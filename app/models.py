@@ -1,7 +1,8 @@
 from app import db
 from datetime import datetime
 
-# Note: I should look to see if this is standard practice. It's currently just a quick fix
+# TODO: Make sure that this is standard practice. 
+# It's currently just a quick fix
 db.metadata.clear()
 
 # db.Model is required - don't change it
@@ -35,3 +36,9 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+    # Keep last visit date for users updated with ping method
+    def ping(self):
+        self.last_seen = datetime.utcnow()
+        db.session.add(self)
+        db.session.commit()

@@ -143,6 +143,9 @@ def lookup():
         # TODO => parse the word
         word_to_lookup = request.form.get('word-to-lookup')
 
+        print(word_to_lookup)
+        # Save to database
+
         return redirect(url_for('main.define', word=word_to_lookup))
 
     # TODO => Check if I actually need this route??
@@ -153,10 +156,16 @@ def lookup():
 @main.route('/account', methods=['GET'])
 def account():
     # Get the user id from sessions
-    # TODO
+    # TODO after you have set up authentication
 
     # Query database for user info
+    user = { 
+        'name': 'Nicholas',
+        'location': 'Lisbon',
+        'email': 'lxnic@gmail.com',
+        'about_me': 'Gardener'
+    }
 
-    user = 'temp placeholder str'
+    print(user)
 
     return render_template('user_profile.html', user=user, current_time=datetime.utcnow())

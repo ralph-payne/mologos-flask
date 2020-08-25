@@ -1,19 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Index{% endblock %}
+{% block title %}Mologos - {{ user.name}} {% endblock %}
 
 {% block page_content %}
-
-    <p>The local date and time is {{ moment(current_time).format('LLL') }}.</p>
-    <p>That was {{ moment(current_time).fromNow(refresh=True) }}</p>
-
-    <p>Display User information</p>
 
     <div class="container">
         <div class="page-header">
        
         {% if user %}
-            <h1 class="text-primary">Hellor, {{ user }}!</h1>
+            <h1 class="text-primary">Hellor, {{ user.name }}!</h1>
         {% else %}
             <h1>Hello, Stranger!</h1>
         {% endif %}
@@ -21,4 +16,27 @@
         </div>
     </div>
 
+
+<div class="page-header">
+    <h1>{{ user.username }}</h1>
+    {% if user.name or user.location %}
+        <p>
+        {% if user.name %}{{ user.name }}{% endif %}
+        {% if user.location %}
+        From <a href="http://maps.google.com/?q={{ user.location }}">
+        {{ user.location }}
+        </a>
+        {% endif %}
+        </p>
+        {% endif %}
+    {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+    <p>
+
+        This date will be changed to show info about the user once the auth routes are set up: {{ moment(current_time).format('L') }}
+    </p>
+</div>
+
 {% endblock %}
+
+        <!-- Member since {{ moment(user.member_since).format('L') }}.
+        Last seen {{ moment(user.last_seen).fromNow() }}. -->
