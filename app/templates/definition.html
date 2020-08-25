@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Definition
+{% endblock %}
+
+{% block page_content %}
+    <form action="/definition" method="POST">
+
+        <div class="form-group">
+            <textarea name="word-to-lookup" rows="2" cols="50" placeholder="Search for a word">
+            </textarea>
+        </div>
+    
+        <button class="btn btn-primary" type="submit">Get a quote</button>
+
+    </form>
+
+    <form action="/add" method="POST">
+    {% if word %}
+        <hr>
+        <h2>Defintion</h2>
+
+        <div class="form-group">
+            <label for="area-1">Definition</label>
+            <textarea name="defined-word" class="form-control" id="area-1" rows="1">{{ word.word }}</textarea>
+        </div>
+
+        <ul>
+        <!-- Loop through each definition -->
+        {% for definition in word.def %}
+            <li> {{definition}} </li>
+        {% endfor %}
+        </ul>
+
+        <h2>Pron</h2>
+
+        <p>/{{ word.pron[0].mw }}/</p>
+
+        </hr>
+
+            <h2>My Example</h2>
+
+            <div class="form-group">
+                <label for="area-2">Your Example</label>
+                <textarea name="user-example" class="form-control" id="area-2" rows="3"></textarea>
+            </div>
+
+            <button class="btn btn-primary" type="submit">Add to my dictionary</button>
+        </form>
+
+    {% endif %}
+           
+{% endblock %}

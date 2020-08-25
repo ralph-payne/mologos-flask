@@ -1,0 +1,36 @@
+<!-- Edit: Page where user can edit the Example Sentence they made -->
+
+{% extends "base.html" %}
+
+{% block title %}Title here{% endblock %}
+
+{% block page_content %}
+
+    <h1>Edit {{ word.word }}</h1>
+
+    <form action="/edit/{{word.id}}" method="POST" class="form-inline">
+
+        <div class="form-group">
+            <label for="area-3">Example</label>
+            <textarea name="edited-example" class="form-control" id="area-3" rows="5" value="{{ word.example }}">{{ word.example }}</textarea>
+            <input type="submit" value="Make Change" />
+        </div>
+
+    </form>
+
+    <ul>
+        <li>id = {{ word.id }}</li>
+        <li>user id{{ word.user_id }}</li>
+        <li>example {{ word.example }}</li>
+        <li>created {{ word.created }}</li>
+    </ul>
+    
+{% endblock %}
+
+Schema Reference
+id
+user_id
+word
+example
+created
+last_modified

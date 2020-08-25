@@ -1,0 +1,63 @@
+<!-- User Words: Page which displays all the words which corresponse with the user's ID -->
+
+{% extends "base.html" %}
+
+{% block title %}Title here{% endblock %}
+
+{% block page_content %}
+
+    <h1>User Words</h1>
+
+    <!-- TODO => Ensure that there are actually words to display -->
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Word</th>
+                <!-- <th scope="col">User ID</th> -->
+                <th scope="col">Example</th>
+                <!-- <th scope="col">Timestamp</th> -->
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+    
+        <tbody>
+        {% for word in words %}
+            <tr>
+                <th scope="row">{{ word.id }}</th>
+                <td>{{ word.word }}</td>
+                <!-- <td>{{ word.user_id }}</td> -->
+                <td>{{ word.example }}</td>
+                <!-- <td>{{ word.created }}</td> -->
+                <td>
+                    <form action="edit/{{word.id}}" method="GET">
+                        <input type="hidden" name="edit-example" value="{{ word.id }}">
+                        <input class="btn btn-outline-primary" type="submit" value="Edit"/>
+                    </form>
+                </td>
+                <td>
+                    <form action="{{ url_for('main.delete') }}" method="POST">
+                        <input type="hidden" name="delete-example" value="{{ word.id }}">
+                        <input class="btn btn-outline-primary" type="submit" value="Delete"/>
+                    </form>
+                </td>
+            </tr>
+                      
+        {% endfor %}
+        </tbody>
+    
+    </table>
+
+{% endblock %}
+
+
+<!-- All Text Below are Comments and Notes -->
+Schema: (For Reference)
+id
+user_id
+word
+example
+created
+last_modified

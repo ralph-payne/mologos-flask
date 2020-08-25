@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Index{% endblock %}
+
+{% block page_content %}
+
+    <!-- <p>The local date and time is {{ moment(current_time).format('LLL') }}.</p>
+    <p>That was {{ moment(current_time).fromNow(refresh=True) }}</p> -->
+
+    <div class="page-header">
+        <h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
+    </div>
+    <form method="POST" class="form-inline">
+        <div class="form-group">
+        {{ form.hidden_tag() }}
+        {{ form.name.label(class='mr-2') }} {{ form.name(class='form-control mr-2', id='my-text-field', placeholder='Enter Name') }}
+        
+        <!-- TODO - Make the Remember Me Check box the same syntax as above -->
+        <div class="form-check">
+            <label class="form-check-label mr-2">
+                <input type="checkbox" class="form-check-input">Remember me
+            </label>
+        </div>
+        </div>
+        {{ form.submit(class='btn btn-primary') }}
+    </form>
+
+    <div class="mt-5">
+        <form class="form-inline my-2 my-lg-0" action="/definition" method="POST">
+            <input name="word-to-lookup" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+
+{% endblock %}
