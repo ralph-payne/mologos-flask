@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ target_word if target_word else 'Not Found' }}
+{% endblock %}
+
+{% block page_content %}
+
+<!-- <form class="my-2 my-lg-0" action="/challenge" method="POST"> -->
+
+    <section id="challenge-toolbar-section">
+
+<!-- First form deals with any Skip -->
+
+    <div class="btn-toolbar">
+        <!-- btn group brings the buttons together and removes padding-->
+        <div class="btn-group mr-2">
+            <button class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Skip</button>
+            <button class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Tooltip on right">Hint</button>
+            <button class="btn btn-danger" data-toggle="tooltip" data-placement="left" title="Tooltip on left">Star</button>
+        </div>
+    </div>
+
+    <hr>
+    The buttons and tooltips (above) might not work with IE
+    <!-- https://stackoverflow.com/questions/547821/two-submit-buttons-in-one-form -->
+    <div>
+        <form action="/challenge" method="POST">
+        <input type="submit" name="skip" value="Skip">
+        <input type="submit" name="hint" value="Hint" disabled>
+        <input type="submit" name="star" value="Star">
+    </form>
+    </div>
+    </section>
+
+<form id="challenge-form" class="my-2 my-lg-0" action="/challenge" method="POST">
+    <div id="attempts-container" style="display: none">
+        <input type="number" id="attempts" name="attempts" value="0">
+    </div>
+
+    <hr>
+    {{ sentence_with_removed_word }}
+
+<!-- Second form deals with the logic -->
+
+    <!-- TODO: Check if an id is necessary on the hidden input tag -->
+    <input type="hidden" id="target-word" name="target_word" value="{{ target_word }}">
+    <input type="hidden" id="star-boolean" name="star_boolean" value="0">
+    <input id="user-guess" name="user_guess" class="form-control mr-sm-2" type="search" placeholder="Input word..." aria-label="Submit">
+    <button id="submit" class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button>
+
+</form>
+
+<script type="text/javascript">
+
+
+
+    let userGuess = document.querySelector('#user-guess')
+    let submitBtn = document.querySelector('#submit')
+    let attempts = document.querySelector('#attempts')
+    let attemptsContainer = document.querySelector('#attempts-container')
+    let targetWord = document.querySelector('#target-word')
+
+    // Below is correct
+
+    // You've got the form, now make sure that the attempts work as well
+    document.getElementById("challenge-form").addEventListener("submit", function(event){
+        if (userGuess.value.toLowerCase() !== targetWord.value.toLowerCase()) {
+            attempts.value++
+            // Display the container tracking attempts
+            attemptsContainer.style.display = 'block';
+            event.preventDefault();
+        } else {
+            // Else user has guessed correctly
+            return true
+        }
+    });
+
+</script>
+           
+{% endblock %}

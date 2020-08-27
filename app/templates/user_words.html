@@ -15,7 +15,7 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Word</th>
-                <!-- <th scope="col">User ID</th> -->
+                <th scope="col">User ID</th>
                 <th scope="col">Example</th>
                 <!-- <th scope="col">Timestamp</th> -->
                 <th scope="col"></th>
@@ -23,12 +23,23 @@
             </tr>
         </thead>
     
+
+
+
         <tbody>
         {% for word in words %}
             <tr>
                 <th scope="row">{{ word.id }}</th>
-                <td>{{ word.word }}</td>
-                <!-- <td>{{ word.user_id }}</td> -->
+                <!-- <td>{{ word.word }}</td> -->
+                <td>
+
+                    <a href="{{ url_for('main.define', word=word.word) }}">{{ word.word }}</a>
+
+                </td>
+                <!-- I want this to be a link to take you to the definition of the word -->
+                <!-- http://localhost:5000/definition/jesus -->
+
+                <td>{{ word.user_id }}</td>
                 <td>{{ word.example }}</td>
                 <!-- <td>{{ word.created }}</td> -->
                 <td>
@@ -61,3 +72,9 @@ word
 example
 created
 last_modified
+
+
+<!-- <a href="{{ url_for('main.define', word=word.word) }}"> -->
+<!-- </a> -->
+
+{{ word.word }}

@@ -5,5 +5,9 @@
 {% block page_content %}
 <div class="page-header">
     <h1>404 Not Found</h1>
+
+    {% if dev_text %}
+        {{ dev_text }}
+    {% endif %}
 </div>
 {% endblock %}

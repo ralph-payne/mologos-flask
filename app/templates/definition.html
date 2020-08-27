@@ -1,49 +1,59 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Definition
+    {{ word.word if word else 'Not Found' }}
 {% endblock %}
 
 {% block page_content %}
-    <form action="/definition" method="POST">
 
-        <div class="form-group">
-            <textarea name="word-to-lookup" rows="1" cols="40" placeholder="Search for a word">
-            </textarea>
-        </div>
-    
-        <button class="btn btn-primary" type="submit">Look Up Another Word</button>
-
+    <form class="form-inline my-2 my-lg-0" action="/definition" method="POST">
+        <input name="word-to-lookup" class="form-control mr-sm-2" type="search" placeholder="Find another word" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
 
-    <form action="/add" method="POST">
+    <form action={{ url_for('main.add', word=word.word) }} method="POST">
     {% if word %}
-        <hr>
-        <h2>Defintion</h2>
 
-        <div class="form-group">
-            <label for="area-1">Definition</label>
-            <textarea name="defined-word" class="form-control" id="area-1" rows="1">{{ word.word }}</textarea>
-        </div>
+        <section id="top-definitions-section">
+            <div class="defined-word-container">
+                <h1 name="defined-word" class="defined-word-content">{{ word.word }}</h1>
+            </div>
+            <div class="pron-ipa-container">
+                <span class="pron-ipa-content">/{{ word.pronunciation }}/<span>
+            </div>
+            <hr>
+        </section>
 
-        <ul>
-        <!-- Loop through each definition -->
-        {% for definition in word.def %}
-            <li> {{definition}} </li>
-        {% endfor %}
-        </ul>
+        <ol>
+            {% for definition in word.definitions %}
+                <li> {{definition}} </li>
+            {% endfor %}
+        </ol>
 
-        <h2>Pron</h2>
+        {% if word.examples %}
+            <h2>Examples</h2>
+            <ul>
+                {% for example in word.examples %}
+                    <li> {{example}} </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-        <p>/{{ word.pron[0].mw }}/</p>
+        {% if word.etymology %}
+            <hr>
+            <h2>Etymology</h2>
+            <p>{{ word.etymology }}</p>
+        {% endif %}
+        
+        {% if source %}
+            <h2>Source</h2>
+            <p>{{ source }}</p>
+        {% endif %}
 
         </hr>
-
-            <h2>My Example</h2>
-
             <div class="form-group">
-                <label for="area-2">Your Example</label>
-                <textarea name="user-example" class="form-control" id="area-2" rows="3"></textarea>
+                <label for="area-2">My Example</label>
+                <textarea name="user-example" class="form-control" id="area-2" rows="2"></textarea>
             </div>
 
             <button class="btn btn-primary" type="submit">Add to my dictionary</button>
