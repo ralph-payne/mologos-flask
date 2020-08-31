@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Mologos - Change Email Address{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Change Your Email Address</h1>
+</div>
+<div class="col-md-4">
+
+    <form action="" method="POST" class="form" role="form">
+        {{ form.hidden_tag() }}
+    
+        <div class="form-group required">
+            <label class="control-label" for="email">New Email</label>
+            {{ form.email(class_="form-control") }}
+        </div>
+        
+        <div class="form-group required">
+            <label class="control-label" for="password">Password</label>
+            {{ form.password(class_="form-control") }}
+        </div>
+        
+        {{ form.submit(class_="btn btn-secondary") }}
+    </form>
+
+</div>
+{% endblock %}
+
+QUESTION
+How can I call the button Update Email Address?
+<input class="btn btn-default" id="submit" name="submit" type="submit" value="Update Email Address">

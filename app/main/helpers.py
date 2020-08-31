@@ -138,7 +138,7 @@ def lookup_db_dictionary(word):
             definitions_list.append(row.definition)
 
         # Look up examples (By setting user ID to 0, you avoid retrieving user examples)
-        examples_base_query = Sentence.query.filter_by(word=word, user_id=0).all()
+        examples_base_query = DictionaryExample.query.filter_by(word=word).all()
 
         # Close database connection
         db.session.commit()

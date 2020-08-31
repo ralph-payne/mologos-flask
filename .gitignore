@@ -145,7 +145,7 @@ bootstrap-templates/
 *.db
 *not-for-git*
 
-notes.md
+*notes.md
 project-specs.md
 schemas.md
 env.md

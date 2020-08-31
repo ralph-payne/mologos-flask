@@ -4,17 +4,44 @@
 
 {% block page_content %}
 
-    <div class="container">
-        <div class="page-header">
-       
-        {% if user %}
-            <h1 class="text-primary">Hellor, {{ user.name }}!</h1>
-        {% else %}
-            <h1>Hello, Stranger!</h1>
+<div class="profile-header">
+    <h1>{{ user.username }}</h1>
+    {% if user.name or user.location %}
+    <p>
+        {% if user.name %}{{ user.name }}{% endif %}
+        {% if user.location %}
+            From <a href="http://maps.google.com/?q={{ user.location }}">
+            {{ user.location }}
+            </a>
         {% endif %}
+    </p>
+    {% endif %}
+    {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
 
-        </div>
-    </div>
+    <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+    {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+    <p>Member since {{ moment(user.member_since).format('L') }}. Last seen {{ moment(user.last_seen).fromNow() }}.</p>
+</div>
+
+{% endblock %}
+
+
+<!-- For Reference: User Model -->
+class User(UserMixin, db.Model):
+    __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(64), unique=True, index=True)
+    username = db.Column(db.String(64), unique=True, index=True)
+    password_hash = db.Column(db.String(128))
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'))    
+    name = db.Column(db.String(64))
+    location = db.Column(db.String(64))
+    about_me = db.Column(db.Text())
+    member_since = db.Column(db.DateTime(), default=datetime.utcnow)
+    last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+    confirmed = db.Column(db.Boolean, default=False)
+
+
 
 
 <div class="page-header">
@@ -35,8 +62,4 @@
         This date will be changed to show info about the user once the auth routes are set up: {{ moment(current_time).format('L') }}
     </p>
 </div>
-
-{% endblock %}
-
-        <!-- Member since {{ moment(user.member_since).format('L') }}.
-        Last seen {{ moment(user.last_seen).fromNow() }}. -->
+    

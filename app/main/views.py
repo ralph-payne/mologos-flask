@@ -9,6 +9,8 @@ from .forms import NameForm
 from .. import db
 from ..models import Definition, DictionaryExample, UserExample, User, Word
 
+from flask_login import current_user
+
 # Helper functions for parsing results from API and database dictionary
 from .helpers import lookup_api, lookup_db_dictionary
 
@@ -39,7 +41,8 @@ def add():
         
         # Temp hardcode of User Id until Auth Routes are set up
         # It's easier to test when you don't have to keep on logging in after restarting the server
-        user_id = os.environ.get('TEST_USER_ID') 
+        # user_id = os.environ.get('TEST_USER_ID')
+        user_id = current_user.id
     
         # Insert User's Example sentence into the database
         record = UserExample(word, user_example, user_id)
@@ -59,7 +62,8 @@ def add():
 @main.route('/my_words', methods=['GET'])
 def read():
     # TODO: Get the user id from sessions (dependency on setting up Auth routes)
-    user_id = os.environ.get('TEST_USER_ID')
+    # user_id = os.environ.get('TEST_USER_ID')
+    user_id = current_user.id
 
     # Read all the entries for that user
     words = UserExample.query.filter_by(user_id=user_id).all()
@@ -183,82 +187,58 @@ def lookup():
         return render_template('definition.html')
 
 
-@main.route('/account', methods=['GET'])
-def account():
-    # Get the user id from sessions
-    # TODO after you have set up authentication
+@main.route('/profile', methods=['GET'])
+def profile():
+    # current_user is imported from flask_login
+    return render_template('user_profile.html', user=current_user)
 
-    # Query database for user info
-    user = { 
-        'name': 'Nicholas',
-        'location': 'Lisbon',
-        'email': 'lxnic@gmail.com',
-        'about_me': 'Gardener'
-    }
-
-    return render_template('user_profile.html', user=user, current_time=datetime.utcnow())
-
-
-'''
-EXPLANATION OF THE CHALLENGE PAGE:
-When the user presses one of the buttons:
-Skip: POST request to server; update db with skip attribute; move onto next word; redirect to challenge page
-Star: Don't do anything but active the button and then let the user continue to guess
-Hint: Nothing yet (could potentially produce a definition)
-Ignore: Don't do anything but active the button which means that this word will be ignored in future challenges
-
-Submit: The User submits their answer; the server checks if it is right by checking against the hidden input
-
-On the Get, you should create a helper function that takes the example string and replaces the target word it with ____________
-Then you should return that word
-'''
 
 @main.route('/challenge', methods=['GET', 'POST'])
 def challenge():
+    user_id = current_user.id
+    # user_id = os.environ.get('TEST_USER_ID')
     if request.method == 'POST':
-        try:
-            skip = request.form.get('skip')
-            print(skip)
-
-        except:
-            print('thru')
-            immutable_multi_dict = request.form
-
-            print(immutable_multi_dict)
-            print(type(immutable_multi_dict))
-            # Compare with hidden input
-            # words don't match, return a flash
-            
+        # If the request.form contains user_guess, it means that the user has clicked on the submit button.
+        if ('user_guess' in request.form):          
             # Retrieve the target word (hidden input) and user_guess from the form
             user_guess = request.form.get('user_guess')
             target_word = request.form.get('target_word')
-            attempts = request.form.get('attempts')
-            star_boolean = request.form.get('star_boolean')
+            attempts = int(request.form.get('attempts'))
+            star_boolean = int(request.form.get('star_boolean'))
 
+            # Compare with hidden input
             if user_guess == target_word:
-                # words do match, give the user a new word
                 flash('Correct')
-                # Increase attribute X of successful guesses in the database
+                metadata = UserExample.query.filter_by(user_id=user_id, word=target_word).first()
+                # Add to the skip column in the database
+                metadata.success = UserExample.success + 1
+
+                # If the user has pressed star, toggle the boolean to True in the db
+                if (star_boolean):
+                    metadata.starred = 1
+                if (attempts):
+                    metadata.fail = UserExample.fail + attempts
+                db.session.commit()
                 
             else:
-                # The checking is done on the browser side (with JavaScript)
-                # So, this should never get to this stage
-                # TODO => change flow below
+                # The checking is done on the browser side (with JavaScript) so this should never get to this stage
                 flash('Error')
-                # return redirect(url_for('main.challenge'))
-            
-        return redirect(url_for('main.challenge'))
 
-        # TODO => Create logic that makes it impossible for the user to get the same word again
+        # If the request.form does not contain user_guess, it means that the user has clicked on the skip button
+        else:
+            # Retrieve data from hidden input
+            target_word = request.form.get('target_word_skipped')
+            # Update by ID and word
+            metadata = UserExample.query.filter_by(user_id=user_id, word=target_word).first()
+            # Add to the skip column in the database
+            metadata.skip = UserExample.skip + 1
+            db.session.commit()
+
+        # Regardless of what button the user pressed, the next page should be another challenge
+        return redirect(url_for('main.challenge'))
 
     # GET
     else:
-        # Query database for using helper
-        
-        # Get the user id from sessions
-        # TODO
-        user_id = os.environ.get('TEST_USER_ID')
-
         # Read all the entries for that user
         words = UserExample.query.filter_by(user_id=user_id).all()
         # TODO => Check if you should db.commit or not
@@ -275,9 +255,7 @@ def challenge():
         user_sentence = word.example
         blank = '____________'
 
-        # Perform a check to see if the sentence contains the word (there is a chance that the example sentence contains the word in a different word, i.e. an adjective instead of a noun)
-        # TODO
-
+        # TODO => Perform a check to see if the sentence contains the word (there is a chance that the example sentence contains the word in a different word, i.e. an adjective instead of a noun)
         if target_word in user_sentence:
             # The string method replace() returns a copy of the string in which the occurrences of old have been replaced with new
             sentence_with_removed_word = user_sentence.replace(target_word, blank)
@@ -285,8 +263,7 @@ def challenge():
 
         else:
             pass
-            # There is a problem here that can be sorted with a recursive helper function
-            # TODO
+            # TODO => There is a problem here that can be sorted with a recursive helper function
             # Temp returning 404 until this has been fixed
             return render_template('404.html')
 

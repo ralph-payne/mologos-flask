@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}#
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Register</h1>
+</div>
+
+<div class="col-md-4">
+    <form method="POST" action="{{ url_for('auth.register') }}" class="form" role="form">
+        <!-- csrf token -->
+        {{ form.hidden_tag() }}
+
+        <div class="form-group required">
+            <label class="control-label" for="email">Email</label>
+            {{ form.email(class_="form-control") }}
+        </div>
+
+        <div class="form-group required">
+            <label class="control-label" for="username">Username</label>
+            {{ form.username(class_="form-control") }}
+        </div>
+
+        <div class="form-group required">
+            <label class="control-label" for="password">Password</label>
+            {{ form.password(class_="form-control") }}
+        </div>
+
+        <div class="form-group required">
+            <label class="control-label" for="password">Confirm password</label>
+            {{ form.password2(class_="form-control") }}
+        </div>
+
+        {{ form.submit(class_="btn btn-primary") }}
+
+    </form>
+</div>
+
+{% endblock %}
