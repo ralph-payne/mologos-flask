@@ -7,6 +7,7 @@
     <h1>Register</h1>
 </div>
 
+<!-- Previous Code -->
 <div class="col-md-4">
     <form method="POST" action="{{ url_for('auth.register') }}" class="form" role="form">
         <!-- csrf token -->
@@ -15,26 +16,86 @@
         <div class="form-group required">
             <label class="control-label" for="email">Email</label>
             {{ form.email(class_="form-control") }}
+            {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                <p class="help-block">{{ error }}</p>                 
+                {% endfor %}
+            {% endif %}
         </div>
 
         <div class="form-group required">
             <label class="control-label" for="username">Username</label>
             {{ form.username(class_="form-control") }}
+            {% if form.username.errors %}
+                {% for error in form.username.errors %}
+                <p class="help-block">{{ error }}</p>                  
+                {% endfor %}
+            {% endif %}
         </div>
 
         <div class="form-group required">
             <label class="control-label" for="password">Password</label>
             {{ form.password(class_="form-control") }}
+            {% if form.password.errors %}
+                {% for error in form.password.errors %}
+                <p class="help-block invalid-feedback">{{ error }}</p>                 
+                {% endfor %}
+            {% endif %}
+            <div class="invalid-feedback">
+                Passworeedz does not match
+            </div>
         </div>
 
         <div class="form-group required">
             <label class="control-label" for="password">Confirm password</label>
-            {{ form.password2(class_="form-control") }}
+            {{ form.password2(class_="form-control is-invalid") }}
+            {% if form.password2.errors %}
+                {% for error in form.password2.errors %}
+                <div class="invalid-feedback">
+                    {{ error }}
+                </div>
+                {% endfor %}
+            {% endif %}
         </div>
 
-        {{ form.submit(class_="btn btn-primary") }}
+        <div class="form-group">
+            <label for="password2">Confirm Password</label>
+            <input class="form-control is-invalid" type="text" id="password2">
+            <div class="invalid-feedback">
+                Passwordz does not match
+            </div>
+        </div>
+
+        {{ form.submit(class_="btn btn-secondary") }}
 
     </form>
 </div>
 
 {% endblock %}
+
+Boostrap CSS
+.help-block {
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    color: #737373;
+}
+
+
+
+<div class="form-field">{{ form.email.label }} {{ form.email }}
+    {% if form.email.errors %}
+        <ul class="errors">
+        	{% for error in form.email.errors %}
+        		<li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
+
+
+<!-- Below is how you do it with Bootstrap-Flask -->
+<div class="col-md-4">
+    {{ wtf.quick_form(form) }}
+</div>

@@ -5,12 +5,10 @@
 {% block page_content %}
 
     <div class="mt-5">
-    {% if current_user.is_authenticated %}
-        <form class="form-inline my-2 my-lg-0" action="/definition" method="POST">
-            <input name="word-to-lookup" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-    {% endif %}
+        <h1>Welcome to Mologos!<h1>
+        <h3>Your place to store words and expressions you want to learn<h3>
     </div>
+
+    <a class="nav-link" href="{{ url_for('main.translate') }}">Translate</a>
 
 {% endblock %}

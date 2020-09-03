@@ -12,8 +12,10 @@ class Config:
     MOLOGOS_MAIL_SUBJECT_PREFIX = '[Mologos]'
     FLASKY_MAIL_SENDER = 'Mologos Admin <flasky@example.com>'
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
+    SSL_REDIRECT = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    TEMPLATES_AUTO_RELOAD = True
+    SQLALCHEMY_RECORD_QUERIES = True
+    # TEMPLATES_AUTO_RELOAD = True
 
     @staticmethod
     def init_app(app):
@@ -23,13 +25,13 @@ class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
     'sqlite:///' + os.path.join(BASE_DIR, 'data-dev.sqlite')
-    print(f'TEMPLATES_AUTO_RELOAD: ')
 
 
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
     'sqlite://'
+    WTF_CSRF_ENABLED = False
 
 
 class ProductionConfig(Config):

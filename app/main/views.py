@@ -1,47 +1,32 @@
 from datetime import datetime
 import random
 
+# TODO => Check if this is still required
 import os # For env variables for test user ID
 
 from flask import flash, redirect, render_template, request, session, url_for
 from . import main
-from .forms import NameForm
 from .. import db
-from ..models import Definition, DictionaryExample, UserExample, User, Word
+from ..models import Definition, DictionaryExample, UserExample, User, UserTranslation, Word
 
 from flask_login import current_user
 
 # Helper functions for parsing results from API and database dictionary
-from .helpers import lookup_api, lookup_db_dictionary
+from .helpers import lookup_api, lookup_db_dictionary, translate_api
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    name = None
-    # Create instance of name form class
-    form = NameForm()
-    if form.validate_on_submit():
-        old_name = session.get('name')
-        if old_name is not None and old_name != form.name.data:
-            flash('Looks like you have changed your name!')
-        # Store user name in session
-        session['name'] = form.name.data
-        # Use the function url for to avoid hardcoding of URLs
-        return redirect(url_for('main.index'))
-    return render_template('index.html', form=form, name=session.get('name'), current_time=datetime.utcnow())
+    return render_template('index.html')
 
 
 @main.route('/add', methods=['GET', 'POST'])
 def add():
     if request.method == 'POST':
-        # Get word from URL query parameters with request.args.get
+        # Get word from URL query parameters
         word = request.args.get('word')
 
-        # Get posted form input with use request.form.get
+        # Get posted form input with request.form.get
         user_example = request.form.get('user-example')
-        
-        # Temp hardcode of User Id until Auth Routes are set up
-        # It's easier to test when you don't have to keep on logging in after restarting the server
-        # user_id = os.environ.get('TEST_USER_ID')
         user_id = current_user.id
     
         # Insert User's Example sentence into the database
@@ -50,9 +35,8 @@ def add():
         # https://docs.sqlalchemy.org/en/13/orm/session_basics.html
         db.session.commit()
 
-        # Redirect to find another word? / homepage
         # Temp redirect to homepage after saving word in database
-        return redirect(url_for('main.read'))
+        return redirect(url_for('main.my_words'))
     
     else:
         return render_template('user.html', name=name)
@@ -60,9 +44,7 @@ def add():
 
 # Return the user's example
 @main.route('/my_words', methods=['GET'])
-def read():
-    # TODO: Get the user id from sessions (dependency on setting up Auth routes)
-    # user_id = os.environ.get('TEST_USER_ID')
+def my_words():
     user_id = current_user.id
 
     # Read all the entries for that user
@@ -83,16 +65,16 @@ def delete():
         # Get the id for the example sentence from the form
         id = request.form.get('delete-example')
         
-        # Hard delete data as opposed to soft deleting by toggling boolean
+        # Hard delete data
         UserExample.query.filter_by(id=id).delete()
         db.session.commit()      
  
         # Return to same page
-        return redirect(url_for('main.read'))
+        return redirect(url_for('main.my_words'))
     
     # TODO => Check if this is necessary or whether the delete route should only be a POST route and the GET method should be removed
     else:
-        return redirect(url_for('main.read'))
+        return redirect(url_for('main.my_words'))
 
 
 # TODO => think about what the best dynamic route would look like
@@ -101,7 +83,6 @@ def edit(id):
     if request.method == 'POST':
         # Get value from form
         updated_example = request.form.get('edited-example') 
-
         last_modified = datetime.utcnow()
 
         # Update by ID
@@ -109,20 +90,15 @@ def edit(id):
         db.session.close()
 
         # redirect to read
-        return redirect(url_for('main.read'))
+        return redirect(url_for('main.my_words'))
 
     # Get request (Select from db)
     else:      
-        # Get the user id from sessions (TODO)
-
         # Lookup the value from the db
-        # SELECT / READ word from db
-        # This is sloppy & could be improved with a unique search
-        word = UserExample.query.filter_by(id=id).all()
+        word = UserExample.query.filter_by(id=id).first()
         db.session.close()
 
-        # Returning index 0 but actually this should be a unique search
-        return render_template('edit.html', word=word[0])
+        return render_template('edit.html', word=word)
 
 
 # Create route with a dynamic component
@@ -142,7 +118,7 @@ def define(word):
         # Return a cannot find if it couldn't be found
         if api_return_val is None:
             flash(f'{word} was not found')
-            # TODO => change logic to render a "did you mean X" page 
+            # TODO => change logic to render a "did you mean X" page (Nice to Have Feature)
             # TODO => get rid of the word in the url parameters as well
 
         else:
@@ -159,7 +135,7 @@ def define(word):
             new_word = Word(word, etymology, pronunciation)
             db.session.add(new_word)
 
-            # Add each of the examples to the database
+            # Add each of the definitions to the database
             for definition in definitions:
                 record = Definition(word, definition, source)
                 db.session.add(record)
@@ -196,7 +172,6 @@ def profile():
 @main.route('/challenge', methods=['GET', 'POST'])
 def challenge():
     user_id = current_user.id
-    # user_id = os.environ.get('TEST_USER_ID')
     if request.method == 'POST':
         # If the request.form contains user_guess, it means that the user has clicked on the submit button.
         if ('user_guess' in request.form):          
@@ -221,8 +196,8 @@ def challenge():
                 db.session.commit()
                 
             else:
-                # The checking is done on the browser side (with JavaScript) so this should never get to this stage
-                flash('Error')
+                # The checking is done on the client side (with JavaScript event listener) so this should never get to this stage
+                return render_template('500.html', dev_text='error')
 
         # If the request.form does not contain user_guess, it means that the user has clicked on the skip button
         else:
@@ -245,7 +220,7 @@ def challenge():
         db.session.close()
 
         if (len(words) == 0):
-            dev_text = 'user has no words in database - TODO make a warning'
+            flash('You have no words in your dictionary')
             return render_template('404.html', dev_text=dev_text)
 
         word = random.choice(words)
@@ -289,3 +264,92 @@ def admin_definitions():
     definitions = Definition.query.all()
     return render_template('user_words.html', words=definitions)
 # -------- end of temp routes ---
+
+
+@main.route('/translate', methods=['GET', 'POST'])
+def translate():
+    if request.method == 'POST':
+        # Check which form has been submitted
+        if ('text_to_translate' in request.form): 
+            # Translate the word with function from helpers.py
+            text_to_translate = request.form.get('text_to_translate')
+            dest_language = request.form.get('select_language')
+
+            output = translate_api(text_to_translate, dest_language)
+
+            if output is None:
+                # return error
+                return render_template('404.html', dev_text='error with translation helper')
+            else:
+                # Redirect to the same page and include the text_to_translate and the translation
+                # Note: this would be better with Ajax but for the moment leave it as is
+
+                # Save to database with user's id etc.
+                return render_template('translate.html', input=text_to_translate, output=output)
+
+        # User is trying to save phrase
+        else:
+            output = request.form.get('translation-result')
+            print(request.form)
+            # Save to database
+
+            # hardcode while test database
+            destination_language = 'pt'
+            input = request.form.get('src_hidden_input')
+            output = request.form.get('translation_result')
+            
+            # temp hardcoding id
+            user_id = 325458
+            # user_id = current_user.id
+            if request.form.get('comment'):
+                comment = request.form.get('comment')
+                # TODO: work out best practice for adding comment in this model
+                record = UserTranslation(destination_language, input, output, user_id)
+            else:
+                record = UserTranslation(destination_language, input, output, user_id)
+                      
+            db.session.add(record)
+            db.session.commit()
+
+            return redirect(url_for('main.translate'))
+
+        # temp option
+        return render_template('translate.html')
+        # If it's the translation form, call the translate helper
+
+        # If it's the edit the translation page, this is done on the front-end through a JavaScript event handler
+
+        # If it's the add to dictionary form, add the translation to the databse
+
+        # Then redirect to trans translate page
+
+    # GET request
+    else:
+        return render_template('translate.html')
+
+# TEMP REF User Translation Model
+# class UserTranslation(db.Model):
+#     __tablename__ = 'user_translation'
+#     id = db.Column(db.Integer, primary_key=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+#     source_language = db.Column(db.String(2))
+#     destination_language = db.Column(db.String(2))
+#     input = db.Column(db.Text())
+#     output = db.Column(db.Text())
+#     comment = db.Column(db.Text())
+
+#     created = db.Column(db.DateTime, default=datetime.utcnow)
+#     success = db.Column(db.Integer, default=0)
+#     fail = db.Column(db.Integer, default=0)
+#     skip = db.Column(db.Integer, default=0)
+#     # Level is used to determine the probablity of the user seeing the word on the Challenge
+#     level = db.Column(db.Integer, default=0)
+#     deleted = db.Column(db.Boolean, default=0)
+#     ignored = db.Column(db.Boolean, default=0)
+#     starred = db.Column(db.Boolean, default=0)
+
+#     def __init__(self, word, example, user_id):
+#         self.word = word
+#         self.example = example
+#         self.user_id = user_id

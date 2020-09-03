@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Translate
+{% endblock %}
+
+{% block page_content %}
+
+    <div class="container">
+      <h1>Translate text</h1>
+      <p>This simple web app uses Azure for text translation, text-to-speech conversion, and sentiment analysis of input text and translations. Learn more about <a href="https://docs.microsoft.com/azure/cognitive-services/">Azure Cognitive Services</a>.
+      </p>
+      <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <form action="{{ url_for('main.translate') }}" method="POST">
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="select-language"><strong>Translate to:</strong></label>
+                        <select class="form-control" name="select_language" id="select-language">
+                        <option value="de">German</option>
+                        <option value="it">Italian</option>
+                        <option value="pt" selected>Portuguese</option>
+                        <option value="es">Spanish</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+      <div class="row">
+
+            <div class="col">
+
+                <!-- Enter text to translate. -->
+                <div class="form-group">
+                <label for="text-to-translate"><strong>Enter the text you'd like to translate:</strong></label>
+                {% if input %}
+                <textarea class="form-control" id="text-to-translate" name="text_to_translate" rows="5">{{ input }}</textarea>
+                {% else %}
+                <textarea class="form-control" id="text-to-translate" name="text_to_translate" rows="5"></textarea>
+                {% endif %}
+                </div>
+                <!-- Select output language here. -->
+
+                <button type="submit" class="btn btn-primary mb-2" id="translate">Translate text</button></br>
+            </form>
+            <!-- Translated text returned by the Translate API is rendered here. -->
+            </div>
+
+            <div class="col">
+                <form action="{{ url_for('main.translate') }}" method="POST">
+                    <div class="form-group" id="translator-text-response">
+                    <label for="translation-result"><strong>Translated text:</strong></label>
+                    {% if output %}
+                    <input type="hidden" name="src_hidden_input" value="{{ input }}">
+                    <textarea readonly class="form-control" name="translation_result" id="translation-result" rows="5">{{ output }}</textarea>
+                    {% else %}
+                    <textarea readonly class="form-control" name="translation_result" id="translation-result" rows="5"></textarea>
+                    {% endif %}
+                    </div>
+                <button type="submit" class="btn btn-primary mb-2" id="edit-translation-btn">Edit this translation</button>
+                <button type="submit" class="btn btn-primary mb-2">Add to My Dictionary</button>
+                <button type="submit" class="btn btn-primary mb-2" id="add-comment-btn">Add a Comment</button>
+                
+            </div>
+
+        </div>
+
+        <div id="comment-box" class="row" style="display: none">
+            <div class="col-6 offset-6">
+                <div class="form-group">
+                    <label for="text-to-translate"><strong>Enter a Comment:</strong></label>
+                    <textarea class="form-control" id="comment" name="comment" rows="5"></textarea>
+                </div>
+            </div>
+        </div>
+                <!-- End of 2nd Form, which is extended to capture any comments -->
+                </form>
+    </div>
+
+<script type="text/javascript">
+
+    let editTranslationBtn = document.querySelector('#edit-translation-btn')
+    let commentBox = document.querySelector('#comment-box')
+
+    document.getElementById("edit-translation-btn").addEventListener("click", function(event){
+        event.preventDefault();
+        // When clicked, remove the attribute read-only
+        translationResult.readOnly = false;
+    });
+
+    document.getElementById("add-comment-btn").addEventListener("click", function(event){
+        commentBox.style.display = 'block';
+        event.preventDefault();       
+    });
+
+</script>
+
+<!-- End of page_content -->
+{% endblock %}
+
+
+This script is:
+1. When the user clicks on the edit button
+2. The script ackowledges the click
+3. It prevents the default submitting to the server
+4. It removes the read-only attribute from the Translated text
+
+The second script is
+1. Listen for a click on the add a comment button
+2. Once clicked, the add a comment text box appears
+
+
+
+
+// You've got the form, now make sure that the attempts work as well
+document.getElementById("challenge-form").addEventListener("submit", function(event){
+    if (userGuess.value.toLowerCase() !== targetWord.value.toLowerCase()) {
+        attempts.value++
+        // Display the container tracking attempts
+        attemptsContainer.style.display = 'block';
+        event.preventDefault();
+    } else {
+        // Else user has guessed correctly
+        return true
+    }
+});

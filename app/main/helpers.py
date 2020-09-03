@@ -2,9 +2,15 @@ import os
 # The requests library is for your app to make HTTP request to other sites, usually APIs. It makes an outgoing request and returns the response from the external site.
 import requests
 
+# https://pypi.org/project/googletrans/
+from googletrans import Translator
+
 from .. import db
 # from ..models import Definition, Sentence, Word
 from ..models import Definition, DictionaryExample, UserExample, User, Word
+
+# Init Translator
+translator = Translator()
 
 def lookup_api(word):
     # Toggle for switching between APIs (Oxford API has a monthly limit of 1000)
@@ -160,4 +166,19 @@ def lookup_db_dictionary(word):
     
     else:
         db.session.commit()
+        return None
+
+
+def translate_api(src_text, dest_language):
+
+    if src_text:
+        # Version 1 only has option to translate from english.
+        source_lang = 'en'
+
+        # result is a dictionary with properties text, src, dest, extra_data...
+        result = translator.translate(src_text, src=source_lang, dest=dest_language)
+        
+        return result.text
+
+    else:
         return None

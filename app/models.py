@@ -9,7 +9,7 @@ from flask_login import UserMixin
 from . import db, login_manager
 
 # TODO: Make sure that this is standard practice; It's currently just a quick fix
-db.metadata.clear()
+# db.metadata.clear()
 
 
 class Word(db.Model):
@@ -18,6 +18,7 @@ class Word(db.Model):
     word = db.Column(db.String(64), unique=True, index=True)
     etymology = db.Column(db.Text())
     pronunciation = db.Column(db.String(64))
+    created = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __init__(self, word, etymology, pronunciation):
         self.word = word
@@ -60,6 +61,7 @@ class UserExample(db.Model):
     word = db.Column(db.String, db.ForeignKey('word.id'))
     example = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    comment = db.Column(db.Text())
     created = db.Column(db.DateTime, default=datetime.utcnow)
     success = db.Column(db.Integer, default=0)
     fail = db.Column(db.Integer, default=0)
@@ -73,6 +75,53 @@ class UserExample(db.Model):
     def __init__(self, word, example, user_id):
         self.word = word
         self.example = example
+        self.user_id = user_id
+
+
+class Translation(db.Model):
+    __tablename__ = 'translation'
+    id = db.Column(db.Integer, primary_key=True)
+
+    # key word is not in use in Version 1 but it could be added to model if we wanted to set up a connection between the English words and the translations
+    # key_word = db.Column(db.String, db.ForeignKey('word.id'))
+    created = db.Column(db.DateTime, default=datetime.utcnow)
+    source_language = db.Column(db.String(2))
+    destination_language = db.Column(db.String(2))
+    input = db.Column(db.Text())
+    output = db.Column(db.Text())
+
+    def __init__(self, word, definition, source):
+        self.word = word
+        self.definition = definition
+        self.source = source
+
+
+class UserTranslation(db.Model):
+    __tablename__ = 'user_translation'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    source_language = db.Column(db.String(2), default='en')
+    destination_language = db.Column(db.String(2))
+    input = db.Column(db.Text())
+    output = db.Column(db.Text())
+    comment = db.Column(db.Text())
+
+    created = db.Column(db.DateTime, default=datetime.utcnow)
+    success = db.Column(db.Integer, default=0)
+    fail = db.Column(db.Integer, default=0)
+    skip = db.Column(db.Integer, default=0)
+
+    # Level is used to determine the probablity of the user seeing the word on the Challenge
+    level = db.Column(db.Integer, default=0)
+    deleted = db.Column(db.Boolean, default=0)
+    ignored = db.Column(db.Boolean, default=0)
+    starred = db.Column(db.Boolean, default=0)
+
+    def __init__(self, destination_language, input, output, user_id):
+        self.destination_language = destination_language
+        self.input = input
+        self.output = output
         self.user_id = user_id
 
 
