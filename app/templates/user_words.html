@@ -8,61 +8,33 @@
 
     <h1>User Words</h1>
 
-    <!-- TODO => Ensure that there are actually words to display -->
+    <!-- TODO => Write logic which displays message if there are no words to display -->
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Word</th>
-                <th scope="col">User ID</th>
-                <th scope="col">Example</th>
-                <!-- <th scope="col">Timestamp</th> -->
-                <th scope="col"></th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-    
-
-
-
-        <tbody>
-        {% for word in words %}
-            <tr>
-                <th scope="row">{{ word.id }}</th>
-                <!-- <td>{{ word.word }}</td> -->
-                <td>
-
-                    <a href="{{ url_for('main.define', word=word.word) }}">{{ word.word }}</a>
-
-                </td>
-                <!-- I want this to be a link to take you to the definition of the word -->
-                <!-- http://localhost:5000/definition/jesus -->
-
-                <td>{{ word.user_id }}</td>
-                <td>{{ word.example }}</td>
-                <!-- <td>{{ word.created }}</td> -->
-                <td>
-                    <form action="edit/{{word.id}}" method="GET">
-                        <input type="hidden" name="edit-example" value="{{ word.id }}">
-                        <input class="btn btn-outline-primary" type="submit" value="Edit"/>
-                    </form>
-                </td>
-                <td>
-                    <form action="{{ url_for('main.delete') }}" method="POST">
-                        <input type="hidden" name="delete-example" value="{{ word.id }}">
-                        <input class="btn btn-outline-primary" type="submit" value="Delete"/>
-                    </form>
-                </td>
-            </tr>
-                      
-        {% endfor %}
-        </tbody>
-    
-    </table>
+    <div id="my-words-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Word</th>
+                    <th>Example</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+        
+            <tbody>
+                {% for word in words %}            
+                    <tr>
+                        <td><a href="{{ url_for('main.define', word=word.word) }}">{{ word.word }}</a></td>
+                        <td>{{ word.example }}</td>
+                        <td><a href="{{ url_for('main.edit', id=word.id) }}"><i class="fa fa-edit fa-2x"></i></a></td>
+                        <td><a href="{{ url_for('main.delete', id=word.id) }}"><i class="fa fa-trash fa-2x"></i></a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock %}
-
 
 <!-- All Text Below are Comments and Notes -->
 Schema: (For Reference)
@@ -72,9 +44,3 @@ word
 example
 created
 last_modified
-
-
-<!-- <a href="{{ url_for('main.define', word=word.word) }}"> -->
-<!-- </a> -->
-
-{{ word.word }}

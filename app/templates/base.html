@@ -9,112 +9,111 @@
 
     {% block styles %}
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
     {% endblock %}
 
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}"
-    type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 
     <!-- JQuery is a dependency for moment.time -->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">  
 </head>
 
-<!-- Navbar https://getbootstrap.com/docs/4.3/components/navbar/ -->
-{% block navbar %}
-<div class="navbar navbar-expand-lg navbar-light bg-light">
+<!-- 1: NAVBAR -->
+<nav id="main-nav">
     <div class="container">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-    </button>
-
-   
-    <div class="collapse navbar-collapse">
-        <a class="navbar-brand" href="{{ url_for('main.index') }}">MoLogos</a>
-        <!-- mr-auto keeps the other links to the right -->
-        <ul class="navbar-nav mr-auto">
-            {% if current_user.is_authenticated %}
-            <li class="nav-item">
-                <a class="nav-link" href="/my_words">My Words</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/challenge">Challenge</a>
-            </li>                    
-            {% endif %}
-
+        <a href="{{ url_for('main.index') }}">
+            <img src="{{url_for('static', filename='img/08_mologos_blue_550x160.png')}}" alt="logo" class="logo"></a>
+        <span>
+            <form class="form-inline my-2 my-lg-0" action="/definition" method="POST">
+                <input name="word-to-lookup" type="search" placeholder="Find another word" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                <!-- TODO - Make the font awesome icon act as the submit button -->
+                <!-- <a href="#" target="_blank"><i class="fa fa-search fa-2x"></i></a> -->
+            </form>            
+            
+        </span>
+        <ul>
+            <!-- Create active links through preferably Flask and Jinja. If you can't, then use JavaScript -->
+            <li><a class="current" href="{{ url_for('main.index') }}">Home</a></li>
+            <li><a href="{{ url_for('main.my_words') }}">List</a></li>
+            <li><a href="{{ url_for('main.challenge') }}">Challenge</a></li>
+            <li><a href="{{ url_for('main.translate') }}">Translate</a></li>
+            <li><a class="login-nav-icon" href="{{ url_for('auth.login') }}">Login</a></li>
         </ul>
+    </div>
+</nav>
 
-    <!-- Search Bar -->
-    {% if current_user.is_authenticated %}
-    <form class="form-inline my-2 my-lg-0" action="/definition" method="POST">
-        <input name="word-to-lookup" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
-    {% endif %}
-    <!-- End of Search Bar -->
 
-    <ul class="navbar-nav my-2 my-lg-0">
-        {% if current_user.is_admin %}
-        <li class="dropdown nav-item">
-            <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                Admin <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
-                <li class="nav-item"><a class="nav-link" href="/admin_words">Admin Local Dict</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin_dictionary_examples">Admin Dict Examples</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin_user_examples">Admin User Examples</a></li>                    
-                <li class="nav-item"><a class="nav-link" href="/admin_definitions">Admin Definitions</a></li>
-            </ul>
-        </li>
-    {% endif %}
-        {% if current_user.is_authenticated %}
-        <li class="dropdown nav-item">
-            <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                Account <b class="caret"></b>
-            </a>
-            <ul class="dropdown-menu">
+<div>
+    <!-- Flash Messages -->
+    {% block content %}
+        <div class="container">
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endblock %}
 
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('main.profile') }}">Profile</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.change_password') }}">Change Password</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.change_email_request') }}">Change Email</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Log Out</a></li>
-            </ul>
-        </li>
-        {% else %}
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}">Register</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Log In</a></li>
-        {% endif %}
-    </ul>
-
+    <div class="container">
+        <!-- Page Content -->
+        {% block page_content %}
+        {% endblock %}
     </div>
 </div>
-</div>
-{% endblock %}
-<!-- End of Navbar -->
-<div>
 
-<!-- Flash Messages --> 
-{% block content %}
-    <div class="container">
-        {% for message in get_flashed_messages() %}
-        <div class="alert alert-warning">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{ message }}
+<!-- 5: FOOTER -->
+<footer id="main-footer" class="py-2">
+    <div class="container footer-container">
+        <div>
+            <img src="{{ url_for('static', filename='img/7_mologos_550x150.png') }}" alt="footer logo"></a>            
+            <!-- <img src="img/07_mologos_550x150.png" alt="Footer Logo"> -->
+            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit deserunt assumenda enim non? Ratione ipsum voluptates fuga eos earum vitae.</p>
         </div>
-        {% endfor %}
+        <div>
+            <h4>Email Newsletter</h4>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <form name="contact" method="POST" data-netlify="true">
+                <p>
+                    <input name="email" type="email" placeholder="Enter Email...">
+                </p>
+                <p>
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </p>
+            </form>
+        </div>
+        <div>
+            <h4>Site Links</h4>
+            <ul class="list">
+                <li><a href="#">Help & Support</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+        <div>
+            <h3>Join Our Club</h3>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi, nesciunt!</p>
+            <a href="#" class="btn btn-secondary">Join Now</a>
+        </div>
+        <div>
+            <p>
+                Copyright &copy; 2020, All Rights Reserved
+            </p>
+        </div>
+    </div>
+</footer>
 
-<!-- Page content -->{% block page_content %}{% endblock %}
-</div>
+<!-- Scripts -->
+{% block scripts %}
+{{ moment.include_moment() }}
 {% endblock %}
 
-    <footer id="footer" class="small fixed-bottom text-center text-muted">
-        Powered by <a href="https://dictionaryapi.com/">Merriam-Webster</a>
-        <img src="{{url_for('static', filename='img/merriam-webster-logo.jpeg')}}" alt="" width="50" height="auto">
-    </footer>
-
-    <!-- Scripts -->
-    {% block scripts %}
-    {{ moment.include_moment() }}
-    {% endblock %}
 </html>

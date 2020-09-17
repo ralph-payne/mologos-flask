@@ -1,0 +1,58 @@
+// Utilities
+
+.container {
+    max-width: $max-width;
+    margin: auto;
+    padding: 0 2rem;
+    overflow: hidden;
+    // height: 1000px;
+}
+
+.page-container {
+    display: grid;
+    // Split so that the side bar takes us 2/7 of the space
+    grid-template-columns: 1fr;
+    margin: 0rem 0;
+    // grid-gap: 1.5rem;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    border: none;
+    // Default is dark in case you just use btn 
+    background: $dark-color;
+    color: set-text-color($dark-color);
+    padding: 0.5rem 1.5rem;
+    // Add curves
+    border-radius: .25rem;
+
+    &-light {
+        background: $light-color;
+        color: set-text-color($light-color) !important; 
+    }
+
+    &-primary {
+        background: $primary-color;
+        color: set-text-color($primary-color) !important;
+    }
+
+    &-secondary {
+        background: $secondary-color;
+        color: set-text-color($secondary-color) !important;
+    }
+
+    &-green {
+        background: $green-color;
+        color: set-text-color($green-color) !important;
+    }    
+
+    &-block {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    // It doesn't matter what color it is, it will just give an effect of making it more transparent
+    &:hover { opacity: 0.9; }
+}

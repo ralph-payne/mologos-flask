@@ -110,7 +110,6 @@ def lookup_api(word):
                 'definitions': merriam_webster[0]['shortdef'], # list
                 # hwi: headword information. # List of pronunciations (prs) from index 0
                 'examples': [] # list
-
             }
 
             return merriam_webster_return_val

@@ -1,57 +1,44 @@
 {% extends "base.html" %}
 
 {% block title %}
-    {{ target_word if target_word else 'Not Found' }}
+    Challenge
 {% endblock %}
 
 {% block page_content %}
 
-<!-- <form class="my-2 my-lg-0" action="/challenge" method="POST"> -->
+<div id="challenge-table">
+    <form id="challenge-form" action="/challenge" method="POST">
+        <table>
+            <thead>
+                <tr>
+                    <th>Example</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
 
-    <section id="challenge-toolbar-section">
-
-<!-- First form deals with any Skip -->
-
-    <div class="btn-toolbar">
-        <!-- btn group brings the buttons together and removes padding-->
-        <div class="btn-group mr-2">
-
-            <button class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Skip</button>
-            <button class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Tooltip on right">Hint</button>
-            <button class="btn btn-danger" data-toggle="tooltip" data-placement="left" title="Tooltip on left">Star</button>
-        </div>
-    </div>
-
-    <hr>
-    The buttons and tooltips (above) might not work with IE
-    <!-- https://stackoverflow.com/questions/547821/two-submit-buttons-in-one-form -->
-    <div>
-        <form action="/challenge" method="POST">
-            <input type="hidden" id="target-word-skipped" name="target_word_skipped" value="{{ target_word }}">
-            <input type="submit" name="skip" value="Skip">
-            <input type="submit" name="hint" value="Hint" disabled>
-            <input type="submit" name="star" value="Star">
-        </form>
-    </div>
-    </section>
-
-<form id="challenge-form" class="my-2 my-lg-0" action="/challenge" method="POST">
-    <div id="attempts-container" style="display: none">
-        <input type="number" id="attempts" name="attempts" value="0">
-    </div>
-
-    <hr>
-    {{ sentence_with_removed_word }}
-
-<!-- Second form deals with the logic -->
-
-    <!-- TODO: Check if an id is necessary on the hidden input tag -->
-    <input type="hidden" id="target-word" name="target_word" value="{{ target_word }}">
-    <input type="hidden" id="star-boolean" name="star_boolean" value="0">
-    <input id="user-guess" name="user_guess" class="form-control mr-sm-2" type="search" placeholder="Input word..." aria-label="Submit">
-    <button id="submit" class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button>
-
-</form>
+            <tbody>
+                {% for word in list_of_words %}
+                    <tr>
+                        <td>
+                            {{ word.first_half_sentence }}
+                                <input type="hidden" id="target-word" name="target_word" value="{{ target_word }}">
+                                <input type="hidden" id="star-boolean" name="star_boolean" value="0">
+                                <input id="user-guess" name="user_guess" placeholder="Write guess...">
+                            {{ word.second_half_sentence }}
+                        </td>
+                        <!-- <td><a href="http://facebook.com" target="_blank"><i class="fa fa-edit fa-2x"></i></a></td> -->
+                        <td><a href="{{ url_for('main.edit', id=word.id) }}" target="_blank" ><i class="fa fa-edit fa-2x"></i></a></td>                        
+                        <td><a href="#"><i class="fa fa-eye-slash fa-2x"></i></a></td>
+                        <td><a href="#" target="_blank"><i class="fa fa-star fa-2x"></i></a></td>
+                    <tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button id="submit" class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button>
+    </form>
+</div>
 
 <script type="text/javascript">
 

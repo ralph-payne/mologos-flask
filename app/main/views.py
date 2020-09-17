@@ -56,24 +56,21 @@ def my_words():
     return render_template('user_words.html', words=words)
 
 
-@main.route('/delete', methods=['GET', 'POST'])
-def delete():
-    if request.method == 'POST':
+@main.route('/delete<id>', methods=['GET'])
+def delete(id):
+    if request.method == 'GET':
         # TODO => Include a last modified field in the User Example model
-        last_modified = datetime.utcnow()
+        # last_modified = datetime.utcnow()
     
         # Get the id for the example sentence from the form
-        id = request.form.get('delete-example')
+        # id = request.form.get('delete-example')
         
         # Hard delete data
         UserExample.query.filter_by(id=id).delete()
-        db.session.commit()      
+        db.session.commit()
+        db.session.close()     
  
         # Return to same page
-        return redirect(url_for('main.my_words'))
-    
-    # TODO => Check if this is necessary or whether the delete route should only be a POST route and the GET method should be removed
-    else:
         return redirect(url_for('main.my_words'))
 
 
@@ -83,13 +80,15 @@ def edit(id):
     if request.method == 'POST':
         # Get value from form
         updated_example = request.form.get('edited-example') 
+        print(updated_example)
         last_modified = datetime.utcnow()
 
         # Update by ID
         UserExample.query.filter_by(id=id).update({'example': updated_example})
+        db.session.commit()
         db.session.close()
 
-        # redirect to read
+        # redirect to read (User List)
         return redirect(url_for('main.my_words'))
 
     # Get request (Select from db)
@@ -219,28 +218,54 @@ def challenge():
         # TODO => Check if you should db.commit or not
         db.session.close()
 
+        max = 1
+
         if (len(words) == 0):
             flash('You have no words in your dictionary')
             return render_template('404.html', dev_text=dev_text)
-
-        word = random.choice(words)
-
-        # Now that they have a random word, retrieve the example sentence
-        target_word = word.word
-        user_sentence = word.example
-        blank = '____________'
-
-        # TODO => Perform a check to see if the sentence contains the word (there is a chance that the example sentence contains the word in a different word, i.e. an adjective instead of a noun)
-        if target_word in user_sentence:
-            # The string method replace() returns a copy of the string in which the occurrences of old have been replaced with new
-            sentence_with_removed_word = user_sentence.replace(target_word, blank)
-            return render_template('challenge.html', target_word=target_word, sentence_with_removed_word=sentence_with_removed_word)
-
+        elif (len(words) > 4):
+            # Create a list of dictionaries
+            max = 5
         else:
-            pass
-            # TODO => There is a problem here that can be sorted with a recursive helper function
-            # Temp returning 404 until this has been fixed
-            return render_template('404.html')
+            max = len(words)
+
+        list_of_words = []
+
+        # Start loop
+        for i in range(max):
+            word = random.choice(words)
+            # TODO => check if this word is already in the list chosen
+
+            # Now that they have a random word, retrieve the example sentence
+            target_word = word.word
+            user_sentence = word.example
+            word_id = word.id
+
+            # Check if the sentence contains the word (there is a chance that the example sentence contains the word in a different word, i.e. an adjective instead of a noun)
+            if target_word in user_sentence:
+                # Find position of target word in sentence
+                pos = user_sentence.find(target_word)
+                word_length = len(target_word)
+                sentence_length = len(user_sentence)
+
+                first_half_sentence = user_sentence[0:pos]
+                second_half_sentence = user_sentence[(pos+word_length):sentence_length]
+
+                word_dict = {
+                    'id': word_id,
+                    'target_word': target_word,
+                    'first_half_sentence': first_half_sentence,
+                    'second_half_sentence': second_half_sentence
+                }
+
+                # Append to list of words
+                list_of_words.append(word_dict)
+
+            else:
+                # TODO: Create logic if the word does not appear in the target sentence
+                pass
+
+        return render_template('challenge.html', list_of_words=list_of_words)
 
 
 # Define temp routes to see how the local dictionary is storing words

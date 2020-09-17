@@ -1,0 +1,17 @@
+/* Colors Config */
+$primary-color: #0F222D;
+$secondary-color: #FDEAA0;
+$light-color: #f3f3f3;
+$dark-color: #333;
+$green-color: #4DB538;
+$max-width: 1200px;
+
+/* Set Text Color Function: If the lightness of the color that is passed in (i.e. the background color) is less than 50, then return the color black. If the lightness of the background color passed in is more than 50, return the color white */
+@function set-text-color($color) {
+    @if(lightness($color) > 50) {
+        @return #000;
+    }
+    @else {
+        @return #fff;
+    }
+}

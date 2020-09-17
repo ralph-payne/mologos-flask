@@ -1,0 +1,234 @@
+@import 'config';
+@import 'utilities';
+@import 'tables';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Temp commenting this out because it messes with the page container */
+// html {
+//     /* 100% Height required for Sticky Footer */
+//     height: 100%;
+// }
+
+body {
+    /* Temp commenting this out because it messes with the page container */
+    /* min-height of 100% and grid required for Sticky Footer */
+    // min-height: 100%;
+    // display: grid;
+    // grid-template-rows: 1fr auto;
+
+    font-family: 'Lato', sans-serif;
+    line-height: 1.5;
+    background: $light-color;
+}
+
+// Remove underline from links
+a {
+    color: #333;
+    text-decoration: none;
+}
+
+// Add space after each paragraph
+p {
+    margin: .5rem 0;
+}
+
+// Remove bullet points from list items
+ul {
+    list-style: none;
+}
+
+// Prevent images from stretching beyond their containers
+img {
+    width: 100%;
+}
+
+/* 1: NAVBAR */
+#main-nav {
+    background: $light-color;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+
+    .container {
+        display: grid;
+        grid-template-columns: 6fr 3fr 2fr;
+        padding: 1rem;
+        align-items: center;
+    }
+
+    // Reduce size of logo
+    .logo {
+        width: 180px;
+    }
+
+    /* Social Media Icons */
+    .social {
+        justify-self: center;
+        // Gray color for Social media icons
+        i {
+            color: #777;
+            margin-right: .5rem;
+        }
+    }
+
+    ul {
+        justify-self: end;
+        display: flex;
+
+        li {
+            a {
+                padding: 0.75rem;
+                font-weight: bold;
+            }
+        }
+
+        a {
+            &.current {
+                background: $primary-color;
+                color: set-text-color($primary-color);
+            }
+
+            &.login-nav-icon {
+                background: $green-color;
+                color: set-text-color($green-color);
+            }
+
+            &:hover {
+                background: $light-color;
+                color: $dark-color;
+            }
+        }
+    }
+}
+
+
+/* 2: SHOWCASE */
+#showcase {
+    color: #fff;
+    background: #333;
+    padding: 2rem;
+    position: relative;
+
+    &:before {
+        content: '';
+        background: url('../img/photo_01.jpeg') no-repeat center center/cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.4;
+    }
+
+    .showcase-container {
+        display: grid;
+        /* We only have one item, but we want to make space for another item */
+        grid-template-columns: repeat(2, 1fr);
+        justify-content: center;
+        align-items: center;
+        height: 50vh;
+    }
+
+    .showcase-content {
+        /* Make text overlap background image with z-index*/
+        z-index: 1;
+
+        p {
+            margin-bottom: 1rem;
+        }
+    }
+}
+
+/* 3: HOMEPAGE ARTICLES */
+// Set to three in a row
+#home-articles .articles-container {
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1rem;
+
+    // > *:first-child, > *:last-child {
+    //     display: grid;
+    //     grid-template-columns: repeat(2, 1fr);
+    //     grid-gap: 1rem;
+    //     align-items: center;
+    //     grid-column: 1 / span 2;
+    // }
+
+    // Overwrite the last child by starting it at position 2
+    // > *:last-child {
+    //     grid-column: 2 / span 2;
+    // }
+}
+
+/* 5: FOOTER */
+#main-footer {
+    background: $dark-color;
+    color: set-text-color($dark-color);
+
+    img {
+        width: 150px;
+    }
+
+    /* Site Links */
+    a {
+        color: #fff;
+    }
+
+    .footer-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 1.5rem;
+
+        input[type='email'] {
+            width: 90%;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+        }        
+
+        /* Subscribe button */
+        input[type='submit'] {
+            width: 90%;
+        }
+
+        /* Target last child with pseudo class */
+        > *:last-child {
+            background: #444;
+            // Span it all the way across (starting at 1st column then going across 4
+            grid-column: 1 / span 4;
+            padding: .5rem;
+            text-align: center;
+            font-size: 0.75rem;
+        }
+    }
+}
+
+
+// Reduce size of logo
+.flag {
+    width: 40px;
+    height: 40px;
+}
+
+
+/* TRANSLATE */
+#translation-grid {
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-rows: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+
+    /* Make the first child (a div) span across the whole first row */
+    > *:first-child {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        grid-gap: 1rem;
+        align-items: center;
+        grid-column: 1 / span 2;
+    }
+}
