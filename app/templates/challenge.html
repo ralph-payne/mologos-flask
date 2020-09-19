@@ -6,38 +6,49 @@
 
 {% block page_content %}
 
-<div id="challenge-table">
-    <form id="challenge-form" action="/challenge" method="POST">
-        <table>
-            <thead>
-                <tr>
-                    <th>Example</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
+<div class="inner-container">
 
-            <tbody>
-                {% for word in list_of_words %}
+    <div id="flag-container">
+        <a href="#"><img src="{{url_for('static', filename='img/flags/en.png')}}" alt="flag-en" class="flag"></a>
+        <a href="#"><img src="{{url_for('static', filename='img/flags/es.png')}}" alt="flag-es" class="flag"></a>
+    </div>
+
+    <div id="challenge-table">
+        <form id="challenge-form" action="/challenge" method="POST">
+            <table>
+                <thead>
                     <tr>
-                        <td>
-                            {{ word.first_half_sentence }}
-                                <input type="hidden" id="target-word" name="target_word" value="{{ target_word }}">
-                                <input type="hidden" id="star-boolean" name="star_boolean" value="0">
-                                <input id="user-guess" name="user_guess" placeholder="Write guess...">
-                            {{ word.second_half_sentence }}
-                        </td>
-                        <!-- <td><a href="http://facebook.com" target="_blank"><i class="fa fa-edit fa-2x"></i></a></td> -->
-                        <td><a href="{{ url_for('main.edit', id=word.id) }}" target="_blank" ><i class="fa fa-edit fa-2x"></i></a></td>                        
-                        <td><a href="#"><i class="fa fa-eye-slash fa-2x"></i></a></td>
-                        <td><a href="#" target="_blank"><i class="fa fa-star fa-2x"></i></a></td>
-                    <tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <button id="submit" class="btn btn-outline-success my-2 my-sm-0" type="submit">Submit</button>
-    </form>
+                        <th>Example</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for word in list_of_words %}
+                        <tr>
+                            <td>
+                                {{ word.first_half_sentence }}
+                                    <input type="hidden" name="word_id" value="{{ word.id }}">
+                                    <input type="hidden" name="target_word" value="{{ word.target_word }}">
+                                    <input type="hidden" name="star_boolean" value="0">
+                                    <input type="hidden" name="eye_boolean" value="0">
+                                    <input id="user-guess" type="text" name="user_guess" placeholder="write guess...">
+                                {{ word.second_half_sentence }}
+                            </td>
+                            <td><a href="{{ url_for('main.edit', id=word.id) }}" target="_blank" ><i class="fa fa-edit fa-2x"></i></a></td>                        
+                            <td><a id="{{ word.id }}-eye-icon" href="#"><i class="fa fa-eye-slash fa-2x" onclick="toggleColor(this)"></i></a></td>
+                            <td><a id="{{ word.id }}-star-icon" href="#" onclick="toggleColor(this)"><i class="fa fa-star fa-2x"></i></a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        <div id="end-btn-div">
+            <button id="submit-btn-challenge" class="btn" type="submit">Submit</button>
+        </div>
+        </form>
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -60,6 +71,27 @@
             return true
         }
     });
+
+</script>
+
+<!-- Script for Changing Color of Star and Eye-->
+<script type="text/javascript">
+
+    function toggleColor(e) {
+        // Remove style if it already has it
+        if (e.classList.contains("icon-selected")) {
+            e.classList.remove("icon-selected");
+            console.log('32')
+        } else {
+            e.classList.add("icon-selected");
+            console.log(3245)
+        }
+    }
+
+    // TODO
+    // Change booleans to 1
+    // <input type="hidden" id="star-boolean" name="star_boolean" value="0">
+    // <input type="hidden" id="eye-boolean" name="eye_boolean" value="0">
 
 </script>
            

@@ -38,55 +38,80 @@ def lookup_api(word):
     try:
         if primary_api_is_oxford:
             oxford = response_oxford.json()
-            print('--- response from Oxford API ---')
-            # print(oxford)
-            print('--- end of response from Oxford API ---')
-
+            print('----')
+            print(oxford)
+            print('----')
             # Loop through to get examples and definitions     
             definitions_list = []
             examples_list = []
 
             # The things that will break the API are if the word doesn't have any examples
             # Or if the word doesn't have any etymology
-            # ginger does not have examples
 
-            # Ginger now works
-            # Messy works because I added try and expect for etymology
-            # house does not work
-            # dolphin does not work
-            # great does not work
+            # house, dolphin, great, cat, comb do not work
 
             for a in oxford['results']:
-                print(f'results: {len(a)}')
+                print('--- stt oxford[results] ---')
+                print(f'results is a list of size: {len(a)}')
+                print(a)
+                print('--- end oxford[results] ---')
                 for b in a['lexicalEntries']:
-                    print(f'Lexical Entries: {len(b)}')
+                    print('--- stt oxford[lexi] ---')
+                    print(b)
+                    print('--- end oxford[lexi] ---')
                     for c in b['entries']:
                         print(f'Entries: {len(c)}')
+                        print('--- stt oxford[ent] ---')
+                        print(c)
+                        print('--- end oxford[ent] ---')
                         for d in c['senses']:
-                            print(f'Senses: {len(d)}')
-                            for e in d['definitions']:
-                                print(f'Definitions: {len(e)}')
-                                print(e)
-                                definitions_list.append(e)
+                            print('opening senses')
+                            print(d)
+                            try:
+                                for e in d['definitions']:
+                                    # print(f'Definitions: {len(e)}')
+                                    print(e)
+                                    definitions_list.append(e)
+                                    print(f'{len(definitions_list)} Definition(s) Added')
+                            except:
+                                pass
+                        # for f in c['defintions']:
+                        #     print('oiasd')
                 
                             # Catch any definitions which don't have examples with try except
-                            try:
-                                for f in d['examples']:
-                                    print(f'Examples: {len(f)}')
-                                    print(f)
-                                    examples_list.append(f['text'])
-                            except:
-                                examples_list = []
+                            # try:
+                            #     for f in d['examples']:
+                            #         print(f'Examples: {len(f)}')
+                            #         print(f)
+                            #         print('10')
+                            #         examples_list.append(f['text'])
+                            #         print(f'{len(examples_list)} Example Added')
+                            # except:
+                            #     print('examples failed (no examples)')
+                            #     examples_list = []
+                            #     examples_list = ['di', 'gi']
+                            #     print(examples_list)
 
             # Anticipate that not all words have an etymology
             try:
                 etymology = oxford['results'][0]['lexicalEntries'][0]['entries'][0]['etymologies'][0]
+                print('12')
             except:
+                print('13')
                 etymology = None
+                etymology = 'na'
+
+            try:
+                pronunciation = oxford['results'][0]['lexicalEntries'][0]['entries'][0]['pronunciations'][0]['phoneticSpelling']
+                print('14')
+            except:
+                print('15')
+                pronunciation = 'oi'
 
             oxford_return_val = {
                 'word': oxford['results'][0]['id'], # str
-                'pronunciation': oxford['results'][0]['lexicalEntries'][0]['entries'][0]['pronunciations'][0]['phoneticSpelling'], # str
+                # 'pronunciation': oxford['results'][0]['lexicalEntries'][0]['entries'][0]['pronunciations'][0]['phoneticSpelling'], # str
+                'pronunciation': pronunciation,
                 'etymology': etymology, # str
                 'definitions': definitions_list, # list
                 'examples': examples_list # list

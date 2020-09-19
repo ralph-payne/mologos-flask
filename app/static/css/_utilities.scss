@@ -8,6 +8,10 @@
     // height: 1000px;
 }
 
+.inner-container {
+    min-height: $min-height;
+}
+
 .page-container {
     display: grid;
     // Split so that the side bar takes us 2/7 of the space

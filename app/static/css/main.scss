@@ -1,0 +1,445 @@
+@import 'config';
+@import 'utilities';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Temp commenting this out because it messes with the page container */
+// html {
+//     /* 100% Height required for Sticky Footer */
+//     height: 100%;
+// }
+
+body {
+    /* Temp commenting this out because it messes with the page container */
+    /* min-height of 100% and grid required for Sticky Footer */
+    // min-height: 100%;
+    // display: grid;
+    // grid-template-rows: 1fr auto;
+
+    font-family: 'Lato', sans-serif;
+    line-height: 1.5;
+    background: $light-color;
+}
+
+// Remove underline from links
+a {
+    color: #333;
+    text-decoration: none;
+}
+
+// Add space after each paragraph
+p {
+    margin: .5rem 0;
+}
+
+// Remove bullet points from list items
+ul {
+    list-style: none;
+}
+
+// Prevent images from stretching beyond their containers
+img {
+    width: 100%;
+}
+
+/* 1: NAVBAR */
+#main-nav {
+    background: $light-color;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+
+    .container {
+        display: grid;
+        grid-template-columns: 4fr 4fr 4fr;
+        padding: 1rem;
+        align-items: center;
+    }
+
+    // Text box for search
+    input[type='search'] {
+        width: 60%;
+        padding: 0.25rem;
+        border-radius: .25rem;
+        margin-bottom: .25rem;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    // Reduce size of logo
+    .logo {
+        width: 180px;
+    }
+
+    ul {
+        justify-self: end;
+        display: flex;
+
+        li {
+            a {
+                padding: 0.75rem;
+                font-weight: bold;
+            }
+        }
+
+        a {
+            &.current {
+                background: $primary-color;
+                color: set-text-color($primary-color);
+            }
+
+            &.login-nav-icon {
+                background: $green-color;
+                color: set-text-color($green-color);
+            }
+
+            &:hover {
+                background: $light-color;
+                color: $dark-color;
+            }
+        }
+    }
+}
+
+
+/* 2: SHOWCASE */
+#showcase {
+    color: #fff;
+    background: #333;
+    padding: 2rem;
+    position: relative;
+
+    &:before {
+        content: '';
+        background: url('../img/photo_01.jpeg') no-repeat center center/cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.4;
+    }
+
+    .showcase-container {
+        display: grid;
+        /* We only have one item, but we want to make space for another item */
+        grid-template-columns: repeat(2, 1fr);
+        justify-content: center;
+        align-items: center;
+        height: 50vh;
+    }
+
+    .showcase-content {
+        /* Make text overlap background image with z-index*/
+        z-index: 1;
+
+        p {
+            margin-bottom: 1rem;
+        }
+    }
+}
+
+/* 3: HOMEPAGE ARTICLES */
+// Set to three in a row
+#home-articles .articles-container {
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1rem;
+
+    // > *:first-child, > *:last-child {
+    //     display: grid;
+    //     grid-template-columns: repeat(2, 1fr);
+    //     grid-gap: 1rem;
+    //     align-items: center;
+    //     grid-column: 1 / span 2;
+    // }
+
+    // Overwrite the last child by starting it at position 2
+    // > *:last-child {
+    //     grid-column: 2 / span 2;
+    // }
+}
+
+/* 5: FOOTER */
+#main-footer {
+    background: $dark-color;
+    color: set-text-color($dark-color);
+
+    img {
+        width: 150px;
+    }
+
+    /* Site Links */
+    a {
+        color: #fff;
+    }
+
+    .footer-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 1.5rem;
+
+        input[type='email'] {
+            width: 70%;
+            padding: 0.25rem;
+            margin-bottom: 0.25rem;
+        }        
+
+        /* Subscribe button */
+        input[type='submit'] {
+            width: 90%;
+        }
+
+        /* Target last child with pseudo class */
+        > *:last-child {
+            background: #444;
+            // Span it all the way across (starting at 1st column then going across 3
+            grid-column: 1 / span 3;
+            padding: .5rem;
+            text-align: center;
+            font-size: 0.75rem;
+        }
+    }
+}
+
+
+// Reduce size of logo
+.flag {
+    width: 40px;
+    height: 40px;
+}
+
+
+/* TRANSLATE */
+#translation-grid {
+    // grid-gap: 1rem;
+    // grid-template-rows: 4fr;
+    // grid-template-columns: repeat(1, 1fr);
+
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
+    // grid-template-columns: repeat(6, 1fr);
+    grid-gap: 1rem;
+
+    > *:first-child {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        grid-gap: 1rem;
+        align-items: center;
+        // grid-column: 1 / span 2;
+    }
+
+    > *:nth-child(3) {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 1rem;
+        align-items: center;
+    }
+
+    > *:last-child {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 1rem;
+        align-items: center;
+        // grid-column: 1 / span 2;
+    }
+
+    /* Make the first child (a div) span across the whole first row */
+    // > *:first-child {
+    //     display: grid;
+    //     grid-template-columns: repeat(1, 1fr);
+    //     grid-gap: 1rem;
+    //     align-items: center;
+    //     grid-column: 1 / span 2;
+    // }
+}
+
+
+/* TABLES */
+#results-table {
+
+    background: yellow;
+
+    table {
+        grid-template-columns: 5fr 5fr 1fr 1fr 1fr;
+        // minmax(300px, 8fr)
+        // minmax(100px, 1fr)
+        // minmax(40px, 1fr);
+
+    }
+
+
+}
+
+#my-words-table table {
+
+        grid-template-columns: 3fr 8fr 1fr 1fr;
+            // minmax(100px, 2fr)
+            // minmax(300px, 4fr)
+            // minmax(40px, 1fr)
+            // minmax(40px, 1fr);
+
+        th,
+        td {
+            padding: 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+}
+
+
+#my-words-foreign table {
+
+    grid-template-columns: 6fr 6fr 1fr 1fr;
+    // minmax(100px, 2fr)
+    // minmax(300px, 4fr)
+    // minmax(40px, 1fr)
+    // minmax(40px, 1fr);
+
+    th,
+    td {
+        padding: 15px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+}
+
+// All Tables
+table {
+
+    min-height: 702px;
+    display: grid;
+    border-collapse: collapse;
+    min-width: 100%;
+    margin-bottom: 1rem;
+    padding-bottom: 3rem;
+
+    thead,
+    tbody,
+    tr {
+        display: contents;
+    }
+
+    thead {
+        // vertical-align: bottom;
+        vertical-align: middle;
+    }   
+
+    th {
+        position: sticky;
+        top: 0;
+        background: $secondary-color;
+        color: set-text-color($secondary-color);
+        text-align: left;
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+
+    th:last-child {
+        border: 0;
+    }
+
+    td {
+        /* Vertical Align doesn't seem to be doing anything */
+        vertical-align: middle;
+        // text-align: center;
+        /* Bootstrap table - td */
+        padding: 0.25rem .75rem;
+        border-top: 1px solid #dee2e4;
+    }
+
+    /* Alternate rows shaded */
+    tr:nth-child(even) td {
+        background: #f8f6ff;
+    }
+
+}
+
+
+/* CHALLENGE PAGE */
+.flag {
+    width: 40px;
+    height: 40px;
+}
+
+    
+#challenge-table form table {
+
+    grid-template-columns: 13fr 1fr 1fr 1fr;
+        // minmax(300px, 8fr)
+        // minmax(100px, 1fr)
+        // minmax(40px, 1fr);
+
+    /* Text */
+    input[type='text'] {
+        width: 100px;
+        padding: 0.25rem;
+        border-radius: .25rem;
+        margin-bottom: .25rem;
+    }
+
+}
+
+/* Stars and Eye Symbol */
+.icon-selected {
+    color: $secondary-color;
+}
+
+#submit-btn-challenge, #next-btn-challenge {
+    cursor: pointer;
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+    background: $green-color;
+}
+
+#end-btn-div {
+    /* Use Flexbox to center button */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+}
+
+/* EDIT PAGE */
+#edit-example {
+    min-width: 500px;
+    border: 1px solid #888;
+    outline: none;
+    resize: none;
+    overflow: auto;
+}
+
+/* DEFINITION PAGE */
+    // Text box for search
+#definition-example{
+
+    textarea {
+        text-rendering: auto;
+        letter-spacing: normal;
+        word-spacing: normal;
+        text-transform: none;
+        text-indent: 0px;
+        text-shadow: none;
+        display: inline-block;
+        text-align: start;
+        appearance: textarea;
+        resize: auto;
+        cursor: text;
+        margin: 0rem;
+        border-width: 2px;
+        border-style: solid;
+        padding: 2px;
+        width: 600px;
+        height: 100px;
+    }
+}

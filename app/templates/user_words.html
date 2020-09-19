@@ -6,10 +6,41 @@
 
 {% block page_content %}
 
-    <h1>User Words</h1>
+    <div id="flag-container">
+        <a href="{{ url_for('main.my_words', lang='eng') }}"><img src="{{url_for('static', filename='img/flags/en.png')}}" alt="flag-en" class="flag"></a>
+        <a href="{{ url_for('main.my_words', lang='spa') }}"><img src="{{url_for('static', filename='img/flags/es.png')}}" alt="flag-es" class="flag"></a>
+        <a href="{{ url_for('main.my_words', lang='por') }}"><img src="{{url_for('static', filename='img/flags/es.png')}}" alt="flag-es" class="flag"></a>
+        <a href="{{ url_for('main.my_words', lang='ger') }}"><img src="{{url_for('static', filename='img/flags/es.png')}}" alt="flag-es" class="flag"></a>
+    </div>
 
     <!-- TODO => Write logic which displays message if there are no words to display -->
 
+    {% if language %}
+    <div id="my-words-foreign">
+        <table>
+            <thead>
+                <tr>
+                    <th>English</th>
+                    <th>{{ language }}</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+        
+            <tbody>
+                {% for word in words %}            
+                    <tr>
+                        <td><a href="{{ url_for('main.define', word=word.input) }}">{{ word.input }}</a></td>
+                        <td>{{ word.output }}</td>
+                        <td><a href="{{ url_for('main.edit', id=word.id) }}"><i class="fa fa-edit fa-2x"></i></a></td>
+                        <td><a href="{{ url_for('main.delete', id=word.id) }}"><i class="fa fa-trash fa-2x"></i></a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
     <div id="my-words-table">
         <table>
             <thead>
@@ -33,8 +64,17 @@
             </tbody>
         </table>
     </div>
+    {% endif %}
 
 {% endblock %}
+
+/*
+created = db.Column(db.DateTime, default=datetime.utcnow)
+source_language = db.Column(db.String(2))
+destination_language = db.Column(db.String(2))
+input = db.Column(db.Text())
+output = db.Column(db.Text())
+*/
 
 <!-- All Text Below are Comments and Notes -->
 Schema: (For Reference)

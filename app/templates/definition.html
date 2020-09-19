@@ -5,11 +5,7 @@
 {% endblock %}
 
 {% block page_content %}
-
-    <form class="form-inline my-2 my-lg-0" action="/definition" method="POST">
-        <input name="word-to-lookup" class="form-control mr-sm-2" type="search" placeholder="Find another word" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+<div class="inner-container">
 
     <form action={{ url_for('main.add', word=word.word) }} method="POST">
     {% if word %}
@@ -44,21 +40,21 @@
             <h2>Etymology</h2>
             <p>{{ word.etymology }}</p>
         {% endif %}
-        
-        {% if source %}
-            <h2>Source</h2>
-            <p>{{ source }}</p>
-        {% endif %}
+    
+            <!-- <h2>Source</h2>
+            <p>{{ source }}</p> -->
+            
 
         </hr>
-            <div class="form-group">
-                <label for="area-2">My Example</label>
-                <textarea name="user-example" class="form-control" id="area-2" rows="2"></textarea>
+            <h4>My Example</h4>
+            <div id="definition-example">
+                
+                <textarea type="text" name="user-example" class="form-control" id="area-2" rows="2"></textarea>
             </div>
 
             <button class="btn btn-primary" type="submit">Add to my dictionary</button>
         </form>
 
     {% endif %}
-           
+</div>
 {% endblock %}

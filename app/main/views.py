@@ -36,24 +36,32 @@ def add():
         db.session.commit()
 
         # Temp redirect to homepage after saving word in database
-        return redirect(url_for('main.my_words'))
+        return redirect(url_for('main.my_words', lang='eng'))
     
     else:
         return render_template('user.html', name=name)
 
 
-# Return the user's example
-@main.route('/my_words', methods=['GET'])
-def my_words():
+# Return the user's examples and translated words
+@main.route('/my_words/<lang>', methods=['GET'])
+# Options for languages: 'eng', 'spa', 'por', 'ger'
+def my_words(lang):
     user_id = current_user.id
 
-    # Read all the entries for that user
-    words = UserExample.query.filter_by(user_id=user_id).all()
-    # TODO => Check if this is necessary or should I use engine.dispose or does it close automatically?
-    # https://stackoverflow.com/questions/21738944/how-to-close-a-sqlalchemy-session
-    db.session.close()
+    if (lang == 'eng'):
+        language = 0
+    else:
+        language = lang
 
-    return render_template('user_words.html', words=words)
+    if language == 0:
+        # Read all the entries for that user
+        words = UserExample.query.filter_by(user_id=user_id).all()
+    else:
+        # Read all the entries for that user
+        # Filter on the language as well
+        words = UserTranslation.query.filter_by(user_id=user_id).all()
+
+    return render_template('user_words.html', words=words, language=language)
 
 
 @main.route('/delete<id>', methods=['GET'])
@@ -68,10 +76,9 @@ def delete(id):
         # Hard delete data
         UserExample.query.filter_by(id=id).delete()
         db.session.commit()
-        db.session.close()     
  
         # Return to same page
-        return redirect(url_for('main.my_words'))
+        return redirect(url_for('main.my_words', lang='eng'))
 
 
 # TODO => think about what the best dynamic route would look like
@@ -80,22 +87,18 @@ def edit(id):
     if request.method == 'POST':
         # Get value from form
         updated_example = request.form.get('edited-example') 
-        print(updated_example)
         last_modified = datetime.utcnow()
 
         # Update by ID
         UserExample.query.filter_by(id=id).update({'example': updated_example})
         db.session.commit()
-        db.session.close()
 
-        # redirect to read (User List)
-        return redirect(url_for('main.my_words'))
+        # Redirect to User List
+        return redirect(url_for('main.my_words', lang='eng'))
 
-    # Get request (Select from db)
-    else:      
+    else: # GET    
         # Lookup the value from the db
         word = UserExample.query.filter_by(id=id).first()
-        db.session.close()
 
         return render_template('edit.html', word=word)
 
@@ -103,7 +106,7 @@ def edit(id):
 # Create route with a dynamic component
 @main.route('/definition/<word>')
 def define(word):
-    # Use helper function (helpers.py) to look up word in database dictionary    
+    # Use helper function (found in helpers.py) to look up word in database dictionary    
     local_dictionary_res = lookup_db_dictionary(word)
 
     if local_dictionary_res is not None:
@@ -117,7 +120,7 @@ def define(word):
         # Return a cannot find if it couldn't be found
         if api_return_val is None:
             flash(f'{word} was not found')
-            # TODO => change logic to render a "did you mean X" page (Nice to Have Feature)
+            # TODO => change logic to render a "did you mean X" page (Nice to Have Version2 Feature)
             # TODO => get rid of the word in the url parameters as well
 
         else:
@@ -149,22 +152,16 @@ def define(word):
         return render_template('definition.html', word=api_return_val, source='API')
 
 
-@main.route('/definition', methods=['GET', 'POST'])
+@main.route('/definition', methods=['POST'])
 def lookup():
     if request.method == 'POST':
         # TODO => parse the word
         word_to_lookup = request.form.get('word-to-lookup')
-
         return redirect(url_for('main.define', word=word_to_lookup))
-
-    # TODO => Check if I actually need this route??
-    else:
-        return render_template('definition.html')
 
 
 @main.route('/profile', methods=['GET'])
 def profile():
-    # current_user is imported from flask_login
     return render_template('user_profile.html', user=current_user)
 
 
@@ -172,53 +169,60 @@ def profile():
 def challenge():
     user_id = current_user.id
     if request.method == 'POST':
-        # If the request.form contains user_guess, it means that the user has clicked on the submit button.
-        if ('user_guess' in request.form):          
-            # Retrieve the target word (hidden input) and user_guess from the form
-            user_guess = request.form.get('user_guess')
-            target_word = request.form.get('target_word')
-            attempts = int(request.form.get('attempts'))
-            star_boolean = int(request.form.get('star_boolean'))
+        # Convert Immutable Dict into list
+        word_ids = request.form.getlist('word_id')
+        target_words = request.form.getlist('target_word')
+        stars = request.form.getlist('star_boolean')
+        skips = request.form.getlist('eye_boolean')
+        guesses = request.form.getlist('user_guess')
 
-            # Compare with hidden input
-            if user_guess == target_word:
-                flash('Correct')
-                metadata = UserExample.query.filter_by(user_id=user_id, word=target_word).first()
-                # Add to the skip column in the database
+        size = len(word_ids)
+
+        # Declare empty list to store results
+        results = []
+
+        for i in range(size):
+            result_bool = 1 if target_words[i].lower() == guesses[i].lower() else 0
+
+            # Create dictionary
+            result_dict = {
+                'id': word_ids[i], 
+                'target_word': target_words[i],
+                'starred': stars[i],
+                'skipped': skips[i],
+                'user_guess': guesses[i],
+                'result': result_bool
+            }
+            results.append(result_dict)
+
+            # Query database
+            metadata = UserExample.query.filter_by(user_id=user_id, word=target_words[i]).first()
+
+            # Update database
+            # TODO
+            if (result_bool):
                 metadata.success = UserExample.success + 1
-
-                # If the user has pressed star, toggle the boolean to True in the db
-                if (star_boolean):
-                    metadata.starred = 1
-                if (attempts):
-                    metadata.fail = UserExample.fail + attempts
-                db.session.commit()
-                
             else:
-                # The checking is done on the client side (with JavaScript event listener) so this should never get to this stage
-                return render_template('500.html', dev_text='error')
+                metadata.fail = UserExample.fail + 1
 
-        # If the request.form does not contain user_guess, it means that the user has clicked on the skip button
-        else:
-            # Retrieve data from hidden input
-            target_word = request.form.get('target_word_skipped')
-            # Update by ID and word
-            metadata = UserExample.query.filter_by(user_id=user_id, word=target_word).first()
-            # Add to the skip column in the database
-            metadata.skip = UserExample.skip + 1
+            if (skips[i]):
+                metadata.skip = 1
+
+            if (stars[i]):
+                metadata.starred = 1
+
             db.session.commit()
 
-        # Regardless of what button the user pressed, the next page should be another challenge
-        return redirect(url_for('main.challenge'))
+        return render_template('results.html', list_of_results=results)
 
     # GET
     else:
         # Read all the entries for that user
         words = UserExample.query.filter_by(user_id=user_id).all()
         # TODO => Check if you should db.commit or not
-        db.session.close()
 
-        max = 1
+        # Declare variable to hold maximum number of questions for Challenge page
+        max = 0
 
         if (len(words) == 0):
             flash('You have no words in your dictionary')
@@ -229,10 +233,11 @@ def challenge():
         else:
             max = len(words)
 
+        # Declare list which will hold dictionaries of each word
         list_of_words = []
 
-        # Start loop
-        for i in range(max):
+        # Start loop and add words until the list is at the maximum size
+        while len(list_of_words) < max:
             word = random.choice(words)
             # TODO => check if this word is already in the list chosen
 
@@ -258,6 +263,9 @@ def challenge():
                     'second_half_sentence': second_half_sentence
                 }
 
+                # Remove word from list 1 (bucket) to avoid duplicates
+                words.remove(word)
+
                 # Append to list of words
                 list_of_words.append(word_dict)
 
@@ -266,29 +274,6 @@ def challenge():
                 pass
 
         return render_template('challenge.html', list_of_words=list_of_words)
-
-
-# Define temp routes to see how the local dictionary is storing words
-@main.route('/admin_words', methods=['GET'])
-def admin_words():
-    words = Word.query.all()
-    return render_template('user_words.html', words=words)
-
-@main.route('/admin_dictionary_examples', methods=['GET'])
-def admin_dictionary_examples():
-    examples = DictionaryExample.query.all()
-    return render_template('user_words.html', words=examples)
-
-@main.route('/admin_user_examples', methods=['GET'])
-def admin_user_examples():
-    examples = UserExample.query.all()
-    return render_template('user_words.html', words=examples)
-
-@main.route('/admin_definitions', methods=['GET'])
-def admin_definitions():
-    definitions = Definition.query.all()
-    return render_template('user_words.html', words=definitions)
-# -------- end of temp routes ---
 
 
 @main.route('/translate', methods=['GET', 'POST'])
@@ -315,7 +300,6 @@ def translate():
         # User is trying to save phrase
         else:
             output = request.form.get('translation-result')
-            print(request.form)
             # Save to database
 
             # hardcode while test database
@@ -324,7 +308,7 @@ def translate():
             output = request.form.get('translation_result')
             
             # temp hardcoding id
-            user_id = 325458
+            user_id = current_user.id
             # user_id = current_user.id
             if request.form.get('comment'):
                 comment = request.form.get('comment')
@@ -342,7 +326,7 @@ def translate():
         return render_template('translate.html')
         # If it's the translation form, call the translate helper
 
-        # If it's the edit the translation page, this is done on the front-end through a JavaScript event handler
+        # If it's the edit to the translation page, this is done on the front-end through a JavaScript event handler
 
         # If it's the add to dictionary form, add the translation to the databse
 
@@ -352,29 +336,26 @@ def translate():
     else:
         return render_template('translate.html')
 
-# TEMP REF User Translation Model
-# class UserTranslation(db.Model):
-#     __tablename__ = 'user_translation'
-#     id = db.Column(db.Integer, primary_key=True)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-#     source_language = db.Column(db.String(2))
-#     destination_language = db.Column(db.String(2))
-#     input = db.Column(db.Text())
-#     output = db.Column(db.Text())
-#     comment = db.Column(db.Text())
+# -------- start of temp routes ---------- #
+# Define temp routes to see how the local dictionary is storing words
+@main.route('/admin_words', methods=['GET'])
+def admin_words():
+    words = Word.query.all()
+    return render_template('user_words.html', words=words)
 
-#     created = db.Column(db.DateTime, default=datetime.utcnow)
-#     success = db.Column(db.Integer, default=0)
-#     fail = db.Column(db.Integer, default=0)
-#     skip = db.Column(db.Integer, default=0)
-#     # Level is used to determine the probablity of the user seeing the word on the Challenge
-#     level = db.Column(db.Integer, default=0)
-#     deleted = db.Column(db.Boolean, default=0)
-#     ignored = db.Column(db.Boolean, default=0)
-#     starred = db.Column(db.Boolean, default=0)
+@main.route('/admin_dictionary_examples', methods=['GET'])
+def admin_dictionary_examples():
+    examples = DictionaryExample.query.all()
+    return render_template('user_words.html', words=examples)
 
-#     def __init__(self, word, example, user_id):
-#         self.word = word
-#         self.example = example
-#         self.user_id = user_id
+@main.route('/admin_user_examples', methods=['GET'])
+def admin_user_examples():
+    examples = UserExample.query.all()
+    return render_template('user_words.html', words=examples)
+
+@main.route('/admin_definitions', methods=['GET'])
+def admin_definitions():
+    definitions = Definition.query.all()
+    return render_template('user_words.html', words=definitions)
+# -------- end of temp routes ---------- #

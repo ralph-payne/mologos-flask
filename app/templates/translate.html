@@ -6,75 +6,73 @@
 
 {% block page_content %}
 
-    <div class="container">
-      <h1>Translate text</h1>
-      <p>This simple web app uses Azure for text translation, text-to-speech conversion, and sentiment analysis of input text and translations. Learn more about <a href="https://docs.microsoft.com/azure/cognitive-services/">Azure Cognitive Services</a>.
-      </p>
-      <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <form action="{{ url_for('main.translate') }}" method="POST">
-            <div class="row">
-                <div class="col-6">
-                    <div class="form-group">
-                        <label for="select-language"><strong>Translate to:</strong></label>
-                        <select class="form-control" name="select_language" id="select-language">
-                        <option value="de">German</option>
-                        <option value="it">Italian</option>
-                        <option value="pt" selected>Portuguese</option>
-                        <option value="es">Spanish</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-      <div class="row">
+<div class="inner-container">
+    <div id="translation-grid">
 
-            <div class="col">
+        <div>
+            <h1>Translate text</h1>
+            <p>This simple web app uses Azure for text translation, text-to-speech conversion, and sentiment analysis of input text and translations. Learn more about <a href="https://docs.microsoft.com/azure/cognitive-services/">Azure Cognitive Services</a>.
+            </p>
+            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
 
-                <!-- Enter text to translate. -->
+        <div>
+            <form action="{{ url_for('main.translate') }}" method="POST">
                 <div class="form-group">
-                <label for="text-to-translate"><strong>Enter the text you'd like to translate:</strong></label>
-                {% if input %}
-                <textarea class="form-control" id="text-to-translate" name="text_to_translate" rows="5">{{ input }}</textarea>
-                {% else %}
-                <textarea class="form-control" id="text-to-translate" name="text_to_translate" rows="5"></textarea>
-                {% endif %}
+                    <label for="select-language"><strong>Translate to:</strong></label>
+                    <select class="form-control" name="select_language" id="select-language">
+                    <option value="de">German</option>
+                    <option value="it">Italian</option>
+                    <option value="pt" selected>Portuguese</option>
+                    <option value="es">Spanish</option>
+                    </select>
                 </div>
-                <!-- Select output language here. -->
+        </div>
 
-                <button type="submit" class="btn btn-primary mb-2" id="translate">Translate text</button></br>
-            </form>
-            <!-- Translated text returned by the Translate API is rendered here. -->
-            </div>
-
-            <div class="col">
-                <form action="{{ url_for('main.translate') }}" method="POST">
-                    <div class="form-group" id="translator-text-response">
-                    <label for="translation-result"><strong>Translated text:</strong></label>
-                    {% if output %}
-                    <input type="hidden" name="src_hidden_input" value="{{ input }}">
-                    <textarea readonly class="form-control" name="translation_result" id="translation-result" rows="5">{{ output }}</textarea>
+        <div>
+                <div>
+                    {% if input %}
+                    <textarea class="form-control" id="text-to-translate" name="text_to_translate" rows="5">{{ input }}</textarea>
                     {% else %}
-                    <textarea readonly class="form-control" name="translation_result" id="translation-result" rows="5"></textarea>
+                    <textarea class="form-control" id="text-to-translate" name="text_to_translate" rows="5"></textarea>
                     {% endif %}
-                    </div>
-                <button type="submit" class="btn btn-primary mb-2" id="edit-translation-btn">Edit this translation</button>
-                <button type="submit" class="btn btn-primary mb-2">Add to My Dictionary</button>
-                <button type="submit" class="btn btn-primary mb-2" id="add-comment-btn">Add a Comment</button>
-                
-            </div>
-
-        </div>
-
-        <div id="comment-box" class="row" style="display: none">
-            <div class="col-6 offset-6">
-                <div class="form-group">
-                    <label for="text-to-translate"><strong>Enter a Comment:</strong></label>
-                    <textarea class="form-control" id="comment" name="comment" rows="5"></textarea>
                 </div>
+                <div>
+                    <button type="submit" class="btn btn-primary mb-2" id="translate">Translate text</button>
+                </div>
+            </form>
+        <!-- Translated text returned by the Translate API is rendered here. -->
+
+            <div>
+                <form action="{{ url_for('main.translate') }}" method="POST">
+                    <div id="translator-text-response">
+                        {% if output %}
+                        <input type="hidden" name="src_hidden_input" value="{{ input }}">
+                        <textarea readonly class="form-control" name="translation_result" id="translation-result" rows="5">{{ output }}</textarea>
+                        {% else %}
+                        <textarea readonly class="form-control" placeholder="Translation" name="translation_result" id="translation-result" rows="5"></textarea>
+                        {% endif %}
+                    </div>
             </div>
         </div>
-                <!-- End of 2nd Form, which is extended to capture any comments -->
-                </form>
+
+        <div>
+            <button type="submit" class="btn btn-primary mb-2" id="edit-translation-btn">Edit this translation</button>
+            <button type="submit" class="btn btn-primary mb-2">Add to My Dictionary</button>
+            <button type="submit" class="btn btn-primary mb-2" id="add-comment-btn">Add a Comment</button>
+        </div>
+        
+        <!-- <div id="comment-box" class="row" style="display: none">
+            <div class="form-group">
+                <label for="text-to-translate"><strong>Enter a Comment:</strong></label>
+                <textarea class="form-control" id="comment" name="comment" rows="5"></textarea>
+            </div>
+        </div> -->
+        <!-- End of 2nd Form, which is extended to capture any comments -->
+        </form>
+    
     </div>
+</div>
 
 <script type="text/javascript">
 
