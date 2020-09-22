@@ -12,7 +12,7 @@
             <thead>
                 <tr>
                     <th>Word</th>
-                    <th>Example</th>
+                    <th>Your Answer</th>
                     <th>3</th>
                     <th>4</th>
                     <th>5</th>                  
@@ -22,17 +22,22 @@
             <tbody>
                 {% for result in list_of_results %} 
                     <tr>
+                        {% if english_view %} 
                         <td><a href="{{ url_for('main.define', word=result.target_word) }}">{{ result.target_word }}</a></td>
-                        <td>{{ result.user_guess }}</td>
+                        {% else %}
+                        <td> {{ result.target_word }} </td>
+                        {% endif %}
+
+                        <td> {{ result.user_guess }} </td>
 
                         {% if result.result %}
-                            <td><i class="fa fa-check fa-2x"></i></td>
+                        <td><i class="fa fa-check fa-2x"></i></td>
                         {% else %}
-                            <td><i class="fa fa-times fa-2x"></i></td>
+                        <td><i class="fa fa-times fa-2x"></i></td>
                         {% endif %}
 
                         <td><a href="{{ url_for('main.edit', id=result.id) }}"><i class="fa fa-edit fa-2x"></i></a></td>
-                        <td><a href="{{ url_for('main.delete', id=result.id) }}"><i class="fa fa-trash fa-2x"></i></a></td>
+                        <td><a href="{{ url_for('main.delete', id=result.id, lng=lng) }}"><i class="fa fa-trash fa-2x"></i></a></td>
 
                     </tr>
                 {% endfor %}
@@ -40,21 +45,8 @@
         </table>
 
         <div id="end-btn-div">
-            <a href="{{ url_for('main.challenge') }}" id="next-btn-challenge" class="btn">Next</a>
+            <a href="{{ url_for('main.challenge', lng=lng) }}" id="next-btn-challenge" class="btn">Next</a>
         </div>
     </div>
 
 {% endblock %}
-
-<!-- All Text Below are Comments and Notes -->
-Schema: (For Reference)
-result_dict = {
-    'id': word_ids[i], 
-    'target_word': target_words[i],
-    'starred': stars[i],
-    'skipped': skips[i],
-    'user_guess': guesses[i],
-    'result': result_bool
-}
-
-

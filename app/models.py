@@ -112,7 +112,7 @@ class UserTranslation(db.Model):
     fail = db.Column(db.Integer, default=0)
     skip = db.Column(db.Integer, default=0)
 
-    # Level is used to determine the probablity of the user seeing the word on the Challenge
+    # Level is used to determine the probablity of the user seeing the word on the Challenge Page
     level = db.Column(db.Integer, default=0)
     deleted = db.Column(db.Boolean, default=0)
     ignored = db.Column(db.Boolean, default=0)
@@ -139,6 +139,8 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     confirmed = db.Column(db.Boolean, default=False)
     is_admin = db.Column(db.Boolean, default=False)
+    lng_preferred = db.Column(db.String(3))
+    lng_recent = db.Column(db.String(3))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

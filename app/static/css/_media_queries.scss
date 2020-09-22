@@ -1,0 +1,14 @@
+.min-height {
+    min-height: 650px;
+
+    @media screen and ( max-height: 600px ) {
+        background: blue;
+        min-height: 400px;
+    }
+
+    @media screen and ( max-height: 400px ) {
+        background: green;
+    }
+
+}
+

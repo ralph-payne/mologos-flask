@@ -52,10 +52,17 @@ def logout():
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
+
+    foo = form.validate_on_submit()
+    print('000')
+    print(foo)
+
     if form.validate_on_submit():
+        print('123')
+        print(form)
         user = User(email=form.email.data.lower(),
                     username=form.username.data,
-                    password=form.password.data)
+                    password=form.password1.data)
         db.session.add(user)
         db.session.commit()
         token = user.generate_confirmation_token()
@@ -63,8 +70,8 @@ def register():
                    'auth/email/confirm', user=user, token=token)
         flash('A confirmation email has been sent to you by email.')
         return redirect(url_for('auth.login'))
-    return render_template('auth/register.html', form=form)
 
+    return render_template('auth/register.html', form=form)
 
 
 @auth.route('/confirm/<token>')
@@ -80,9 +87,6 @@ def confirm(token):
     return redirect(url_for('main.index'))
 
 
-
-
-
 @auth.route('/confirm')
 @login_required
 def resend_confirmation():
@@ -91,7 +95,6 @@ def resend_confirmation():
             'auth/email/confirm', user=current_user, token=token)
     flash('A new confirmation email has been sent to you by email.')
     return redirect(url_for('main.index'))
-
 
 
 @auth.route('/change-password', methods=['GET', 'POST'])

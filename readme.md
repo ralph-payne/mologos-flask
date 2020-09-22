@@ -1,6 +1,6 @@
 **Notes are stored in zz-notes**
 ## Quick Start
-venv; scss-compile app/static/css/main.scss; flask run
+p43; venv; scss-compile app/static/css/main.scss; flask run
 
 ## Mologos Project Description
 - Flask Web application that allows users to find definitions of words and then upload their own example sentences containing the defined word
@@ -27,3 +27,9 @@ a) You tell us how important the word is (by assigning it a star or an unwatch).
 - HTML5
 - Bootstrap
 - Sass / CSS
+
+## Reminder on how to do a db migration
+(venv) $ flask db stamp head
+(venv) $ flask db migrate -m "Update user model with preferred lng and recent lng"
+(venv) $ flask db upgrade
+^^ You need to do stamp head or you will probably get 'Error: Target database is not up to date' ^^

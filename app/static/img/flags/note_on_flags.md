@@ -1,0 +1,1 @@
+UK and German flags have been resized to fit 3:2 ratio

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Mologos
+    Homepage
 {% endblock %}
 
 {% block page_content %}
@@ -24,41 +24,37 @@
     <div class="container">
         <div class="articles-container">
 
-            <article class="card">
+            <article class="card p-1">
                 <img src="{{ url_for('static', filename='img/articles/ent1.jpg') }}" alt="">
                 <div>
-                    <div class="category category-ent">Entertainment</div>
                     <h3>
                         <a href="article.html">Store definitions of words</a>
                     </h3>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla quam eius ducimus optio veniam sit nihil beatae ea autem. Doloribus.</p>
+                    <p>Take advantage of our partnership with Merriam-Webster to search a database of 275,000 words</p>
                 </div>
             </article>
 
-            <article class="card bg-dark">
-                <div class="category category-sports">Sports</div>
+            <article class="card p-1 bg-dark">
                 <h3>
-                    <a href="article.html">Find translations in Spanish and Portuguese</a>
+                    <a href="article.html">Find translations in foreign languages</a>
                 </h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla quam eius ducimus optio veniam sit nihil beatae ea autem. Doloribus.</p>
+                <p>Find expressions in German, Italian, Portuguese and Spanish!</p>
                 <img src="{{ url_for('static', filename='img/articles/ent1.jpg') }}" alt="">
             </article>
 
-            <article class="card">
+            <article class="card p-1">
                 <img src="{{ url_for('static', filename='img/articles/tech1.jpg') }}" alt="">
-                <div class="category category-tech">Technology</div>
                 <h3>
                     <a href="article.html">Create your own examples</a>
                 </h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla quam eius ducimus optio veniam sit nihil beatae ea autem. Doloribus.</p>
+                <p>Personalise your own dictionary by adding your own sentences or using the ones provided by our database</p>
             </article>
 
-            <article class="card">
-                <div class="category category-sports">Sports</div>
+            <article class="card p-1">
                 <h3>
                     <a href="article.html">Test yourself and design memory games!</a>
                 </h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla quam eius ducimus optio veniam sit nihil beatae ea autem. Doloribus.</p>
+                <p>Use our algorithm which intelligently picks questions based on the statastics of your past performances</p>
                 <img src="{{ url_for('static', filename='img/articles/sports1.jpg') }}" alt="">
             </article>                    
 

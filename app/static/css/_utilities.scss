@@ -1,5 +1,10 @@
 // Utilities
 
+#main-container {
+    width: 100%;
+    min-height: 950px;
+}
+
 .container {
     max-width: $max-width;
     margin: auto;
@@ -30,6 +35,7 @@
     padding: 0.5rem 1.5rem;
     // Add curves
     border-radius: .25rem;
+    cursor: pointer;
 
     &-light {
         background: $light-color;
@@ -59,4 +65,52 @@
 
     // It doesn't matter what color it is, it will just give an effect of making it more transparent
     &:hover { opacity: 0.9; }
+}
+
+/* Padding and Margins */
+// Padding
+.py-1 { padding: 1.5rem 0 }
+.py-2 { padding: 2rem 0 }
+.py-3 { padding: 3rem 0 }
+.p-1 { padding: 1.5rem }
+.p-2 { padding: 2rem }
+.p-3 { padding: 3rem }
+
+
+/* Flash Messages */
+
+// Adapted from Boostrap Alerts
+.flash-msg {
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .15rem;
+
+    text-align: center
+}
+
+// Boostrap utilities
+.items-center {
+    justify-content: center;
+}
+/* 
+Todo - change colors from standard Boostrap to fit the color palette of the site
+*/
+.flash-primary {
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+}
+
+.flash-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.flash-danger {
+    color: red;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
 }

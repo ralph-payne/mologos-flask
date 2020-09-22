@@ -25,34 +25,32 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">  
 </head>
 
+<!-- Body -->
+<body>
+<div id="main-container">
 <!-- 1: NAVBAR -->
 <nav id="main-nav">
     <div class="container">
         <a href="{{ url_for('main.index') }}">
             <img src="{{url_for('static', filename='img/08_mologos_blue_550x160.png')}}" alt="logo" class="logo"></a>
-        <span>
-            <form class="form-inline my-2 my-lg-0" action="/definition" method="POST">
-                <input name="word-to-lookup" type="search" placeholder="Find another word" aria-label="Search">
-                <!-- <button class="btn" type="submit">Search</button> -->
-
-                <!-- <a href="#"><i class="fa fa-search"></i></a> -->
-
-                <button type="submit" class="btn btn-success">
+        <div class="flex-container items-center">
+        <!-- <div> -->
+            <form action="/definition" method="POST">
+                <input id="nav-search-bar" name="word-to-lookup" type="search" placeholder="Look up a definition..." aria-label="Search">
+                <button id="nav-btn" type="submit" class="btn">
                     <i class="fa fa-search"></i>
                 </button>
-
-                <!-- TODO - Make the font awesome icon act as the submit button -->
-                <!-- <a href="#" target="_blank"><i class="fa fa-search fa-2x"></i></a> -->
             </form>            
             
-        </span>
+        </div>
         <ul>
             <!-- Create active links through preferably Flask and Jinja. If you can't, then use JavaScript -->
             <!-- <li><a class="current" href="{{ url_for('main.index') }}">Home</a></li> -->
             {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('main.my_words', lang='eng') }}">List</a></li>
-                <li><a href="{{ url_for('main.challenge') }}">Challenge</a></li>
+                <li><a href="{{ url_for('main.my_words', lng='en') }}">List</a></li>
+                <li><a href="{{ url_for('main.challenge', lng='en') }}">Challenge</a></li>
                 <li><a href="{{ url_for('main.translate') }}">Translate</a></li>
+                <li><a href="{{ url_for('auth.logout') }}"><i class="fa fa-sign-out-alt"></i></a></td>
             {% else %}
                 <li><a class="login-nav-icon" href="{{ url_for('auth.login') }}">Login</a></li>
             {% endif %}
@@ -60,13 +58,14 @@
     </div>
 </nav>
 
-
+<!-- 2: MAIN PAGE -->
 <div>
-    <!-- Flash Messages -->
     {% block content %}
+        <!-- 3: Flash Messages -->
         <div class="container">
             {% for message in get_flashed_messages() %}
-                <div class="alert alert-warning">
+                
+                <div class="flash-msg flash-danger">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     {{ message }}
                 </div>
@@ -74,8 +73,8 @@
         </div>
     {% endblock %}
 
-    <div class="container">
-        <!-- Page Content -->
+    <!-- 4: Page Content -->
+    <div class="container min-height">
         {% block page_content %}
         {% endblock %}
     </div>
@@ -127,5 +126,6 @@
 {% block scripts %}
 {{ moment.include_moment() }}
 {% endblock %}
-
+</div>
+</body>
 </html>

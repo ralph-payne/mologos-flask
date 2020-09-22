@@ -9,46 +9,75 @@
 <div class="inner-container">
 
     <div id="flag-container">
-        <a href="#"><img src="{{url_for('static', filename='img/flags/en.png')}}" alt="flag-en" class="flag"></a>
-        <a href="#"><img src="{{url_for('static', filename='img/flags/es.png')}}" alt="flag-es" class="flag"></a>
+        <a href="{{ url_for('main.challenge', lng='en') }}"><img src="{{url_for('static', filename='img/flags/en.png')}}" alt="flag-en" class="flag"></a>
+        <a href="{{ url_for('main.challenge', lng='es') }}"><img src="{{url_for('static', filename='img/flags/es.png')}}" alt="flag-es" class="flag"></a>
+        <a href="{{ url_for('main.challenge', lng='de') }}"><img src="{{url_for('static', filename='img/flags/de.png')}}" alt="flag-de" class="flag"></a>
+        <a href="{{ url_for('main.challenge', lng='it') }}"><img src="{{url_for('static', filename='img/flags/it.png')}}" alt="flag-it" class="flag"></a>
+        <a href="{{ url_for('main.challenge', lng='pt') }}"><img src="{{url_for('static', filename='img/flags/pt.png')}}" alt="flag-pt" class="flag"></a>
     </div>
 
-    <div id="challenge-table">
-        <form id="challenge-form" action="/challenge" method="POST">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Example</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for word in list_of_words %}
+    {% if words %}
+        {% if english_view %}<div id="challenge-table-en">{% else %}<div id="challenge-table-foreign">{% endif %}
+            <form id="challenge-form" action="/challenge/{{lng}}" method="POST">
+                <table>
+                    <thead>
                         <tr>
-                            <td>
-                                {{ word.first_half_sentence }}
-                                    <input type="hidden" name="word_id" value="{{ word.id }}">
-                                    <input type="hidden" name="target_word" value="{{ word.target_word }}">
-                                    <input type="hidden" name="star_boolean" value="0">
-                                    <input type="hidden" name="eye_boolean" value="0">
-                                    <input id="user-guess" type="text" name="user_guess" placeholder="write guess...">
-                                {{ word.second_half_sentence }}
-                            </td>
-                            <td><a href="{{ url_for('main.edit', id=word.id) }}" target="_blank" ><i class="fa fa-edit fa-2x"></i></a></td>                        
-                            <td><a id="{{ word.id }}-eye-icon" href="#"><i class="fa fa-eye-slash fa-2x" onclick="toggleColor(this)"></i></a></td>
-                            <td><a id="{{ word.id }}-star-icon" href="#" onclick="toggleColor(this)"><i class="fa fa-star fa-2x"></i></a></td>
+                            <th>Example</th>
+                            <th>{% if english_view %} {% else %} {{ lng }} {% endif %}</th>
+                            <th></th>
+                            <th></th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        <div id="end-btn-div">
-            <button id="submit-btn-challenge" class="btn" type="submit">Submit</button>
+                    </thead>
+
+                    <tbody>
+                            {% if english_view %}
+                                {% for word in words %}
+                                    <tr>
+                                        <td>
+                                            {{ word.first_half_sentence }}
+                                                <input type="hidden" name="word_id" value="{{ word.id }}">
+                                                <input type="hidden" name="target_word" value="{{ word.target_word }}">
+                                                <input type="hidden" name="star_boolean" value="0">
+                                                <input type="hidden" name="eye_boolean" value="0">
+                                                <input id="user-guess" type="text" name="user_guess" placeholder="write guess...">
+                                            {{ word.second_half_sentence }}
+                                        </td>
+                                        <td><a href="{{ url_for('main.edit', id=word.id) }}" target="_blank" ><i class="fa fa-edit fa-2x"></i></a></td>                        
+                                        <td><a id="{{ word.id }}-eye-icon" href="#"><i class="fa fa-eye-slash fa-2x" onclick="toggleColor(this)"></i></a></td>
+                                        <td><a id="{{ word.id }}-star-icon" href="#" onclick="toggleColor(this)"><i class="fa fa-star fa-2x"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                {% for word in words %}
+                                    <tr>
+                                        <td>
+                                            {{ word.input }}
+                                        </td>
+                                        <td>
+                                            <input type="hidden" name="eye_boolean" value="0">
+                                            <input type="hidden" name="word_id" value="{{ word.id }}">
+                                            <input type="hidden" name="target_word" value="{{ word.target_word }}">
+                                            <input type="hidden" name="star_boolean" value="0">
+                                            <input id="user-guess" type="text" name="user_guess" placeholder="write guess...">
+                                        </td>
+                                        <td><a id="{{ word.id }}-eye-icon" href="#"><i class="fa fa-eye-slash fa-2x" onclick="toggleColor(this)"></i></a></td>
+                                        <td><a id="{{ word.id }}-star-icon" href="#" onclick="toggleColor(this)"><i class="fa fa-star fa-2x"></i></a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                    </tbody>
+                </table>
+            <div id="end-btn-div">
+                <button id="submit-btn-challenge" class="btn" type="submit">Submit</button>
+            </div>
+            </form>
         </div>
-        </form>
-    </div>
+    {% else %}
+        <div class="inner-container">
+            <p>You don't have any saved words or expressions in {{ lng }}</p>
+            <p>Go to the <a class="link-color" href="{{ url_for('main.translate') }}">translation</a> page to add some!</p>
+        </div>
+    {% endif %}
 </div>
 
 <script type="text/javascript">
