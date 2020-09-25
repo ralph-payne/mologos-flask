@@ -149,3 +149,6 @@ bootstrap-templates/
 project-specs.md
 schemas.md
 env.md
+
+# Coverage tests
+tmp/

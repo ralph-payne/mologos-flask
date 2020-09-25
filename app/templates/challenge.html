@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Challenge
+Challenge
 {% endblock %}
 
 {% block page_content %}
@@ -9,99 +9,89 @@
 <div class="inner-container">
 
     <div id="flag-container">
-        <a href="{{ url_for('main.challenge', lng='en') }}"><img src="{{url_for('static', filename='img/flags/en.png')}}" alt="flag-en" class="flag"></a>
-        <a href="{{ url_for('main.challenge', lng='es') }}"><img src="{{url_for('static', filename='img/flags/es.png')}}" alt="flag-es" class="flag"></a>
-        <a href="{{ url_for('main.challenge', lng='de') }}"><img src="{{url_for('static', filename='img/flags/de.png')}}" alt="flag-de" class="flag"></a>
-        <a href="{{ url_for('main.challenge', lng='it') }}"><img src="{{url_for('static', filename='img/flags/it.png')}}" alt="flag-it" class="flag"></a>
-        <a href="{{ url_for('main.challenge', lng='pt') }}"><img src="{{url_for('static', filename='img/flags/pt.png')}}" alt="flag-pt" class="flag"></a>
+        <a href="{{ url_for('main.challenge', lng='en') }}"><img
+                src="{{url_for('static', filename='img/flags/en.png')}}" alt="flag-en" class="flag"></a>
+        <a href="{{ url_for('main.challenge', lng='es') }}"><img
+                src="{{url_for('static', filename='img/flags/es.png')}}" alt="flag-es" class="flag"></a>
+        <a href="{{ url_for('main.challenge', lng='de') }}"><img
+                src="{{url_for('static', filename='img/flags/de.png')}}" alt="flag-de" class="flag"></a>
+        <a href="{{ url_for('main.challenge', lng='it') }}"><img
+                src="{{url_for('static', filename='img/flags/it.png')}}" alt="flag-it" class="flag"></a>
+        <a href="{{ url_for('main.challenge', lng='pt') }}"><img
+                src="{{url_for('static', filename='img/flags/pt.png')}}" alt="flag-pt" class="flag"></a>
     </div>
 
     {% if words %}
-        {% if english_view %}<div id="challenge-table-en">{% else %}<div id="challenge-table-foreign">{% endif %}
-            <form id="challenge-form" action="/challenge/{{lng}}" method="POST">
+        {% if eng %}<div id="challenge-table-en">{% else %}<div id="challenge-table-foreign">{% endif %}
+            <form id="challenge-form" action="/challenge/{{ lng.code }}" method="POST">
                 <table>
                     <thead>
                         <tr>
                             <th>Example</th>
-                            <th>{% if english_view %} {% else %} {{ lng }} {% endif %}</th>
+                            <th>{% if eng %} {% else %} {{ lng.lng_src }} {% endif %}</th>
                             <th></th>
                             <th></th>
                         </tr>
                     </thead>
 
                     <tbody>
-                            {% if english_view %}
-                                {% for word in words %}
-                                    <tr>
-                                        <td>
-                                            {{ word.first_half_sentence }}
-                                                <input type="hidden" name="word_id" value="{{ word.id }}">
-                                                <input type="hidden" name="target_word" value="{{ word.target_word }}">
-                                                <input type="hidden" name="star_boolean" value="0">
-                                                <input type="hidden" name="eye_boolean" value="0">
-                                                <input id="user-guess" type="text" name="user_guess" placeholder="write guess...">
-                                            {{ word.second_half_sentence }}
-                                        </td>
-                                        <td><a href="{{ url_for('main.edit', id=word.id) }}" target="_blank" ><i class="fa fa-edit fa-2x"></i></a></td>                        
-                                        <td><a id="{{ word.id }}-eye-icon" href="#"><i class="fa fa-eye-slash fa-2x" onclick="toggleColor(this)"></i></a></td>
-                                        <td><a id="{{ word.id }}-star-icon" href="#" onclick="toggleColor(this)"><i class="fa fa-star fa-2x"></i></a></td>
-                                    </tr>
-                                {% endfor %}
-                            {% else %}
-                                {% for word in words %}
-                                    <tr>
-                                        <td>
-                                            {{ word.input }}
-                                        </td>
-                                        <td>
-                                            <input type="hidden" name="eye_boolean" value="0">
-                                            <input type="hidden" name="word_id" value="{{ word.id }}">
-                                            <input type="hidden" name="target_word" value="{{ word.target_word }}">
-                                            <input type="hidden" name="star_boolean" value="0">
-                                            <input id="user-guess" type="text" name="user_guess" placeholder="write guess...">
-                                        </td>
-                                        <td><a id="{{ word.id }}-eye-icon" href="#"><i class="fa fa-eye-slash fa-2x" onclick="toggleColor(this)"></i></a></td>
-                                        <td><a id="{{ word.id }}-star-icon" href="#" onclick="toggleColor(this)"><i class="fa fa-star fa-2x"></i></a></td>
-                                    </tr>
-                                {% endfor %}
-                            {% endif %}
+                        {% if eng %}
+                            {% for word in words %}
+                            <tr>
+                                <td>
+                                    {{ word.first_half_sentence }}
+                                    <input type="hidden" name="word_id" value="{{ word.id }}">
+                                    <input type="hidden" name="target_word" value="{{ word.target_word }}">
+                                    <input type="hidden" name="star_boolean" value="0">
+                                    <input type="hidden" name="eye_boolean" value="0">
+                                    <input id="user-guess" type="text" name="user_guess" placeholder="write guess...">
+                                    {{ word.second_half_sentence }}
+                                </td>
+                                <td><a href="{{ url_for('main.edit', id=word.id, lng=lng.code) }}" target="_blank"><i
+                                            class="fa fa-edit fa-2x"></i></a></td>
+                                <td><a id="{{ word.id }}-eye-icon" href="#"><i class="fa fa-eye-slash fa-2x"
+                                            onclick="toggleColor(this)"></i></a></td>
+                                <td><a id="{{ word.id }}-star-icon" href="#" onclick="toggleColor(this)"><i
+                                            class="fa fa-star fa-2x"></i></a></td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            {% for word in words %}
+                            <tr>
+                                <td>
+                                    {{ word.original }}
+                                </td>
+                                <td>
+                                    <input type="hidden" name="eye_boolean" value="0">
+                                    <input type="hidden" name="word_id" value="{{ word.id }}">
+                                    <input type="hidden" name="target_word" value="{{ word.example }}">
+                                    <input type="hidden" name="translation" value="{{ word.original }}">
+                                    <input type="hidden" name="star_boolean" value="0">
+                                    <input id="user-guess" type="text" name="user_guess" placeholder="write guess...">
+                                </td>
+                                <td><a id="{{ word.id }}-eye-icon" href="#"><i class="fa fa-eye-slash fa-2x"
+                                            onclick="toggleColor(this)"></i></a></td>
+                                <td><a id="{{ word.id }}-star-icon" href="#" onclick="toggleColor(this)"><i
+                                            class="fa fa-star fa-2x"></i></a></td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
                     </tbody>
                 </table>
-            <div id="end-btn-div">
-                <button id="submit-btn-challenge" class="btn" type="submit">Submit</button>
-            </div>
+                <div id="end-btn-div">
+                    <button id="submit-btn-challenge" class="btn" type="submit">Submit</button>
+                </div>
             </form>
         </div>
-    {% else %}
+        {% else %}
         <div class="inner-container">
-            <p>You don't have any saved words or expressions in {{ lng }}</p>
+            <p>You don't have any saved words or expressions in {{ lng.lng_eng }}</p>
+            {% if eng %}{% else %}
             <p>Go to the <a class="link-color" href="{{ url_for('main.translate') }}">translation</a> page to add some!</p>
+            {% endif %}
         </div>
-    {% endif %}
-</div>
-
-<script type="text/javascript">
-
-    let userGuess = document.querySelector('#user-guess')
-    let submitBtn = document.querySelector('#submit')
-    let attempts = document.querySelector('#attempts')
-    let attemptsContainer = document.querySelector('#attempts-container')
-    let targetWord = document.querySelector('#target-word')
-
-    // You've got the form, now make sure that the attempts work as well
-    document.getElementById("challenge-form").addEventListener("submit", function(event){
-        if (userGuess.value.toLowerCase() !== targetWord.value.toLowerCase()) {
-            attempts.value++
-            // Display the container tracking attempts
-            attemptsContainer.style.display = 'block';
-            event.preventDefault();
-        } else {
-            // Else user has guessed correctly
-            return true
-        }
-    });
-
-</script>
+        {% endif %}
+    </div>
 
 <!-- Script for Changing Color of Star and Eye-->
 <script type="text/javascript">
@@ -110,18 +100,10 @@
         // Remove style if it already has it
         if (e.classList.contains("icon-selected")) {
             e.classList.remove("icon-selected");
-            console.log('32')
         } else {
             e.classList.add("icon-selected");
-            console.log(3245)
         }
     }
-
-    // TODO
-    // Change booleans to 1
-    // <input type="hidden" id="star-boolean" name="star_boolean" value="0">
-    // <input type="hidden" id="eye-boolean" name="eye_boolean" value="0">
-
 </script>
-           
+
 {% endblock %}

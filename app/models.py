@@ -8,9 +8,6 @@ from flask_login import UserMixin
 
 from . import db, login_manager
 
-# TODO: Make sure that this is standard practice; It's currently just a quick fix
-# db.metadata.clear()
-
 
 class Word(db.Model):
     __tablename__ = 'word'
@@ -24,6 +21,41 @@ class Word(db.Model):
         self.word = word
         self.etymology = etymology
         self.pronunciation = pronunciation
+
+
+class UserExample(db.Model):
+    __tablename__ = 'user_example'
+    id = db.Column(db.Integer, primary_key=True)
+    # Example contains either (i) a sentence in English with the target word in or (ii) the translated sentence in the destination language (dst)
+    example = db.Column(db.String)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    word = db.Column(db.String, db.ForeignKey('word.id'))    
+    # Translation boolean. 0 indicates that it is an English expression. 1 indicates that it is a foreign translation
+    translation = db.Column(db.Boolean)
+    src = db.Column(db.String(2))
+    dst = db.Column(db.String(2))
+    # Original is used to store the original English text if the data contains a translation
+    original = db.Column(db.String)
+    comment = db.Column(db.String())
+    created = db.Column(db.DateTime, default=datetime.utcnow)
+    last_modified = db.Column(db.DateTime)
+    last_tested = db.Column(db.DateTime)
+    attempt = db.Column(db.Integer, default=0)
+    success = db.Column(db.Integer, default=0)
+    fail = db.Column(db.Integer, default=0)
+    # Level is used to determine the probablity of the user seeing the word on the Challenge
+    level = db.Column(db.Integer, default=0)
+    ignored = db.Column(db.Boolean, default=0)
+    starred = db.Column(db.Boolean, default=0)
+
+    def __init__(self, example, word, user_id, translation, src, dst, original):
+        self.example = example
+        self.word = word
+        self.user_id = user_id
+        self.translation = translation
+        self.src = src
+        self.dst = dst
+        self.original = original
 
 
 class Definition(db.Model):
@@ -44,8 +76,6 @@ class DictionaryExample(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     word = db.Column(db.String, db.ForeignKey('word.id'))
     example = db.Column(db.String)
-    # source can be oxford_dict or merriam_webster
-    # TODO => See if it makes more sense to use an enum instead of a string with 32 chars
     source = db.String(32)
     created = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -53,29 +83,6 @@ class DictionaryExample(db.Model):
         self.word = word
         self.example = example
         self.source = source
-
-
-class UserExample(db.Model):
-    __tablename__ = 'user_example'
-    id = db.Column(db.Integer, primary_key=True)
-    word = db.Column(db.String, db.ForeignKey('word.id'))
-    example = db.Column(db.String)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    comment = db.Column(db.Text())
-    created = db.Column(db.DateTime, default=datetime.utcnow)
-    success = db.Column(db.Integer, default=0)
-    fail = db.Column(db.Integer, default=0)
-    skip = db.Column(db.Integer, default=0)
-    # Level is used to determine the probablity of the user seeing the word on the Challenge
-    level = db.Column(db.Integer, default=0)
-    deleted = db.Column(db.Boolean, default=0)
-    ignored = db.Column(db.Boolean, default=0)
-    starred = db.Column(db.Boolean, default=0)
-
-    def __init__(self, word, example, user_id):
-        self.word = word
-        self.example = example
-        self.user_id = user_id
 
 
 class Translation(db.Model):
@@ -108,9 +115,10 @@ class UserTranslation(db.Model):
     comment = db.Column(db.Text())
 
     created = db.Column(db.DateTime, default=datetime.utcnow)
+    last_modified = db.Column(db.DateTime)
+    attempt = db.Column(db.Integer, default=0)
     success = db.Column(db.Integer, default=0)
     fail = db.Column(db.Integer, default=0)
-    skip = db.Column(db.Integer, default=0)
 
     # Level is used to determine the probablity of the user seeing the word on the Challenge Page
     level = db.Column(db.Integer, default=0)

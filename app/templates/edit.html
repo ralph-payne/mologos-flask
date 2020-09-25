@@ -1,58 +1,194 @@
-<!-- Edit: Page where user can edit the Example Sentence they made -->
-
 {% extends "base.html" %}
 
 {% block title %}Edit {{ word.word }} {% endblock %}
 
 {% block page_content %}
+
+<style>
+    /* Tooltip container */
+    .tooltip {
+        position: relative;
+        display: inline-block;
+    }
+    
+    /* Tooltip text */
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 6px;
+        
+        /* Position the tooltip text - see examples below! */
+        position: absolute;
+        z-index: 1;
+    }
+    
+    /* Show the tooltip text when you mouse over the tooltip container */
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+    }
+
+    .icon-container {
+        height: 100%;
+        display: flex;
+        padding: 0.5rem;
+        justify-content: space-around;
+        border: 1px solid green;
+        flex-direction: column;
+    }
+
+    .statistics-container {
+        height: 100%;
+        display: flex;
+        padding: 0.5rem;
+        justify-content: space-around;
+        /* justify-content: center; */
+        border: 1px solid green;
+        flex-direction: column;
+    }
+
+    </style>
+
 <div class="inner-container">
+    <form action="{{ url_for('main.edit', id=word.id, lng=lng.code) }}" method="POST">
+    
+    <div id="edit-grid">
 
-    <form action="/edit/{{word.id}}" method="POST" class="form-inline">
+        {% if word.word %}
+            <div class="edit-article">
+                <section id="top-definitions-section">
+                    <div class="defined-word-container">
+                        <h1 name="defined-word" class="defined-word-content">{{ word.word }}</h1>
+                    </div>
+                    <div class="pron-ipa-container">
+                        <span class="pron-ipa-content">/lʌɪf/<span>
+                    </div>
+                    <div>
+                        the condition that distinguishes animals and plants from inorganic matter, including the capacity for growth, reproduction, functional activity, and continual change preceding death
+                    </div>
+                    <small>
+                        Old English līf, of Germanic origin; related to Dutch lijf, German Leib ‘body’, also to live
+                    </small>
+                    <div>
+                        <p><a href="{{ url_for('main.define', word=word.word) }}">More examples</a></p>
+                    </div>
+                    <hr>
+                </section>
+            </div>
+        {% else %}
+            <div class="edit-article">
+                <section id="top-definitions-section">
+                    <div class="defined-word-container">
+                        <h1 name="defined-word" class="defined-word-content">{{ word.input }}</h1>
+                        <h1 name="defined-word" class="defined-word-content">{{ word.output }}</h1>
+                        <h1 name="defined-word" class="defined-word-content">{{ word.destination_language }}</h1>
+                    </div>
+                    <div class="pron-ipa-container">
+                        <span class="pron-ipa-content">/ɡɒlf/<span>
+                    </div>
+                    <hr>
+                </section>
+            </div>
+        {% endif %}
 
-        <div class="form-group">
-            <label for="area-3">Example</label>
-            <textarea name="edited-example" class="form-control" id="edit-example" rows="5">{{ word.example }}</textarea>
-            <input type="submit" value="Make Change" />
+        <div class="edit-article">
+            <div class="icon-container">
+                <div class="tooltip">
+                    <a><i class="fa fa-eye-slash fa-2x {% if word.ignored %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
+                    <input type="hidden" id="eye-boolean" name="eye_boolean" value="0">
+                    <span class="tooltiptext">Hide From Challenges</span>
+                </div>
+
+                <div class="tooltip">
+                    <a><i class="fa fa-star fa-2x {% if word.starred %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
+                    <input type="hidden" id="star-boolean" name="star_boolean" value="{% if word.starred %}1{% else %}0{% endif %}">
+                    <span class="tooltiptext">Mark as Important</span>
+                </div>
+
+                <div class="tooltip">
+                    <a href="{{ url_for('main.delete', id=word.id, lng=lng.code) }}"><i class="fa fa-trash fa-2x"></i></a>
+                    <span class="tooltiptext">Delete</span>
+                </div>
+            </div>
         </div>
-    </form>
 
-    <div>
+        <div class="edit-article">
 
-        Statistics:
-        <ul>
-            <li>id = {{ word.id }}</li>
-            <li>user id{{ word.user_id }}</li>
-            <li>example {{ word.example }}</li>
-            <li>created {{ word.created }}</li>
-            <li>success {{ word.success }}</li>
-            <li>fails: {{ word.fail }}</li>
-            <li>skips {{ word.skip }}</li>
-            <li>starred {{ word.starred }}</li>
-        </ul>
+            {% if word.word %}
+                <div id="definition-example">
+                    <h3>Example</h3>
+                    <textarea type="text" name="edited-example">{{ word.example }}</textarea>
+                </div>
+            {% else %}
+                <div id="definition-example">
+                    <textarea type="text" name="edited-example">{{ word.output }}</textarea>
+                </div>
+            {% endif %}
+            <button class="btn btn-primary" type="submit">Edit and Update</button>
+        </div>
+
+
+        <div class="edit-article">
+            <div class="statistics-container">
+                <h3>Statistics</h3>
+                <ul>
+                    <li>Attempts:  </li>
+                    <li>Correct: {{ word.success }} </li>
+                    <li>Incorrect: {{ word.fail }} </li>
+                    <li>Comment: {{ word.comment }} </li>
+                    <li>Created: {{ word.created }} </li>
+                    <li>Last Modified:  </li>
+                    <li>Ignored: {{ word.ignored }} </li>
+                    <li>Starred: {{ word.starred }} </li>
+            </div>
+        </div>
+
+        <div>
+            <div>
+                <a><i class="fa fa-arrow-left fa-2x {% if word.starred %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
+            </div>
+        </div>
+
+        <div>
+            <div class="arrow-container">
+                <a><i class="fa fa-arrow-right fa-2x {% if word.starred %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
+            </div>
+        </div>
+
     </div>
-
+    </form>
 </div>
+
+<!-- Script for Changing Color of Star and Eye-->
+<script type="text/javascript">
+
+    let starBoolean = document.getElementById('star-boolean')
+    let eyeBoolean = document.getElementById('eye-boolean')
+
+    function toggleColor(e) {
+        // Remove style if it already has it
+        if (e.classList.contains("icon-selected")) {
+            e.classList.remove("icon-selected");
+            // Change the value of the hidden input to zero
+            if (e.classList.contains("fa-eye-slash")) {
+                eyeBoolean.value = 0;
+            } else {
+                starBoolean.value = 0;
+            }
+            
+        } else {
+            e.classList.add("icon-selected");
+
+            if (e.classList.contains("fa-eye-slash")) {
+                eyeBoolean.value = 1;
+            } else {
+                starBoolean.value = 1;
+            }
+        }
+    }
+</script>
+
 {% endblock %}
-
-Schema Reference
-id
-user_id
-word
-example
-created
-last_modified
-
-id = db.Column(db.Integer, primary_key=True)
-word = db.Column(db.String, db.ForeignKey('word.id'))
-example = db.Column(db.String)
-user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-comment = db.Column(db.Text())
-created = db.Column(db.DateTime, default=datetime.utcnow)
-success = db.Column(db.Integer, default=0)
-fail = db.Column(db.Integer, default=0)
-skip = db.Column(db.Integer, default=0)
-# Level is used to determine the probablity of the user seeing the word on the Challenge
-level = db.Column(db.Integer, default=0)
-deleted = db.Column(db.Boolean, default=0)
-ignored = db.Column(db.Boolean, default=0)
-starred = db.Column(db.Boolean, default=0)

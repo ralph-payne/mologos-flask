@@ -6,78 +6,70 @@
 
 {% block page_content %}
 
-<div class="container">
-    <div class="flash-msg flash-success">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        This word has been successfully added to your dictionary!
-    </div>
+<!-- Flash Container -->
+<div class="container-flash">
+    {% for message in get_flashed_messages() %}
+        <div class="flash-msg flash-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message }}
+        </div>
+    {% endfor %}
 </div>
 
-        <div id="translate-container">
-            <div class="language-select flex-container">
-                <div class="inner-lang-select">
-                    <input type="hidden" id="usr-recent-lang" value="{{ lng_recent}}">
-                    <label for="select-language"><strong>Translate to:</strong></label>
-                    <select name="select_language" id="select-language">
-                        <option value="de">German</option>
-                        <option value="it">Italian</option>
-                        <option value="pt">Portuguese</option>
-                        <option value="es">Spanish</option>
-                    </select>
-                </div>
-            </div>     
-            <div class="box-1 flex-container">
-                {% if input %}
-                <textarea class="translate-box" id="text-to-translate">{{ input }}</textarea>
-                {% else %}
-                <textarea class="translate-box" id="text-to-translate"></textarea>
-                {% endif %}
+<!-- Translate Container -->
+    <div id="translate-container">
+        <div class="language-select flex-container">
+            <div class="inner-lang-select">
+                <input type="hidden" id="usr-recent-lang" value="{{ lng_recent}}">
+                <label for="select-language"><strong>Translate to:</strong></label>
+                <select name="select_language" id="select-language">
+                    <option value="de">German</option>
+                    <option value="it">Italian</option>
+                    <option value="pt">Portuguese</option>
+                    <option value="es">Spanish</option>
+                </select>
             </div>
-            <div class="box-2 btn-wrapper">
-                <form id="form-1" action="{{ url_for('main.translate') }}" method="POST">
-                    <input type="hidden" id="src-tra-1" name="src_tra_1">
-                    <input type="hidden" id="dst-lng-1" name="dst_lng_1">
-                    <button type="submit" class="btn btn-primary" id="translate-btn" onclick="fetchInput(this)">Translate</button>
-                </form>
-            </div>
-            <div class="box-3 flex-container">                
-                {% if output %}
-                <textarea class="translate-box" id="translation-result"  name="translation_result">{{ output }}</textarea>
-                {% else %}
-                <textarea readonly class="translate-box" placeholder="Translation" name="translation_result" id="translation-result">{{ output }}</textarea>
-                {% endif %}
-            </div>
-            <div class="box-4">
-                <p>
-                    You can edit the translated text before adding to your dictionary
-                </p>
-            </div>
-            <div class="add-btn">
-                <form id="form-2" action="{{ url_for('main.translate') }}" method="POST">
-                    <input type="hidden" id="src-tra-2" name="src_tra_2">
-                    <input type="hidden" id="dst-tra-2" name="dst_tra_2">
-                    <input type="hidden" id="dst-lng-2" name="dst_lng_2">
-                    <button type="submit" class="btn btn-primary" onclick="fetchInput(this)">Add to My Dictionary</button>
-                </form>
-            </div>
-            
+        </div>     
+        <div class="box-1 flex-container">
+            {% if input %}
+            <textarea class="translate-box" id="text-to-translate">{{ input }}</textarea>
+            {% else %}
+            <textarea class="translate-box" id="text-to-translate"></textarea>
+            {% endif %}
         </div>
+        <div class="box-2 btn-wrapper">
+            <form id="form-1" action="{{ url_for('main.translate') }}" method="POST">
+                <input type="hidden" id="src-tra-1" name="src_tra_1">
+                <input type="hidden" id="dst-lng-1" name="dst_lng_1">
+                <button type="submit" class="btn btn-primary" id="translate-btn" onclick="fetchInput(this)">Translate</button>
+            </form>
+        </div>
+        <div class="box-3 flex-container">                
+            {% if output %}
+            <textarea class="translate-box" id="translation-result"  name="translation_result">{{ output }}</textarea>
+            {% else %}
+            <textarea readonly class="translate-box" placeholder="Translation" name="translation_result" id="translation-result">{{ output }}</textarea>
+            {% endif %}
+        </div>
+        <div class="box-4">
+            <p>
+                You can edit the translated text before adding to your dictionary
+            </p>
+        </div>
+        <div class="add-btn">
+            <form id="form-2" action="{{ url_for('main.translate') }}" method="POST">
+                <input type="hidden" id="src-tra-2" name="src_tra_2">
+                <input type="hidden" id="dst-tra-2" name="dst_tra_2">
+                <input type="hidden" id="dst-lng-2" name="dst_lng_2">
+                <button type="submit" class="btn btn-primary" onclick="fetchInput(this)">Add to My Dictionary</button>
+            </form>
+        </div>
+    </div>
 
 <!-- Script to Fetch text inputs and add to hidden fields -->
 <script type="text/javascript">
 
-    // Select most recent language on page load
-    /// <input type=hidden" id="usr-recent-lang" value="{{ lng_recent}}">
-    /* 
-    <select name="select_language" id="select-language">
-                        <option value="de">German</option>
-                        <option value="it">Italian</option>
-                        <option value="pt" selected>Portuguese</option>
-                        <option value="es">Spanish</option>
-    </select>
-    */
     document.addEventListener("DOMContentLoaded", function(){
-        console.log('loaded')
         lng_pref = document.getElementById("usr-recent-lang").value;
         lng_select = document.getElementById("select-language").selected;
 
@@ -85,12 +77,6 @@
         let opts = ddl.options.length;
 
         let listLangs = ["de", "it", "pt", "es"];
-        // https://stackoverflow.com/questions/10029276/how-to-change-dropdownlist-selected-value-in-javascript
-        // <option value="de">German</option>
-        // <option value="it">Italian</option>
-        // <option value="pt" selected>Portuguese</option>
-        // <option value="es">Spanish</option>
-        // <option value="en">English</option>
 
         for (let i = 0; i < opts; i++) {
             if (ddl.options[i].value == lng_pref) {
@@ -100,15 +86,15 @@
         }
 
     });
+</script>
 
+<script type="text/javascript">
     function fetchInput(e) {
         event.preventDefault(e)
 
         // Fetch values
         srcVal = document.getElementById("text-to-translate").value;
         srcLng = document.getElementById("select-language").value;
-
-        console.log(srcVal)
 
         if (e.id == "translate-btn") {
             // Assign values to hidden input
@@ -126,7 +112,6 @@
             document.getElementById("form-2").submit();
         }
     }
-
 </script>
 
 <!-- End of page_content -->

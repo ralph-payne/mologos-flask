@@ -19,10 +19,8 @@
 
 .page-container {
     display: grid;
-    // Split so that the side bar takes us 2/7 of the space
     grid-template-columns: 1fr;
-    margin: 0rem 0;
-    // grid-gap: 1.5rem;
+    margin: 0rem;
 }
 
 /* Buttons */
@@ -83,7 +81,6 @@
 .flash-msg {
     position: relative;
     padding: .75rem 1.25rem;
-    margin-bottom: 1rem;
     border: 1px solid transparent;
     border-radius: .15rem;
 
@@ -97,10 +94,15 @@
 /* 
 Todo - change colors from standard Boostrap to fit the color palette of the site
 */
-.flash-primary {
-    color: #004085;
-    background-color: #cce5ff;
-    border-color: #b8daff;
+
+/* Flash Messages */
+.container-flash {
+    min-height: 50px
+}
+
+.container-flash-index {
+    min-height: 0px;
+    padding-bottom: 1rem;
 }
 
 .flash-success {
@@ -110,7 +112,7 @@ Todo - change colors from standard Boostrap to fit the color palette of the site
 }
 
 .flash-danger {
-    color: red;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
 }

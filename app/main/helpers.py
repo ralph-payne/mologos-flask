@@ -38,9 +38,6 @@ def lookup_api(word):
     try:
         if primary_api_is_oxford:
             oxford = response_oxford.json()
-            print('----')
-            print(oxford)
-            print('----')
             # Loop through to get examples and definitions     
             definitions_list = []
             examples_list = []
@@ -51,75 +48,33 @@ def lookup_api(word):
             # house, dolphin, great, cat, comb do not work
 
             for a in oxford['results']:
-                print('--- stt oxford[results] ---')
-                print(f'results is a list of size: {len(a)}')
-                print(a)
-                print('--- end oxford[results] ---')
                 for b in a['lexicalEntries']:
-                    print('--- stt oxford[lexi] ---')
-                    print(b)
-                    print('--- end oxford[lexi] ---')
                     for c in b['entries']:
-                        print(f'Entries: {len(c)}')
-                        print('--- stt oxford[ent] ---')
-                        print(c)
-                        print('--- end oxford[ent] ---')
                         for d in c['senses']:
-                            print('opening senses')
-                            print(d)
                             try:
                                 for e in d['definitions']:
-                                    # print(f'Definitions: {len(e)}')
-                                    print(e)
                                     definitions_list.append(e)
-                                    print(f'{len(definitions_list)} Definition(s) Added')
                             except:
                                 pass
-                        # for f in c['defintions']:
-                        #     print('oiasd')
-                
-                            # Catch any definitions which don't have examples with try except
-                            # try:
-                            #     for f in d['examples']:
-                            #         print(f'Examples: {len(f)}')
-                            #         print(f)
-                            #         print('10')
-                            #         examples_list.append(f['text'])
-                            #         print(f'{len(examples_list)} Example Added')
-                            # except:
-                            #     print('examples failed (no examples)')
-                            #     examples_list = []
-                            #     examples_list = ['di', 'gi']
-                            #     print(examples_list)
 
             # Anticipate that not all words have an etymology
             try:
                 etymology = oxford['results'][0]['lexicalEntries'][0]['entries'][0]['etymologies'][0]
-                print('12')
             except:
-                print('13')
                 etymology = None
-                etymology = 'na'
 
             try:
                 pronunciation = oxford['results'][0]['lexicalEntries'][0]['entries'][0]['pronunciations'][0]['phoneticSpelling']
-                print('14')
             except:
-                print('15')
-                pronunciation = 'oi'
+                pronunciation = None
 
             oxford_return_val = {
                 'word': oxford['results'][0]['id'], # str
-                # 'pronunciation': oxford['results'][0]['lexicalEntries'][0]['entries'][0]['pronunciations'][0]['phoneticSpelling'], # str
                 'pronunciation': pronunciation,
                 'etymology': etymology, # str
                 'definitions': definitions_list, # list
                 'examples': examples_list # list
             }
-
-            print('--- Printing parsed value from Oxford API ---')
-            print(oxford_return_val)
-            print('--- end of printing value ---')
 
             return oxford_return_val
 
@@ -206,3 +161,27 @@ def translate_api(src_text, dest_language):
 
     else:
         return None
+
+
+def lng_dict(lng):
+
+    lng_codes = [
+        { 'code': 'de', 'lng_eng': 'German', 'lng_src': 'Deutsch' },
+        { 'code': 'es', 'lng_eng': 'Spanish', 'lng_src': 'español' },
+        { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' },
+        { 'code': 'en', 'lng_eng': 'English', 'lng_src': 'English' },
+        { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' }
+    ]
+
+    for code in lng_codes:
+        if code['code'] == lng:
+            return code
+
+    return None
+
+# Is English Helper returns a boolean result, which in turn determines the correct view for the templates
+def is_eng(lng):
+    if lng == 'en':
+        return True
+    else:
+        return False
