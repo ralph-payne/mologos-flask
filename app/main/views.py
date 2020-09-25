@@ -18,7 +18,7 @@ def index():
 
 
 @main.route('/add', methods=['POST'])
-@login_required
+# @login_required
 def add():
     if request.method == 'POST':
         # Get word from URL query parameters
@@ -27,7 +27,7 @@ def add():
         user_example = request.form.get('user-example')
     
         # Insert User's Example sentence into database
-        record = UserExample(example=user_example, word=word, user_id=current_user.id, translation=False, src=None, dst='en', original=None)
+        record = UserExample(example=user_example, word=word, user_id=1, translation=False, src=None, dst='en', original=None)
         db.session.add(record)
         db.session.commit()
 
@@ -91,7 +91,7 @@ def edit(lng, id):
 
 # Create route with a dynamic component
 @main.route('/definition/<word>')
-@login_required
+# @login_required
 def define(word):
     # Use helper function (found in helpers.py) to look up word in database dictionary    
     local_dictionary_res = lookup_db_dictionary(word)
@@ -140,7 +140,7 @@ def define(word):
 
 
 @main.route('/definition', methods=['POST'])
-@login_required
+# @login_required
 def lookup():
     if request.method == 'POST':
         # TODO => parse the word
