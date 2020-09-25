@@ -55,7 +55,3 @@ def test(coverage, test_names):
         COV.html_report(directory=covdir)
         print('HTML version: file://%s/index.html' % covdir)
         COV.erase()
-
-
-with app.app_context():
-    db.create_all()

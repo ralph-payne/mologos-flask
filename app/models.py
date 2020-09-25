@@ -29,7 +29,7 @@ class UserExample(db.Model):
     # Example contains either (i) a sentence in English with the target word in or (ii) the translated sentence in the destination language (dst)
     example = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    word = db.Column(db.String, db.ForeignKey('word.id'))    
+    word = db.Column(db.String)    
     # Translation boolean. 0 indicates that it is an English expression. 1 indicates that it is a foreign translation
     translation = db.Column(db.Boolean)
     src = db.Column(db.String(2))
@@ -61,7 +61,7 @@ class UserExample(db.Model):
 class Definition(db.Model):
     __tablename__ = 'definition'
     id = db.Column(db.Integer, primary_key=True)
-    word = db.Column(db.String(64), db.ForeignKey('word.id'))
+    word = db.Column(db.String)
     definition = db.Column(db.Text())
     source = db.String(32)
 
@@ -74,7 +74,7 @@ class Definition(db.Model):
 class DictionaryExample(db.Model):
     __tablename__ = 'dictionary_example'
     id = db.Column(db.Integer, primary_key=True)
-    word = db.Column(db.String, db.ForeignKey('word.id'))
+    word = db.Column(db.String)
     example = db.Column(db.String)
     source = db.String(32)
     created = db.Column(db.DateTime, default=datetime.utcnow)
