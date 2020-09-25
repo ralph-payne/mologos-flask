@@ -61,4 +61,5 @@ def test(coverage, test_names):
 def deploy():
     """Run deployment tasks."""
     # migrate database to latest revision
-    upgrade()
+    # upgrade()
+    db.create_all()
