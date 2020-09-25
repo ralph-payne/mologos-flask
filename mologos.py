@@ -57,9 +57,5 @@ def test(coverage, test_names):
         COV.erase()
 
 
-@app.cli.command()
-def deploy():
-    """Run deployment tasks."""
-    # migrate database to latest revision
-    # upgrade()
+with app.app_context():
     db.create_all()
