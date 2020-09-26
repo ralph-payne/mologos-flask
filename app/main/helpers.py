@@ -44,7 +44,6 @@ def lookup_api(word):
 
             # The things that will break the API are if the word doesn't have any examples
             # Or if the word doesn't have any etymology
-
             # house, dolphin, great, cat, comb do not work
 
             for a in oxford['results']:

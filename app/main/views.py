@@ -27,6 +27,7 @@ def add():
         user_example = request.form.get('user-example')
     
         # Insert User's Example sentence into database
+        # TEMP CHANGING USER_ID TO 1 TO TEST OUT BUGS ON HEROKU
         record = UserExample(example=user_example, word=word, user_id=1, translation=False, src=None, dst='en', original=None)
         db.session.add(record)
         db.session.commit()
@@ -95,6 +96,7 @@ def edit(lng, id):
 def define(word):
     # Use helper function (found in helpers.py) to look up word in database dictionary    
     local_dictionary_res = lookup_db_dictionary(word)
+    print(local_dictionary_res)
 
     if local_dictionary_res is not None:
         return render_template('definition.html', word=local_dictionary_res, source='local')
@@ -103,6 +105,7 @@ def define(word):
     else:
         # Lookup the word in the API (helper function returns a dict)
         api_return_val = lookup_api(word)
+        print(api_return_val)
 
         # Return a cannot find if it couldn't be found
         if api_return_val is None:
