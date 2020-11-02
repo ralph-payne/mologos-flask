@@ -6,9 +6,11 @@ https://mologos.herokuapp.com/
 - Users then guess defined word and the application stores the progress of the user's learning
 - Word definitions are provided by Merriam-Webster's Dictionary API
 
+
 ## The Challenge Page
 q) How does the algorithm for the Challenge page work?
 a) You tell us how important the word is (by assigning it a star or an unwatch). The algorithm takes that data and, along with the statistics of past performances, will give each word a certain weighting. This weighting determines the likelihood that you will see the word on the challenge page
+
 
 ### The Challenge Page Algorithm
 1. Back end asks db for a list of users words (The words which the user does not want to appear are filtered out in the db query)
@@ -18,6 +20,7 @@ a) You tell us how important the word is (by assigning it a star or an unwatch).
 5. The example sentence containing the word is sliced up & the first half and the second half are assigned to a dictionary which is appended to List 2
 6. Repeat Steps 1-5 until list 2 contains 5 words 
 (note: In a future version, the algorithm will assign a certain weighting to each word so that there is a higher probability that "starred words" or words which the user frequently fails to remember are prioritised
+
 
 ## Technologies used
 - Python / Flask

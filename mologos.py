@@ -1,7 +1,6 @@
 import os
 from flask_migrate import Migrate, upgrade
 from app import create_app, db
-# from app.models import Word, Definition, User, Sentence
 from app.models import Definition, DictionaryExample, Role, UserExample, User, Word
 
 import click
@@ -55,3 +54,13 @@ def test(coverage, test_names):
         COV.html_report(directory=covdir)
         print('HTML version: file://%s/index.html' % covdir)
         COV.erase()
+
+
+@app.cli.command()
+def deploy():
+    """Run deployment tasks."""
+    # migrate database to latest revision
+    upgrade()
+
+    # create or update user roles
+    Role.insert_roles()

@@ -26,13 +26,42 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
     'sqlite:///' + os.path.join(BASE_DIR, 'data-dev.sqlite')
 
+'''
+Right now the issue with testing is that the tables are not being created with create_all
+One work around is using the Prod database (obviously a terrible idea in practice but it works for the moment)
+The next step is to create a test database manually on the local machine
+Then enter the flask shell and create all the tables within the test databsae
+
+1. No such table: user in data-dev.sqlite
+2. Go into flask shell, from mologos import db, db.create_all(), quit()
+3. Go into data-dev.sqlite and check that the table has been created
+4. Change the config within config.py so that the test script uses the data-dev.sqlite database
+5. Run Flask Test
+6. All tests are passed
+
+'''
+# class TestingConfig(Config):
+#     TESTING = True
+#     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
+#     'sqlite:///' + os.path.join(BASE_DIR, 'data-test.sqlite')
+#     WTF_CSRF_ENABLED = False
+
+# class TestingConfig(Config):
+#     TESTING = True
+#     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'data-test-2020-09-28.sqlite')
+#     # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'data-dev.sqlite')
+#     WTF_CSRF_ENABLED = False
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
-    'sqlite://'
+    print(BASE_DIR)
+    # SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URI') or \
+    #     'sqlite://'
+    # SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URI_V1') or \
+    # 'sqlite:///' + os.path.join(BASE_DIR, 'data2.sqlite')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL_NOOOO') or \
+    'sqlite:///' + os.path.join(BASE_DIR, 'data-dev.sqlite')
     WTF_CSRF_ENABLED = False
-
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \

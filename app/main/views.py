@@ -91,7 +91,7 @@ def edit(lng, id):
 
 # Create route with a dynamic component
 @main.route('/definition/<word>')
-@login_required
+# @login_required
 def define(word):
     # Use helper function (found in helpers.py) to look up word in database dictionary    
     local_dictionary_res = lookup_db_dictionary(word)
@@ -149,7 +149,7 @@ def lookup():
 
 
 @main.route('/translate', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def translate():
     if request.method == 'POST':
         # Check which of the 2 forms has been submitted
