@@ -4,78 +4,35 @@
 
 {% block page_content %}
 
-<style>
-    /* Tooltip container */
-    .tooltip {
-        position: relative;
-        display: inline-block;
-    }
-    
-    /* Tooltip text */
-    .tooltip .tooltiptext {
-        visibility: hidden;
-        width: 120px;
-        background-color: black;
-        color: #fff;
-        text-align: center;
-        padding: 5px 0;
-        border-radius: 6px;
-        
-        /* Position the tooltip text - see examples below! */
-        position: absolute;
-        z-index: 1;
-    }
-    
-    /* Show the tooltip text when you mouse over the tooltip container */
-    .tooltip:hover .tooltiptext {
-        visibility: visible;
-    }
-
-    .icon-container {
-        height: 100%;
-        display: flex;
-        padding: 0.5rem;
-        justify-content: space-around;
-        border: 1px solid green;
-        flex-direction: column;
-    }
-
-    .statistics-container {
-        height: 100%;
-        display: flex;
-        padding: 0.5rem;
-        justify-content: space-around;
-        /* justify-content: center; */
-        border: 1px solid green;
-        flex-direction: column;
-    }
-
-    </style>
-
 <div class="inner-container">
     <form action="{{ url_for('main.edit', id=word.id, lng=lng.code) }}" method="POST">
     
     <div id="edit-grid">
-
         {% if word.word %}
             <div class="edit-article">
                 <section id="top-definitions-section">
                     <div class="defined-word-container">
                         <h1 name="defined-word" class="defined-word-content">{{ word.word }}</h1>
                     </div>
+
+
+                    {% if word_details %}
                     <div class="pron-ipa-container">
-                        <span class="pron-ipa-content">/lʌɪf/<span>
+                        <span class="pron-ipa-content">/{{ word_details.pronunciation }}/<span>
                     </div>
+
                     <div>
-                        the condition that distinguishes animals and plants from inorganic matter, including the capacity for growth, reproduction, functional activity, and continual change preceding death
+                        {{ definition.definition }}
                     </div>
                     <small>
-                        Old English līf, of Germanic origin; related to Dutch lijf, German Leib ‘body’, also to live
+                        {{ word_details.etymology }}
                     </small>
                     <div>
-                        <p><a href="{{ url_for('main.define', word=word.word) }}">More examples</a></p>
+                        <p><a href="{{ url_for('main.define', word=word.word) }}">Examples</a></p>
                     </div>
-                    <hr>
+
+                    {% endif %}
+
                 </section>
             </div>
         {% else %}
@@ -135,26 +92,13 @@
             <div class="statistics-container">
                 <h3>Statistics</h3>
                 <ul>
-                    <li>Attempts:  </li>
+                    <li>Attempts: {{ word.attempt }} </li>
                     <li>Correct: {{ word.success }} </li>
                     <li>Incorrect: {{ word.fail }} </li>
-                    <li>Comment: {{ word.comment }} </li>
                     <li>Created: {{ word.created }} </li>
-                    <li>Last Modified:  </li>
-                    <li>Ignored: {{ word.ignored }} </li>
-                    <li>Starred: {{ word.starred }} </li>
-            </div>
-        </div>
-
-        <div>
-            <div>
-                <a><i class="fa fa-arrow-left fa-2x {% if word.starred %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
-            </div>
-        </div>
-
-        <div>
-            <div class="arrow-container">
-                <a><i class="fa fa-arrow-right fa-2x {% if word.starred %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
+                    {% if word.last_modified %}
+                    <li>Last Modified: {{ word.last_modified }} </li>
+                    {% endif %}
             </div>
         </div>
 

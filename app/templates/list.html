@@ -2,7 +2,7 @@
 
 {% extends "base.html" %}
 
-{% block title %}Title here{% endblock %}
+{% block title %}My Words{% endblock %}
 
 {% block page_content %}
 
@@ -32,8 +32,6 @@
                             <th>Example</th>
                             <th></th>
                             <th></th>
-                            <th></th>
-                            <th></th>
                         </tr>
                     </thead>
                 
@@ -43,8 +41,6 @@
                                 <td><a href="{{ url_for('main.define', word=word.word) }}">{{ word.word }}</a></td>
                                 <td>{{ word.example }}</td>
                                 <td><a href="{{ url_for('main.edit', id=word.id, lng=lng.code) }}"><i class="fa fa-edit fa-2x"></i></a></td>
-                                <td><a><i class="fa fa-eye-slash fa-2x {% if word.ignored %}icon-selected{% endif %}" ></i></a></td>
-                                <td><a><i class="fa fa-star fa-2x {% if word.starred %}icon-selected{% endif %}"></i></a></td>
                                 <td><a href="{{ url_for('main.delete', id=word.id, lng=lng.code ) }}"><i class="fa fa-trash fa-2x"></i></a></td>
                             </tr>
                         {% endfor %}
@@ -61,8 +57,6 @@
                             <th>{{ lng.lng_src }}</th>
                             <th></th>
                             <th></th>
-                            <th></th>
-                            <th></th>
                         </tr>
                     </thead>
                 
@@ -71,9 +65,7 @@
                             <tr>
                                 <td>{{ word.original }}</td>
                                 <td>{{ word.example }}</td>
-                                <td><a href="{{ url_for('main.edit', id=word.id, lng=lng.code) }}"><i class="fa fa-edit"></i></a></td>
-                                <td><a><i class="fa fa-eye-slash {% if word.ignored %}icon-selected{% endif %}" ></i></a></td>
-                                <td><a><i class="fa fa-star {% if word.starred %}icon-selected{% endif %}"></i></a></td>                                
+                                <td><a href="{{ url_for('main.edit', id=word.id, lng=lng.code) }}"><i class="fa fa-edit"></i></a></td>                             
                                 <td><a href="{{ url_for('main.delete', id=word.id, lng=lng.code ) }}"><i class="fa fa-trash"></i></a></td>
                             </tr>
                         {% endfor %}

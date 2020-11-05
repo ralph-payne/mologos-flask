@@ -74,6 +74,7 @@ def edit(lng, id):
 
         metadata.starred = star_bool
         metadata.ignored = ignored_bool
+        metadata.last_modified = last_modified
 
         db.session.commit()
 
@@ -81,17 +82,24 @@ def edit(lng, id):
         return redirect(url_for('main.list', lng=lng))
 
     else: # GET
+        word_details = False
+        definition = False
         if lng == 'en':
             word = UserExample.query.filter_by(id=id).first()
+
+            # Word contains etymology and pronunciation
+            # todo => make this a lookup on the id rather than the word
+            word_details = Word.query.filter_by(word=word.word).first()
+
+            definition = Definition.query.filter_by(word=word.word).first()
         else:
             word = UserTranslation.query.filter_by(id=id).first()
 
-        return render_template('edit.html', word=word, lng=lng_dict(lng))
+        return render_template('edit.html', word=word, word_details=word_details, definition=definition, lng=lng_dict(lng))
 
 
 # Create route with a dynamic component
 @main.route('/definition/<word>')
-# @login_required
 def define(word):
     # Use helper function (found in helpers.py) to look up word in database dictionary    
     local_dictionary_res = lookup_db_dictionary(word)
@@ -140,7 +148,6 @@ def define(word):
 
 
 @main.route('/definition', methods=['POST'])
-@login_required
 def lookup():
     if request.method == 'POST':
         # TODO => parse the word
@@ -149,7 +156,6 @@ def lookup():
 
 
 @main.route('/translate', methods=['GET', 'POST'])
-# @login_required
 def translate():
     if request.method == 'POST':
         # Check which of the 2 forms has been submitted

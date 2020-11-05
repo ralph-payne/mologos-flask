@@ -1,0 +1,10 @@
+<div class="container-flash">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <div class="flash-msg {{ category }}">
+            <button type="button" class="close-btn" onclick=delete_flash(this)>&times;</button>
+            {{ message }}
+          </div>
+        {% endfor %}
+    {% endwith %}
+</div>

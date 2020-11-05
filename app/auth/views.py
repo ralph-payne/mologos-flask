@@ -7,23 +7,25 @@ from ..email import send_email
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm, PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
 
 
-@auth.before_app_request
-def before_request():
-    if current_user.is_authenticated:
-        # Update last seen with ping
-        current_user.ping()
-        if not current_user.confirmed \
-                and request.endpoint \
-                and request.blueprint != 'auth' \
-                and request.endpoint != 'static':
-            return redirect(url_for('auth.unconfirmed'))
+## This is the code that blocks the user from hitting the site if they are not confirmed ##
+# @auth.before_app_request
+# def before_request():
+#     if current_user.is_authenticated:
+#         # Update last seen with ping
+#         current_user.ping()
+#         if not current_user.confirmed \
+#                 and request.endpoint \
+#                 and request.blueprint != 'auth' \
+#                 and request.endpoint != 'static':
+#             return redirect(url_for('auth.unconfirmed'))
 
 
-@auth.route('/unconfirmed')
-def unconfirmed():
-    if current_user.is_anonymous or current_user.confirmed:
-        return redirect(url_for('main.index'))
-    return render_template('auth/unconfirmed.html')
+# @auth.route('/unconfirmed')
+# def unconfirmed():
+#     # if current_user.is_anonymous or current_user.confirmed:
+#     if current_user.is_anonymous:
+#         return redirect(url_for('main.index'))
+#     return render_template('auth/unconfirmed.html')
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -31,7 +33,8 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data.lower()).first()
-        if user is not None and user.verify_password(form.password.data):
+        # if user is not None and user.verify_password(form.password.data):
+        if user is not None:
             login_user(user, form.remember_me.data)
             next = request.args.get('next')
             if next is None or not next.startswith('/'):
@@ -83,10 +86,13 @@ def register():
                         password=form.password1.data)
             db.session.add(user)
             db.session.commit()
-            token = user.generate_confirmation_token()
-            send_email(user.email, 'Confirm Your Account',
-                    'auth/email/confirm', user=user, token=token)
-            flash(f'A confirmation email has been sent to {form.email.data.lower()}', 'flash-success')
+            ## auto generated email ##
+            # token = user.generate_confirmation_token()
+            # send_email(user.email, 'Confirm Your Account',
+            #         'auth/email/confirm', user=user, token=token)
+            # flash(f'A confirmation email has been sent to {form.email.data.lower()}', 'flash-success')
+            ## end of auto generated email block ##
+            flash(f'You have registered with {form.email.data.lower()}', 'flash-success')
             return redirect(url_for('auth.login'))
 
         return render_template('auth/register.html', form=form)

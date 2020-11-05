@@ -9,6 +9,10 @@ from flask_login import UserMixin
 from . import db, login_manager
 
 
+## sqlalchemy.exc.ProgrammingError: (psycopg2.ProgrammingError) foreign key constraint "definitions_word_fkey" cannot be implemented
+## DETAIL:  Key columns "word" and "id" are of incompatible types: character varying and integer.
+
+
 #### Adding Role and Permission so that db.create_all() works when testing
 
 class Permission:
@@ -70,8 +74,6 @@ class Role(db.Model):
 
     def __repr__(self):
         return '<Role %r>' % self.name
-
-###
 
 
 class Word(db.Model):
