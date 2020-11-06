@@ -33,18 +33,18 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data.lower()).first()
-        # if user is not None and user.verify_password(form.password.data):
-        if user is not None:
+        if user is None:
+            flash(f'Invalid email address', 'flash-danger')
+            return render_template('auth/login.html', form=form)
+        if user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             next = request.args.get('next')
             if next is None or not next.startswith('/'):
                 next = url_for('main.index')
             return redirect(next)
         else:
-            # THIS CODE IS BROKEN. HAVE A LOOK AT GITHUB AND FIX IT!!
-            flash(f'Invalid email address', 'flash-danger')
-            return render_template('auth/login.html', form=form)
-        flash('Invalid password', 'flash-danger')
+            flash('Invalid password', 'flash-danger')
+
     return render_template('auth/login.html', form=form)
 
 
@@ -92,7 +92,7 @@ def register():
             db.session.add(user)
             db.session.commit()
 
-            ## auto generated email - temp not in use ##
+            ## auto generated email - not in use ##
             # token = user.generate_confirmation_token()
             # send_email(user.email, 'Confirm Your Account',
             #         'auth/email/confirm', user=user, token=token)

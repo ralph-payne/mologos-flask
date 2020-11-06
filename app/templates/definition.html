@@ -36,7 +36,7 @@
               <h2 class="link color">Examples</h2>
               <ul>
                   {% for example in word.examples %}
-                      <li> {{example}} </li>
+                      <li>{{ example[0]|upper}}{{example[1:]}}</li>
                   {% endfor %}
               </ul>
           {% endif %}
@@ -46,7 +46,7 @@
           {% if word.etymology %}
               <hr>
               <h2>Etymology</h2>
-              <p>{{ word.etymology }}</p>
+              <p>{{ word.etymology[0]|upper}}{{word.etymology[1:] }}</p>
           {% endif %}
         </div>
 

@@ -11,51 +11,33 @@
     {% endif %}
         <table>
             <thead>
-
                 <tr>
                     {% if english %}
                     <th>Example Sentence</th>
                     <th>Target Word</th>
-                    <th>Your Guess</th>
-                    <th></th>
                     {% else %}
                     <th>English</th>
                     <th>{{ lng.lng_src }}</th>
+                    {% endif %}
                     <th>Your Guess</th>
                     <th></th>
-                    {% endif %}
                 </tr>
             </thead>
         
             <tbody>
                 {% for result in results %}
-                    {% if english %}
-                        <tr>
-                            <td>{{ result.example }}</td>    
-                            <td><a class="link-color" href="{{ url_for('main.edit', id=result.id, lng=lng.code) }}">{{ result.target_word }}</td>
-                            <td>{{ result.user_guess }}</td>
-                            <td>
-                                {% if result.result %}
-                                <i class="fa fa-check fa-2x">
-                                {% else %}
-                                <i class="fa fa-times fa-2x"></i>
-                                {% endif %}
-                            </td>                            
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td>{{ result.translation }}</td>
-                            <td>{{ result.target_word }}</td>
-                            <td>{{ result.user_guess }}</td>
-                            <td>
-                                {% if result.result %}
-                                <i class="fa fa-check fa-2x">
-                                {% else %}
-                                <i class="fa fa-times fa-2x"></i>
-                                {% endif %}
-                            </td>  
-                        </tr>
-                    {% endif %}
+                    <tr>
+                        <td>{% if english %}{{ result.example }}{% else %}{{ result.translation }}{% endif %}</td>    
+                        <td><a class="link-color" href="{{ url_for('main.edit', id=result.id, lng=lng.code) }}">{{ result.target_word }}</td>
+                        <td>{{ result.user_guess }}</td>
+                        <td>
+                            {% if result.result %}
+                            <i class="fa fa-check fa-2x">
+                            {% else %}
+                            <i class="fa fa-times fa-2x"></i>
+                            {% endif %}
+                        </td>                            
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>

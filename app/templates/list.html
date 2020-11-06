@@ -23,7 +23,7 @@
                         {% for word in words %}            
                             <tr>
                                 <td><a href="{{ url_for('main.define', word=word.word) }}">{{ word.word }}</a></td>
-                                <td>{{ word.example }}</td>
+                                <td>{{ word.example[0]|upper}}{{word.example[1:] }}</td>
                                 <td><a href="{{ url_for('main.edit', id=word.id, lng=lng.code) }}"><i class="fa fa-edit"></i></a></td>
                                 <td><a href="{{ url_for('main.delete', id=word.id, lng=lng.code ) }}"><i class="fa fa-trash"></i></a></td>
                             </tr>

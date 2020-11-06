@@ -83,7 +83,7 @@
         <div class="edit-article">
 
             {% if word.word %}
-                <div id="definition-example">
+                <div id="edit-page-example">
                     {% if definition %}<h3>Example</h3>{% else %}<h3>Edit Translation</h3>{% endif %}
                     <textarea type="text" name="edited-example">{{ word.example }}</textarea>
                 </div>
@@ -119,7 +119,7 @@
 <script type="text/javascript">
 
     let starBoolean = document.getElementById('star-boolean')
-    let eyeBoolean = document.getElementById('eye-boolean')
+    let hideBoolean = document.getElementById('eye-boolean')
 
     function toggleColor(e) {
         // Remove style if it already has it
@@ -127,7 +127,7 @@
             e.classList.remove("icon-selected");
             // Change the value of the hidden input to zero
             if (e.classList.contains("fa-eye-slash")) {
-                eyeBoolean.value = 0;
+                hideBoolean.value = 0;
             } else {
                 starBoolean.value = 0;
             }
@@ -136,7 +136,7 @@
             e.classList.add("icon-selected");
 
             if (e.classList.contains("fa-eye-slash")) {
-                eyeBoolean.value = 1;
+                hideBoolean.value = 1;
             } else {
                 starBoolean.value = 1;
             }

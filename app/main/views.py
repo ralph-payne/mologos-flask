@@ -135,10 +135,6 @@ def translate():
             input = request.form.get('src_tra_2')
             output = request.form.get('dst_tra_2')
             
-            print(input)
-            print(output)
-            print(current_user.id)
-            print(dst)
             record = UserExample(example=output, word=input, user_id=current_user.id, translation=True, src='en', dst=dst, original=input)
 
             db.session.add(record)
@@ -173,21 +169,13 @@ def edit(lng, id):
     if request.method == 'POST':
         updated_example = request.form.get('edited-example') 
         last_modified = datetime.utcnow()
-
         star_bool = int(request.form.get('star_boolean'))
-        ignored_bool = int(request.form.get('eye_boolean'))
+        hide_bool = int(request.form.get('eye_boolean'))
 
-        ## Temp do two separate options
-        if (lng == 'en'):
-            metadata = UserExample.query.filter_by(user_id=current_user.id, id=id).first()
-            metadata.example = updated_example
-      
-        else:
-            metadata = UserExample.query.filter_by(user_id=current_user.id, id=id).first()
-            metadata.example = updated_example
-
+        metadata = UserExample.query.filter_by(user_id=current_user.id, id=id).first()
+        metadata.example = updated_example
         metadata.starred = star_bool
-        metadata.ignored = ignored_bool
+        metadata.ignored = hide_bool
         metadata.last_modified = last_modified
 
         db.session.commit()
@@ -241,30 +229,12 @@ def challenge(lng):
         for i in range(size):
             if (is_eng(lng)):
                 translation = ''
-                result_bool = 1 if target_words[i].lower() == guesses[i].lower() else 0
             else:
                 translation = translations[i]
-                result_bool = 1 if translations[i].lower() == guesses[i].lower() else 0
+                
+            result_bool = 1 if target_words[i].lower() == guesses[i].lower() else 0
 
             metadata = UserExample.query.filter_by(user_id=current_user.id, id=word_ids[i]).first()
-
-
-
-            print(metadata)
-            print(type(metadata))
-            # Create dictionary
-            result_dict = {
-                'id': word_ids[i], 
-                'target_word': target_words[i],
-                'starred': stars[i],
-                'skipped': skips[i],
-                'user_guess': guesses[i],
-                'result': result_bool,
-                'translation': translation,
-                'example': metadata.example
-            }
-
-            results.append(result_dict)
             
             if (result_bool):
                 metadata.success = UserExample.success + 1
@@ -280,6 +250,19 @@ def challenge(lng):
                 metadata.starred = 1
 
             db.session.commit()
+
+            result_dict = {
+                'id': word_ids[i], 
+                'target_word': target_words[i],
+                'starred': stars[i],
+                'skipped': skips[i],
+                'user_guess': guesses[i],
+                'result': result_bool,
+                'translation': translation,
+                'example': metadata.example
+            }
+
+            results.append(result_dict)
 
         return render_template('results.html', results=results, lng=lng_dict(lng), english=is_eng(lng))
 
@@ -330,10 +313,3 @@ def challenge(lng):
         else:
             words = UserExample.query.filter_by(user_id=current_user.id, dst=lng).all()
             return render_template('challenge.html', words=words, lng=lng_dict(lng), english=is_eng(lng))
-
-
-
-@main.route('/profile', methods=['GET'])
-@login_required
-def profile():
-    return render_template('user_profile.html', user=current_user)
