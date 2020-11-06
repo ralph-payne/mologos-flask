@@ -1,29 +1,13 @@
-<!-- User Words: Page which displays all the words which corresponse with the user's ID -->
-
 {% extends "base.html" %}
 
 {% block title %}My Words{% endblock %}
 
 {% block page_content %}
 
-    <div id="flag-container">
-        <a href="{{ url_for('main.list', lng='en') }}"><img src="{{url_for('static', filename='img/flags/en.png')}}" alt="flag-en" class="flag"></a>
-        <a href="{{ url_for('main.list', lng='es') }}"><img src="{{url_for('static', filename='img/flags/es.png')}}" alt="flag-es" class="flag"></a>
-        <a href="{{ url_for('main.list', lng='de') }}"><img src="{{url_for('static', filename='img/flags/de.png')}}" alt="flag-de" class="flag"></a>
-        <a href="{{ url_for('main.list', lng='it') }}"><img src="{{url_for('static', filename='img/flags/it.png')}}" alt="flag-it" class="flag"></a>
-        <a href="{{ url_for('main.list', lng='pt') }}"><img src="{{url_for('static', filename='img/flags/pt.png')}}" alt="flag-pt" class="flag"></a>
-    </div>
-
-    <!-- TODO => Write logic which displays message if there are no words to display -->
+    {% include 'partials/_flags_list.html' %}
 
     {% if words %}
-
-        {% with %}
-            {% set lng = lng.code %}
-            {{ foo }}
-        {% endwith %}
-
-        {% if eng %}
+        {% if english %}
             <div id="my-words-table">
                 <table>
                     <thead>
@@ -40,8 +24,8 @@
                             <tr>
                                 <td><a href="{{ url_for('main.define', word=word.word) }}">{{ word.word }}</a></td>
                                 <td>{{ word.example }}</td>
-                                <td><a href="{{ url_for('main.edit', id=word.id, lng=lng.code) }}"><i class="fa fa-edit fa-2x"></i></a></td>
-                                <td><a href="{{ url_for('main.delete', id=word.id, lng=lng.code ) }}"><i class="fa fa-trash fa-2x"></i></a></td>
+                                <td><a href="{{ url_for('main.edit', id=word.id, lng=lng.code) }}"><i class="fa fa-edit"></i></a></td>
+                                <td><a href="{{ url_for('main.delete', id=word.id, lng=lng.code ) }}"><i class="fa fa-trash"></i></a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -77,7 +61,7 @@
     {% else %}
     <div class="inner-container">
         <p>You don't have any saved words or expressions in {{ lng.lng_eng }}</p>
-        {% if eng %}{% else %}
+        {% if english %}{% else %}
         <p>Go to the <a class="link-color" href="{{ url_for('main.translate') }}">translation</a> page to add some!</p>
         {% endif %}
     </div>

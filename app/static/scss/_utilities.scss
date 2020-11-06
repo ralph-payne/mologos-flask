@@ -1,0 +1,230 @@
+/* GENERAL UTILITIES */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    line-height: 1.5;
+    background: $light-color;
+}
+
+
+// Add space after each paragraph
+p {
+    margin: .5rem 0;
+}
+
+// Remove bullet points from list items
+ul {
+    list-style: none;
+}
+
+// Prevent images from stretching beyond their containers
+img {
+    width: 100%;
+}
+
+#main-container {
+    width: 100%;
+    min-height: 950px;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.container {
+    max-width: $max-width;
+    margin: auto;
+    padding: 0 2rem;
+    overflow: hidden;
+}
+
+.inner-container {
+    min-height: $min-height;
+}
+
+.page-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 0rem;
+}
+
+.items-center {
+    justify-content: center;
+}
+
+.items-right {
+    justify-content: flex-end
+}
+
+/* LINKS */
+a {
+    /* Default Links */
+    color: #333;
+    text-decoration: none;
+}
+
+.link-color {
+    color: green;
+    background-color: transparent;
+    text-decoration: none;
+
+    &:hover {
+        color: red;
+        background-color: transparent;
+        text-decoration: underline;
+    }
+}
+
+/* BUTTONS */
+.btn {
+    display: inline-block;
+    border: none;
+    // Default is dark
+    background: $dark-color;
+    color: set-text-color($dark-color);
+    padding: 0.5rem 1.5rem;
+    // Add curves
+    border-radius: .25rem;
+    cursor: pointer;
+
+    &-light {
+        background: $light-color;
+        color: set-text-color($light-color) !important; 
+    }
+
+    &-primary {
+        background: $primary-color;
+        color: set-text-color($primary-color) !important;
+    }
+
+    &-secondary {
+        background: $secondary-color;
+        color: set-text-color($secondary-color) !important;
+    }
+
+    &-green {
+        background: $green-color;
+        color: set-text-color($green-color) !important;
+    }    
+
+    &-block {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    // It doesn't matter what color it is, it will just give an effect of making it more transparent
+    &:hover { opacity: 0.9; }
+}
+
+
+/* PADDING AND MARGINS */
+.py-1 { padding: 1.5rem 0 }
+.py-2 { padding: 2rem 0 }
+.py-3 { padding: 3rem 0 }
+.p-1 { padding: 1.5rem }
+.p-2 { padding: 2rem }
+.p-3 { padding: 3rem }
+
+
+/* FLASH MESSAGES */
+// Adapted from Boostrap Alerts
+.flash-msg {
+    position: relative;
+    padding: .75rem 1.25rem;
+    border: 1px solid transparent;
+    border-radius: .15rem;
+    text-align: center;
+
+    // Default Yellow
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+
+}
+
+.container-flash {
+    min-height: 60px;
+    padding-bottom: 0.5rem;
+}
+
+.container-flash-index {
+    min-height: 0px;
+    padding-bottom: 1rem;
+}
+
+.flash-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.flash-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.close-btn {
+    cursor: pointer;
+}
+
+
+/* TABLES */
+table {
+    // Set implicit size for rows
+    grid-auto-rows: 60px;
+    padding-top: 1rem;
+    width: 100%;
+    max-width: 100%;
+
+    min-height: 600px;
+    display: grid;
+    border-collapse: collapse;
+    min-width: 100%;
+    margin-bottom: 1rem;
+    padding-bottom: 3rem;
+
+    thead,
+    tbody,
+    tr {
+        display: contents;
+    }
+
+    thead {
+        vertical-align: middle;
+    }   
+
+    th {
+        position: sticky;
+        top: 0;
+        background: $secondary-color;
+        color: set-text-color($secondary-color);
+        text-align: left;
+        font-weight: 600;
+        font-size: 1.2rem;
+        padding: 0.25rem .75rem;
+    }
+
+    th:last-child {
+        border: 0;
+    }
+
+    td {
+        /* Vertical Align doesn't seem to be doing anything */
+        vertical-align: middle;
+        padding: 0.25rem .75rem;
+        border-top: 1px solid #dee2e4;
+    }
+
+    /* Alternate rows shaded */
+    tr:nth-child(even) td {
+        background: #f8f6ff;
+    }
+
+}

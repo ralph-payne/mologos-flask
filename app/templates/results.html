@@ -1,64 +1,64 @@
-<!-- User Words: Page which displays all the words which corresponse with the user's ID -->
-
 {% extends "base.html" %}
 
 {% block title %}Results{% endblock %}
 
 {% block page_content %}
 
-    <!-- TODO => Write logic which displays message if there are no words to display -->
-    {% if english_view %} <div id="results-table-en">{% else %}<div id="results-table-foreign">{% endif %}
+    {% if english %} 
+    <div id="results-table-english">
+    {% else %}
+    <div id="results-table-foreign">
+    {% endif %}
         <table>
             <thead>
+
                 <tr>
-                    <th>{% if english_view %}Word{% else %}English{% endif %}</th>
-                    {% if english_view %}{% else %}<th> {{ lng.lng_src }} </th>{% endif %}
-                    <th>{% if english_view %}Your Guess{% else %} Your Guess {% endif %}</th>
-                    
-                    {% if english_view %}<th>eng view</th>{% else %}<th>4.5</th>{% endif %}
-                    <th>4</th>
-                    <th>5</th>
+                    {% if english %}
+                    <th>Example Sentence</th>
+                    <th>Target Word</th>
+                    <th>Your Guess</th>
+                    <th></th>
+                    {% else %}
+                    <th>English</th>
+                    <th>{{ lng.lng_src }}</th>
+                    <th>Your Guess</th>
+                    <th></th>
+                    {% endif %}
                 </tr>
             </thead>
         
             <tbody>
                 {% for result in results %}
-                    {% if english_view %}
+                    {% if english %}
                         <tr>
-                            
-                            <td>{{ result.target_word }}</td>
+                            <td>{{ result.example }}</td>    
+                            <td><a class="link-color" href="{{ url_for('main.edit', id=result.id, lng=lng.code) }}">{{ result.target_word }}</td>
                             <td>{{ result.user_guess }}</td>
-
-                            {% if result.result %}
-                            <td><i class="fa fa-check fa-2x"></i></td>
-                            {% else %}
-                            <td><i class="fa fa-times fa-2x"></i></td>
-                            {% endif %}
-
-                            <td><a href="{{ url_for('main.edit', id=result.id, lng=lng.code) }}"><i class="fa fa-edit fa-2x"></i></a></td>
-                            <td><a href="{{ url_for('main.delete', id=result.id, lng=lng.code) }}"><i class="fa fa-trash fa-2x"></i></a></td>
-
+                            <td>
+                                {% if result.result %}
+                                <i class="fa fa-check fa-2x">
+                                {% else %}
+                                <i class="fa fa-times fa-2x"></i>
+                                {% endif %}
+                            </td>                            
                         </tr>
                     {% else %}
                         <tr>
-                            <td>{{ result.target_word }}</td>
                             <td>{{ result.translation }}</td>
+                            <td>{{ result.target_word }}</td>
                             <td>{{ result.user_guess }}</td>
-
-                            {% if result.result %}
-                            <td><i class="fa fa-check fa-2x"></i></td>
-                            {% else %}
-                            <td><i class="fa fa-times fa-2x"></i></td>
-                            {% endif %}
-
-                            <td><a href="{{ url_for('main.edit', id=result.id, lng=lng.code) }}"><i class="fa fa-edit fa-2x"></i></a></td>
-                            <td><a href="{{ url_for('main.delete', id=result.id, lng=lng.code) }}"><i class="fa fa-trash fa-2x"></i></a></td>
+                            <td>
+                                {% if result.result %}
+                                <i class="fa fa-check fa-2x">
+                                {% else %}
+                                <i class="fa fa-times fa-2x"></i>
+                                {% endif %}
+                            </td>  
                         </tr>
                     {% endif %}
                 {% endfor %}
             </tbody>
         </table>
-
         <div id="end-btn-div">
             <a href="{{ url_for('main.challenge', lng=lng.code) }}" id="next-btn-challenge" class="btn">Next</a>
         </div>

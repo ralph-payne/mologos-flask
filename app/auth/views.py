@@ -40,7 +40,11 @@ def login():
             if next is None or not next.startswith('/'):
                 next = url_for('main.index')
             return redirect(next)
-        flash('Invalid email or password', 'flash-danger')
+        else:
+            # THIS CODE IS BROKEN. HAVE A LOOK AT GITHUB AND FIX IT!!
+            flash(f'Invalid email address', 'flash-danger')
+            return render_template('auth/login.html', form=form)
+        flash('Invalid password', 'flash-danger')
     return render_template('auth/login.html', form=form)
 
 
@@ -61,12 +65,13 @@ def register():
     else:
         if (form.password1.data != form.password2.data):
             flash('Passwords must match', 'flash-danger')
-            # return redirect(url_for('auth.register'))
+            return render_template('auth/register.html', form=form)
 
-        if (len(form.username.data)) < 7:
-            flash('Username should be longer than 6 characters', 'flash-danger')
+        if (len(form.username.data)) < 4:
+            flash('Username should be longer than 3 characters', 'flash-danger')
+            return render_template('auth/register.html', form=form)
 
-        # Look up if username is already taken
+        # Look up if email is already taken
         email_check = User.query.filter_by(email=form.email.data.lower()).first()
 
         if (email_check):
@@ -75,10 +80,10 @@ def register():
         username_check = User.query.filter_by(username=form.username.data.lower()).first()
 
         if (username_check):
-            flash(f'{form.email.data.lower()} is already in use', 'flash-danger')
+            flash(f'{form.username.data.lower()} is already in use', 'flash-danger')
 
         if (len(form.password1.data)) < 7:
-            flash('Username should be longer than 6 characters', 'flash-danger')
+            flash('Password should be longer than 6 characters', 'flash-danger')
 
         if form.validate_on_submit():
             user = User(email=form.email.data.lower(),
@@ -86,12 +91,14 @@ def register():
                         password=form.password1.data)
             db.session.add(user)
             db.session.commit()
-            ## auto generated email ##
+
+            ## auto generated email - temp not in use ##
             # token = user.generate_confirmation_token()
             # send_email(user.email, 'Confirm Your Account',
             #         'auth/email/confirm', user=user, token=token)
             # flash(f'A confirmation email has been sent to {form.email.data.lower()}', 'flash-success')
             ## end of auto generated email block ##
+
             flash(f'You have registered with {form.email.data.lower()}', 'flash-success')
             return redirect(url_for('auth.login'))
 
@@ -134,7 +141,7 @@ def change_password():
             return redirect(url_for('main.index'))
         else:
             flash('Invalid password.')
-    return render_template("auth/change_password.html", form=form)
+    return render_template('auth/change_password.html', form=form)
 
 
 @auth.route('/reset', methods=['GET', 'POST'])
@@ -186,7 +193,7 @@ def change_email_request():
             return redirect(url_for('main.index'))
         else:
             flash('Invalid email or password.')
-    return render_template("auth/change_email.html", form=form)
+    return render_template('auth/change_email.html', form=form)
 
 
 @auth.route('/change_email/<token>')

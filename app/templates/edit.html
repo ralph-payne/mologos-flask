@@ -13,8 +13,11 @@
                 <section id="top-definitions-section">
                     <div class="defined-word-container">
                         <h1 name="defined-word" class="defined-word-content">{{ word.word }}</h1>
+                        <hr>
+                        {{ lng.lng_src }}
+                        <hr>
+                        {{ word.example }}
                     </div>
-
 
                     {% if word_details %}
                     <div class="pron-ipa-container">
@@ -28,7 +31,7 @@
                         {{ word_details.etymology }}
                     </small>
                     <div>
-                        <p><a href="{{ url_for('main.define', word=word.word) }}">Examples</a></p>
+                        <p><a class="link-color" href="{{ url_for('main.define', word=word.word) }}">Examples</a></p>
                     </div>
 
                     {% endif %}
@@ -39,9 +42,14 @@
             <div class="edit-article">
                 <section id="top-definitions-section">
                     <div class="defined-word-container">
-                        <h1 name="defined-word" class="defined-word-content">{{ word.input }}</h1>
+                        <h1 name="defined-word" class="defined-word-content">{{ word.translation }}</h1>
                         <h1 name="defined-word" class="defined-word-content">{{ word.output }}</h1>
-                        <h1 name="defined-word" class="defined-word-content">{{ word.destination_language }}</h1>
+                        <h1 name="defined-word" class="defined-word-content">{{ word.example }}</h1>
+                        <h1 name="defined-word" class="defined-word-content">{{ word.user_id }}</h1>
+                        <h1 name="defined-word" class="defined-word-content">{{ word.dst}}</h1>
+                        <h1 name="defined-word" class="defined-word-content">{{ word.input}}</h1>
+
+                        Look into what is saved when you add it to the dictionary
                     </div>
                     <div class="pron-ipa-container">
                         <span class="pron-ipa-content">/ɡɒlf/<span>
@@ -76,7 +84,7 @@
 
             {% if word.word %}
                 <div id="definition-example">
-                    <h3>Example</h3>
+                    {% if definition %}<h3>Example</h3>{% else %}<h3>Edit Translation</h3>{% endif %}
                     <textarea type="text" name="edited-example">{{ word.example }}</textarea>
                 </div>
             {% else %}
@@ -92,13 +100,14 @@
             <div class="statistics-container">
                 <h3>Statistics</h3>
                 <ul>
+                    <li>Created: {{ moment(word.created).format('D MMM YYYY') }} </li>
+                    {% if word.last_modified %}
+                    <li>Last Modified: {{ moment(word.last_modified).format('D MMM YYYY') }} </li>
+                    {% endif %}
                     <li>Attempts: {{ word.attempt }} </li>
                     <li>Correct: {{ word.success }} </li>
                     <li>Incorrect: {{ word.fail }} </li>
-                    <li>Created: {{ word.created }} </li>
-                    {% if word.last_modified %}
-                    <li>Last Modified: {{ word.last_modified }} </li>
-                    {% endif %}
+                </ul>
             </div>
         </div>
 

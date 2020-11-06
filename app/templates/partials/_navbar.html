@@ -1,0 +1,28 @@
+<nav id="main-nav">
+    <div class="container">
+        <div>
+        <a href="{{ url_for('main.index') }}">
+            <img src="{{url_for('static', filename='img/08_mologos_blue_550x160.png')}}" alt="logo" class="logo"></a>
+        </div>
+        <div id="search-bar-container" class="flex-container items-center">
+            <form action="/definition" method="POST">
+                <input id="nav-search-bar" name="word-to-lookup" type="search" placeholder="Look up a definition..." aria-label="Search">
+                <button id="nav-btn" type="submit" class="btn">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
+        </div>
+        <div class="flex-container items-right">
+            <ul>
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('main.list', lng='en') }}">List</a></li>
+                    <li><a href="{{ url_for('main.challenge', lng='en') }}">Challenge</a></li>
+                    <li><a href="{{ url_for('main.translate') }}">Translate</a></li>
+                    <li><a href="{{ url_for('auth.logout') }}"><i class="fa fa-sign-out-alt"></i></a></td>
+                {% else %}
+                    <li><a class="login-nav-icon" href="{{ url_for('auth.login') }}">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,12 +1,11 @@
 import os
-# The requests library is for your app to make HTTP request to other sites, usually APIs. It makes an outgoing request and returns the response from the external site.
 import requests
 
 # https://pypi.org/project/googletrans/
 from googletrans import Translator
+from time import sleep
 
 from .. import db
-# from ..models import Definition, Sentence, Word
 from ..models import Definition, DictionaryExample, UserExample, User, Word
 
 # Init Translator
@@ -41,10 +40,6 @@ def lookup_api(word):
             # Loop through to get examples and definitions     
             definitions_list = []
             examples_list = []
-
-            # The things that will break the API are if the word doesn't have any examples
-            # Or if the word doesn't have any etymology
-            # house, dolphin, great, cat, comb do not work
 
             for a in oxford['results']:
                 for b in a['lexicalEntries']:
@@ -100,16 +95,12 @@ def lookup_api(word):
 def lookup_db_dictionary(word):
     # Create route with dynamic component
     # Lookup the word in the local dictionary
-    # first() returns only the first result or None if there are no results
     local_dictionary_res = Word.query.filter_by(word=word).first()
-    # TODO => check if .commit() is necessary here
 
     # If found, display template with data from the local dictionary
     if local_dictionary_res is not None:
         # TODO => Check efficiency of having three different database look ups.
         # TODO => Can you use JOIN TABLES instead here?
-        # Look up definitions
-        # definitions_list = Definition.query.filter_by(word=word).all()
 
         # Returns Type <class 'flask_sqlalchemy.BaseQuery'>
         definitions_base_query = Definition.query.filter_by(word=word)
@@ -147,20 +138,21 @@ def lookup_db_dictionary(word):
         return None
 
 
+# https://github.com/ssut/py-googletrans/issues/234
 def translate_api(src_text, dest_language):
-
-    if src_text:
-        # Version 1 only has option to translate from english.
-        source_lang = 'en'
-
-        # result is a dictionary with properties text, src, dest, extra_data...
-        result = translator.translate(src_text, src=source_lang, dest=dest_language)
-        
-        return result.text
-
-    else:
-        return None
-
+    translator = Translator()
+    result = None
+    while result == None:
+        try:
+            result = translator.translate(src_text, src='en', dest=dest_language)
+        except Exception as e:
+            print(e)
+            translator = Translator()
+            sleep(0.5)
+            pass
+    print(result)
+    return result.text     
+   
 
 def lng_dict(lng):
 
@@ -177,6 +169,7 @@ def lng_dict(lng):
             return code
 
     return None
+
 
 # Is English Helper returns a boolean result, which in turn determines the correct view for the templates
 def is_eng(lng):

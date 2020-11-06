@@ -8,34 +8,23 @@ Challenge
 
 <div class="inner-container">
 
-    <div id="flag-container">
-        <a href="{{ url_for('main.challenge', lng='en') }}"><img
-                src="{{url_for('static', filename='img/flags/en.png')}}" alt="flag-en" class="flag"></a>
-        <a href="{{ url_for('main.challenge', lng='es') }}"><img
-                src="{{url_for('static', filename='img/flags/es.png')}}" alt="flag-es" class="flag"></a>
-        <a href="{{ url_for('main.challenge', lng='de') }}"><img
-                src="{{url_for('static', filename='img/flags/de.png')}}" alt="flag-de" class="flag"></a>
-        <a href="{{ url_for('main.challenge', lng='it') }}"><img
-                src="{{url_for('static', filename='img/flags/it.png')}}" alt="flag-it" class="flag"></a>
-        <a href="{{ url_for('main.challenge', lng='pt') }}"><img
-                src="{{url_for('static', filename='img/flags/pt.png')}}" alt="flag-pt" class="flag"></a>
-    </div>
+    {% include 'partials/_flags_challenge.html' %}
 
     {% if words %}
-        {% if eng %}<div id="challenge-table-en">{% else %}<div id="challenge-table-foreign">{% endif %}
+        {% if english %}<div id="challenge-table-en">{% else %}<div id="challenge-table-foreign">{% endif %}
             <form id="challenge-form" action="/challenge/{{ lng.code }}" method="POST">
                 <table>
                     <thead>
                         <tr>
                             <th>Example</th>
-                            <th>{% if eng %} {% else %} {{ lng.lng_src }} {% endif %}</th>
+                            <th>{% if english %} {% else %} {{ lng.lng_src }} {% endif %}</th>
                             <th></th>
                             <th></th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        {% if eng %}
+                        {% if english %}
                             {% for word in words %}
                             <tr>
                                 <td>
@@ -86,7 +75,7 @@ Challenge
         {% else %}
         <div class="inner-container">
             <p>You don't have any saved words or expressions in {{ lng.lng_eng }}</p>
-            {% if eng %}{% else %}
+            {% if english %}{% else %}
             <p>Go to the <a class="link-color" href="{{ url_for('main.translate') }}">translation</a> page to add some!</p>
             {% endif %}
         </div>

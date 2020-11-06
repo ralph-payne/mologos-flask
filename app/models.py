@@ -8,11 +8,6 @@ from flask_login import UserMixin
 
 from . import db, login_manager
 
-
-## sqlalchemy.exc.ProgrammingError: (psycopg2.ProgrammingError) foreign key constraint "definitions_word_fkey" cannot be implemented
-## DETAIL:  Key columns "word" and "id" are of incompatible types: character varying and integer.
-
-
 #### Adding Role and Permission so that db.create_all() works when testing
 
 class Permission:
@@ -97,7 +92,7 @@ class UserExample(db.Model):
     example = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     word = db.Column(db.String)    
-    # Translation boolean. 0 indicates that it is an English expression. 1 indicates that it is a foreign translation
+    # Translation boolean: 0 indicates that it is an English expression | 1 indicates that it is a foreign translation
     translation = db.Column(db.Boolean)
     src = db.Column(db.String(2))
     dst = db.Column(db.String(2))
@@ -168,36 +163,6 @@ class Translation(db.Model):
         self.word = word
         self.definition = definition
         self.source = source
-
-
-class UserTranslation(db.Model):
-    __tablename__ = 'user_translation'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    source_language = db.Column(db.String(2), default='en')
-    destination_language = db.Column(db.String(2))
-    input = db.Column(db.Text())
-    output = db.Column(db.Text())
-    comment = db.Column(db.Text())
-
-    created = db.Column(db.DateTime, default=datetime.utcnow)
-    last_modified = db.Column(db.DateTime)
-    attempt = db.Column(db.Integer, default=0)
-    success = db.Column(db.Integer, default=0)
-    fail = db.Column(db.Integer, default=0)
-
-    # Level is used to determine the probablity of the user seeing the word on the Challenge Page
-    level = db.Column(db.Integer, default=0)
-    deleted = db.Column(db.Boolean, default=0)
-    ignored = db.Column(db.Boolean, default=0)
-    starred = db.Column(db.Boolean, default=0)
-
-    def __init__(self, destination_language, input, output, user_id):
-        self.destination_language = destination_language
-        self.input = input
-        self.output = output
-        self.user_id = user_id
 
 
 class User(UserMixin, db.Model):
