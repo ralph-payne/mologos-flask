@@ -90,7 +90,7 @@ class UserExample(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # Example contains either (i) a sentence in English with the target word in or (ii) the translated sentence in the destination language (dst)
     example = db.Column(db.String)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('app_user.id'))
     word = db.Column(db.String)    
     # Translation boolean: 0 indicates that it is an English expression | 1 indicates that it is a foreign translation
     translation = db.Column(db.Boolean)
@@ -150,9 +150,7 @@ class DictionaryExample(db.Model):
 class Translation(db.Model):
     __tablename__ = 'translation'
     id = db.Column(db.Integer, primary_key=True)
-
     # key word is not in use in Version 1 but it could be added to model if we wanted to set up a connection between the English words and the translations
-    # key_word = db.Column(db.String, db.ForeignKey('word.id'))
     created = db.Column(db.DateTime, default=datetime.utcnow)
     source_language = db.Column(db.String(2))
     destination_language = db.Column(db.String(2))
@@ -166,12 +164,12 @@ class Translation(db.Model):
 
 
 class User(UserMixin, db.Model):
-    __tablename__ = 'user'
+    # user is a reserved word in Postgres: https://www.postgresql.org/docs/7.3/sql-keywords-appendix.html
+    __tablename__ = 'app_user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'))  
     name = db.Column(db.String(64))
     location = db.Column(db.String(64))
     about_me = db.Column(db.Text())
