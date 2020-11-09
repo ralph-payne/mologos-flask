@@ -401,17 +401,18 @@
 
     a {
         cursor: pointer;
+        display: inline-block;
+        height: 100%;
     }
 
-    /* Tooltip container */
-    .tooltip {
+    .tooltip-container {
         position: relative;
         display: inline-block;
         padding: 0.5rem;
     }
 
     /* Tooltip text */
-    .tooltip .tooltiptext {
+    .tooltip-container .tooltiptext {
         visibility: hidden;
         width: 120px;
         background-color: black;
@@ -423,8 +424,8 @@
         z-index: 1;
     }
 
-    /* Show the tooltip text when you mouse over the tooltip container */
-    .tooltip:hover .tooltiptext {
+    /* Show tooltip text when you mouse over the tooltip container */
+    .tooltip-container:hover .tooltiptext {
         visibility: visible;
     }
 
@@ -452,9 +453,13 @@
         overflow: auto;
     }
 
-    /* Star and Eye Symbols */
     .icon-selected {
         color: $secondary-color;
+    }
+
+    .trash-extra-padding {
+        /* Extra padding as trash icon is slightly smaller */
+        padding: 0px 3px;
     }
 }
 

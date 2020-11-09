@@ -61,20 +61,20 @@
 
         <div class="edit-article">
             <div class="icon-container">
-                <div class="tooltip">
+                <div class="tooltip-container">
                     <a><i class="fa fa-eye-slash fa-2x {% if word.ignored %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
                     <input type="hidden" id="eye-boolean" name="eye_boolean" value="0">
                     <span class="tooltiptext">Hide From Challenges</span>
                 </div>
 
-                <div class="tooltip">
+                <div class="tooltip-container">
                     <a><i class="fa fa-star fa-2x {% if word.starred %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
                     <input type="hidden" id="star-boolean" name="star_boolean" value="{% if word.starred %}1{% else %}0{% endif %}">
                     <span class="tooltiptext">Mark as Important</span>
                 </div>
 
-                <div class="tooltip">
-                    <a href="{{ url_for('main.delete', id=word.id, lng=lng.code) }}"><i class="fa fa-trash fa-2x"></i></a>
+                <div class="tooltip-container">
+                    <a href="{{ url_for('main.delete', id=word.id, lng=lng.code) }}"><i class="fa fa-trash fa-2x trash-extra-padding"></i></a>
                     <span class="tooltiptext">Delete</span>
                 </div>
             </div>

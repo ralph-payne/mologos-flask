@@ -1,7 +1,7 @@
 from datetime import datetime
 import random
 
-from flask import flash, redirect, render_template, request, session, url_for
+from flask import flash, redirect, render_template, request, session, url_for, current_app
 from . import main
 from .. import db
 from ..models import Definition, DictionaryExample, UserExample, User, Word
@@ -9,7 +9,7 @@ from ..models import Definition, DictionaryExample, UserExample, User, Word
 from flask_login import current_user, login_required
 
 # Helper functions for parsing results from API and database dictionary
-from .helpers import lookup_api, lookup_db_dictionary, translate_api, lng_dict, is_eng
+from .helpers import lookup_api, lookup_db_dictionary, translate_api, lng_dict, is_english
 
 # Homepage
 @main.route('/')
@@ -159,7 +159,7 @@ def translate():
 @login_required
 def list(lng):
     words = UserExample.query.filter_by(user_id=current_user.id, dst=lng).all()
-    return render_template('list.html', words=words, english=is_eng(lng), lng=lng_dict(lng))
+    return render_template('list.html', words=words, english=is_english(lng), lng=lng_dict(lng))
 
 
 # 7: EDIT
@@ -227,7 +227,7 @@ def challenge(lng):
         size = len(word_ids)
 
         for i in range(size):
-            if (is_eng(lng)):
+            if (is_english(lng)):
                 translation = ''
             else:
                 translation = translations[i]
@@ -264,18 +264,19 @@ def challenge(lng):
 
             results.append(result_dict)
 
-        return render_template('results.html', results=results, lng=lng_dict(lng), english=is_eng(lng))
+        return render_template('results.html', results=results, lng=lng_dict(lng), english=is_english(lng))
 
     # GET
     else:
         # English view differs
-        if (is_eng(lng)):
-            words_from_db = UserExample.query.filter_by(user_id=current_user.id, dst=lng).all()
+        if (is_english(lng)):
+            # Filter out words which have been ignored by the user
+            words_from_db = UserExample.query.filter_by(user_id=current_user.id, dst=lng, ignored=False).all()
             # Declare list which will hold dictionaries of each word
             words = []
 
             # Start loop and add words until the list is at the maximum size
-            while len(words) <= 5 and len(words_from_db) != 0:
+            while len(words) <= current_app.config['MAX_SIZE_CHALLENGE'] and len(words_from_db) != 0:
                 word = random.choice(words_from_db)
 
                 # After choosing a random word, retrieve the example sentence
@@ -283,7 +284,7 @@ def challenge(lng):
                 user_sentence = word.example
                 word_id = word.id
 
-                # Check if the sentence contains the word (there is a chance that the example sentence contains the word in a different word, i.e. an adjective instead of a noun)
+                # Check if the sentence contains the target word
                 if target_word in user_sentence:
                     # Find position of target word in sentence
                     pos = user_sentence.find(target_word)
@@ -308,8 +309,8 @@ def challenge(lng):
                     # Skip if word does not appear in target sentence
                     words_from_db.remove(word)
 
-            return render_template('challenge.html', words=words, lng=lng_dict(lng), english=is_eng(lng))
+            return render_template('challenge.html', words=words, lng=lng_dict(lng), english=is_english(lng))
 
         else:
             words = UserExample.query.filter_by(user_id=current_user.id, dst=lng).all()
-            return render_template('challenge.html', words=words, lng=lng_dict(lng), english=is_eng(lng))
+            return render_template('challenge.html', words=words, lng=lng_dict(lng), english=is_english(lng))

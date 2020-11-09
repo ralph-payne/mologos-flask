@@ -519,20 +519,20 @@ table {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 0.25rem;
-  /* Tooltip container */
   /* Tooltip text */
-  /* Show the tooltip text when you mouse over the tooltip container */
-  /* Star and Eye Symbols */ }
+  /* Show tooltip text when you mouse over the tooltip container */ }
   #edit-grid .edit-article {
     padding: 1rem;
     min-height: 350px; }
   #edit-grid a {
-    cursor: pointer; }
-  #edit-grid .tooltip {
+    cursor: pointer;
+    display: inline-block;
+    height: 100%; }
+  #edit-grid .tooltip-container {
     position: relative;
     display: inline-block;
     padding: 0.5rem; }
-  #edit-grid .tooltip .tooltiptext {
+  #edit-grid .tooltip-container .tooltiptext {
     visibility: hidden;
     width: 120px;
     background-color: black;
@@ -542,7 +542,7 @@ table {
     border-radius: 6px;
     position: absolute;
     z-index: 1; }
-  #edit-grid .tooltip:hover .tooltiptext {
+  #edit-grid .tooltip-container:hover .tooltiptext {
     visibility: visible; }
   #edit-grid .icon-container {
     height: 100%;
@@ -564,6 +564,9 @@ table {
     overflow: auto; }
   #edit-grid .icon-selected {
     color: #FDEAA0; }
+  #edit-grid .trash-extra {
+    /* Extra padding as trash icon is slightly smaller */
+    padding: 0px 3px; }
 
 /* 8: CHALLENGE */
 #challenge-table-en form table {

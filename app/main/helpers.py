@@ -172,7 +172,7 @@ def lng_dict(lng):
 
 
 # Is English Helper returns a boolean result, which in turn determines the correct view for the templates
-def is_eng(lng):
+def is_english(lng):
     if lng == 'en':
         return True
     else:
