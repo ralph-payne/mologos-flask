@@ -8,8 +8,8 @@ from flask_login import UserMixin
 
 from . import db, login_manager
 
-#### Adding Role and Permission so that db.create_all() works when testing
 
+#### Adding Role and Permission so that db.create_all() works when testing
 class Permission:
     FOLLOW = 1
     COMMENT = 2
@@ -97,7 +97,8 @@ class UserExample(db.Model):
     src = db.Column(db.String(2))
     dst = db.Column(db.String(2))
     # Original is used to store the original English text if the data contains a translation
-    original = db.Column(db.String)
+    # Original is a lecacy field
+    original = db.Column(db.String) # to delete
     comment = db.Column(db.String())
     created = db.Column(db.DateTime, default=datetime.utcnow)
     last_modified = db.Column(db.DateTime)
@@ -110,14 +111,13 @@ class UserExample(db.Model):
     ignored = db.Column(db.Boolean, default=0)
     starred = db.Column(db.Boolean, default=0)
 
-    def __init__(self, example, word, user_id, translation, src, dst, original):
+    def __init__(self, example, word, user_id, translation, src, dst):
         self.example = example
         self.word = word
         self.user_id = user_id
         self.translation = translation
         self.src = src
         self.dst = dst
-        self.original = original
 
 
 class Definition(db.Model):
@@ -261,7 +261,18 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         return True
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+class InternationalAccent(UserMixin, db.Model):
+    __tablename__ = 'international_accent'
+    id = db.Column(db.Integer, primary_key=True)
+    character = db.Column(db.String(1))
+    language = db.Column(db.String(32))
+    alt_code = db.Column(db.String(32))
+    html_entity = db.Column(db.String(32))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

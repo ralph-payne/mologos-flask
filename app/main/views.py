@@ -11,9 +11,83 @@ from flask_login import current_user, login_required
 # Helper functions for parsing results from API and database dictionary
 from .helpers import lookup_api, lookup_db_dictionary, translate_api, lng_dict, is_english
 
+
+'''
+class InternationalAccent(UserMixin, db.Model):
+    __tablename__ = 'international_accent'
+    id = db.Column(db.Integer, primary_key=True)
+    character = db.Column(db.String(1))
+    language = db.Column(db.String(32))
+    alt_code = db.Column(db.String(32))
+    html_entity = db.Column(db.String(32))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+'''
+
+from ..models import InternationalAccent
+from .international_accent_list import international_accent_list
+from .starting_data import starting_data
+
 # Homepage
 @main.route('/')
 def index():
+    test_user_email = 'test1234@gmail.com'
+    test_user_exists = User.query.filter_by(email=test_user_email).first()
+
+    if not test_user_exists:
+        user = User(email= test_user_email,
+                username='test1234',
+                password='12341234')
+        db.session.add(user)
+        db.session.commit()
+
+    # Get rid of all
+    InternationalAccent.query.delete() # temp code because I've changed the data
+
+    accent_exists = InternationalAccent.query.filter_by(html_entity='Agrave;').first()
+
+    # Add all the International Accents into the database
+    if not accent_exists:
+        for item in international_accent_list: 
+            id = item['id']
+            character = item['character']
+            html_entity = item['entitycode']
+            alt_code = item['altcode']
+            language = item['language']
+
+            special_character = InternationalAccent(id=id, character=character, language=language, alt_code=alt_code, html_entity=html_entity)
+            db.session.add(special_character)
+                
+        db.session.commit()
+
+    test_user = User.query.filter_by(email=test_user_email).scalar()
+    # These is a more efficient way to do this with the load_only function https://code-examples.net/en/q/afefd4
+    test_user_id = test_user.id
+    has_data = UserExample.query.filter_by(user_id=test_user_id).first()
+    all_examples = UserExample.query.filter_by(user_id=test_user_id).all()
+
+    # If it's the same length, don't add any more
+    if len(starting_data) != len(all_examples):
+        # Reset the data by deleting whatever
+        UserExample.query.filter_by(user_id=test_user_id).delete()
+        for item in starting_data:
+            language = item['language']
+            word = item['word']
+            example = item['example']
+            # user_id = item['userid']
+
+            if language == 'english':
+                record = UserExample(example=example, word=word, user_id=test_user_id, translation=False, src=None, dst='en')
+                db.session.add(record)
+
+            else:
+                dst = item['dst']
+                record = UserExample(example=example, word=word, user_id=test_user_id, translation=True, src='en', dst=dst)
+                db.session.add(record)
+
+        db.session.commit()
+
     return render_template('index.html')
 
 
@@ -27,7 +101,7 @@ def add():
         user_example = request.form.get('user-example')
     
         # Insert User's Example sentence into database
-        record = UserExample(example=user_example, word=word, user_id=current_user.id, translation=False, src=None, dst='en', original=None)
+        record = UserExample(example=user_example, word=word, user_id=current_user.id, translation=False, src=None, dst='en')
         db.session.add(record)
         db.session.commit()
 
@@ -135,7 +209,7 @@ def translate():
             input = request.form.get('src_tra_2')
             output = request.form.get('dst_tra_2')
             
-            record = UserExample(example=output, word=input, user_id=current_user.id, translation=True, src='en', dst=dst, original=input)
+            record = UserExample(example=output, word=input, user_id=current_user.id, translation=True, src='en', dst=dst)
 
             db.session.add(record)
             db.session.commit()
@@ -162,6 +236,7 @@ def list(lng):
     return render_template('list.html', words=words, english=is_english(lng), lng=lng_dict(lng))
 
 
+
 # 7: EDIT
 @main.route('/edit/<lng>/<id>', methods=['GET', 'POST'])
 @login_required
@@ -186,21 +261,46 @@ def edit(lng, id):
     else: # GET
         word_details = False
         definition = False
+        # Word contains etymology and pronunciation
+        word = UserExample.query.filter_by(id=id).first()
         if lng == 'en':
-            word = UserExample.query.filter_by(id=id).first()
 
-            # Word contains etymology and pronunciation
-            # todo => make this a lookup on the id rather than the word
+            
+            # TODO => make this a lookup on the id rather than the word
             word_details = Word.query.filter_by(word=word.word).first()
 
             definition = Definition.query.filter_by(word=word.word).first()
-        else:
-            word = UserExample.query.filter_by(id=id).first()
-            print(word.word)
-            print(word.example)
-            print(word.user_id)
 
-        return render_template('edit.html', word=word, word_details=word_details, definition=definition, lng=lng_dict(lng))
+            return render_template('edit.html', word=word, word_details=word_details, definition=definition, lng=lng_dict(lng))
+        else:
+            # Get Keyboard
+            lng
+
+            '''
+            class InternationalAccent(UserMixin, db.Model):
+                __tablename__ = 'international_accent'
+                id = db.Column(db.Integer, primary_key=True)
+                character = db.Column(db.String(1))
+                language = db.Column(db.String(32))
+                alt_code = db.Column(db.String(32))
+                html_entity = db.Column(db.String(32))
+
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+
+                "id": 1,
+                "character": "À",
+                "entitycode": "Agrave;",
+                "altcode": "0192",
+                "language": "pt"
+            '''
+
+            # Declare list of keyboard accents for lang
+            keyboard = InternationalAccent.query.filter_by(language=lng).all()
+
+            print(f'number of accents in {lng} is {len(keyboard)}')
+
+            return render_template('edit.html', word=word, keyboard=keyboard, lng=lng_dict(lng))
 
 
 # 8: CHALLENGE
@@ -314,3 +414,5 @@ def challenge(lng):
         else:
             words = UserExample.query.filter_by(user_id=current_user.id, dst=lng).all()
             return render_template('challenge.html', words=words, lng=lng_dict(lng), english=is_english(lng))
+
+

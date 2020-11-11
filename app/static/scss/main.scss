@@ -392,11 +392,12 @@
 #edit-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(5, 1fr);
     grid-gap: 0.25rem;
 
-    .edit-article {
+    .edit-page-box {
         padding: 1rem;
-        min-height: 350px;
+        min-height: 150px;
     }
 
     a {
@@ -460,6 +461,58 @@
     .trash-extra-padding {
         /* Extra padding as trash icon is slightly smaller */
         padding: 0px 3px;
+    }
+}
+
+/* FOREIGN ACCENTS KEYBOARD */
+#keyboard-container {
+    background: grey;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    box-sizing: border-box;
+    font-size: 16px;
+    line-height: 29px;
+    margin-right: 3px;
+
+    #typeit_buttons {
+        button {
+            cursor: pointer;
+            -webkit-transition: transform .1s ease-in;
+            transition: transform .1s ease-in,box-shadow .1s ease-in;
+            font-size: 16px;
+            line-height: 29px;
+            width: 35px;
+            height: 29px;
+            margin-right: 3px;
+            padding: 0;
+            margin-left: 0;
+            margin-bottom: 3px;
+            vertical-align: middle;
+            text-align: center;
+            -webkit-appearance: none;
+            font-size: 13px;
+            border-radius: 2px;
+            border-style: solid;
+            border-color: #999;
+            border-width: 1px;
+            appearance: button;
+            text-rendering: auto;
+            letter-spacing: normal;
+            word-spacing: normal;
+            text-transform: none;
+            text-indent: 0px;
+            text-shadow: none;
+            display: inline-block;
+            text-align: center;
+            align-items: flex-start;
+            cursor: pointer;
+            margin: 0em;
+            padding: 1px 6px;
+            border-width: 2px;
+        }
     }
 }
 

@@ -1,15 +1,13 @@
 {% extends "base.html" %}
-
 {% block title %}Edit {{ word.word }} {% endblock %}
 
 {% block page_content %}
-
 <div class="inner-container">
     <form action="{{ url_for('main.edit', id=word.id, lng=lng.code) }}" method="POST">
     
     <div id="edit-grid">
         {% if word.word %}
-            <div class="edit-article">
+            <div class="edit-page-box">
                 <section id="top-definitions-section">
                     <div class="defined-word-container">
                         <h1 name="defined-word" class="defined-word-content">{{ word.word }}</h1>
@@ -20,46 +18,25 @@
                     </div>
 
                     {% if word_details %}
-                    <div class="pron-ipa-container">
-                        <span class="pron-ipa-content">/{{ word_details.pronunciation }}/<span>
-                    </div>
-
-                    <div>
-                        {{ definition.definition }}
-                    </div>
-                    <small>
-                        {{ word_details.etymology }}
-                    </small>
-                    <div>
-                        <p><a class="link-color" href="{{ url_for('main.define', word=word.word) }}">Examples</a></p>
-                    </div>
+                        <div class="pron-ipa-container">
+                            <span class="pron-ipa-content">/{{ word_details.pronunciation }}/<span>
+                        </div>
+                        <div>
+                            {{ definition.definition }}
+                        </div>
+                        <small>
+                            {{ word_details.etymology }}
+                        </small>
+                        <div>
+                            <p><a class="link-color" href="{{ url_for('main.define', word=word.word) }}">Examples</a></p>
+                        </div>
 
                     {% endif %}
-
-                </section>
-            </div>
-        {% else %}
-            <div class="edit-article">
-                <section id="top-definitions-section">
-                    <div class="defined-word-container">
-                        <h1 name="defined-word" class="defined-word-content">{{ word.translation }}</h1>
-                        <h1 name="defined-word" class="defined-word-content">{{ word.output }}</h1>
-                        <h1 name="defined-word" class="defined-word-content">{{ word.example }}</h1>
-                        <h1 name="defined-word" class="defined-word-content">{{ word.user_id }}</h1>
-                        <h1 name="defined-word" class="defined-word-content">{{ word.dst}}</h1>
-                        <h1 name="defined-word" class="defined-word-content">{{ word.input}}</h1>
-
-                        Look into what is saved when you add it to the dictionary
-                    </div>
-                    <div class="pron-ipa-container">
-                        <span class="pron-ipa-content">/ɡɒlf/<span>
-                    </div>
-                    <hr>
                 </section>
             </div>
         {% endif %}
 
-        <div class="edit-article">
+        <div class="edit-page-box">
             <div class="icon-container">
                 <div class="tooltip-container">
                     <a><i class="fa fa-eye-slash fa-2x {% if word.ignored %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
@@ -80,25 +57,45 @@
             </div>
         </div>
 
-        <div class="edit-article">
-
-            {% if word.word %}
-                <div id="edit-page-example">
-                    {% if definition %}<h3>Example</h3>{% else %}<h3>Edit Translation</h3>{% endif %}
-                    <textarea type="text" name="edited-example">{{ word.example }}</textarea>
+        <div class="edit-page-box">
+            {% if keyboard %}
+            <div id="keyboard-container">
+                <div id="typeit_buttons">
+                    {% for key in keyboard %}   
+                        <button onclick="addAccentToTextArea(this)" role="button" type="button" value="&{{ key.html_entity }}">{{ key.character}}</button>
+                    {% endfor %}
                 </div>
-            {% else %}
-                <div id="definition-example">
-                    <textarea type="text" name="edited-example">{{ word.output }}</textarea>
-                </div>
+            </div>
             {% endif %}
-            <button class="btn btn-primary" type="submit">Edit and Update</button>
         </div>
 
-
-        <div class="edit-article">
+        <div class="edit-page-box">
             <div class="statistics-container">
-                <h3>Statistics</h3>
+                <ul>
+                    <li>Created: {{ moment(word.created).format('D MMM YYYY') }} </li>
+                    {% if word.last_modified %}
+                    <li>Last Modified: {{ moment(word.last_modified).format('D MMM YYYY') }} </li>
+                    {% endif %}
+                    <li>Attempts: {{ word.attempt }} </li>
+                    <li>Correct: {{ word.success }} </li>
+                    <li>Incorrect: {{ word.fail }} </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="edit-page-box">
+        {% if word.word %}
+            <div id="edit-page-example">
+                {% if definition %}{% endif %}
+                <textarea id="edited-example" type="text" name="edited-example">{{ word.example }}</textarea>
+            </div>
+        {% endif %}
+        <button class="btn btn-primary" type="submit">Edit and Update</button>
+        </div>
+
+        <div class="edit-page-box">
+            <div class="statistics-container">
+                <h3>Did You Know?</h3>
                 <ul>
                     <li>Created: {{ moment(word.created).format('D MMM YYYY') }} </li>
                     {% if word.last_modified %}
@@ -141,6 +138,13 @@
                 starBoolean.value = 1;
             }
         }
+    }
+</script>
+
+<script type="text/javascript">
+    const addAccentToTextArea = event => {
+        // Add accent to the text area
+        document.getElementById("edited-example").value += event.value;
     }
 </script>
 

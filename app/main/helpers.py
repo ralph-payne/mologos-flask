@@ -150,7 +150,6 @@ def translate_api(src_text, dest_language):
             translator = Translator()
             sleep(0.5)
             pass
-    print(result)
     return result.text     
    
 

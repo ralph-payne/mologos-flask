@@ -48,13 +48,13 @@ Challenge
                             {% for word in words %}
                             <tr>
                                 <td>
-                                    {{ word.original }}
+                                    {{ word.word }}
                                 </td>
                                 <td>
                                     <input type="hidden" name="eye_boolean" value="0">
                                     <input type="hidden" name="word_id" value="{{ word.id }}">
-                                    <input type="hidden" name="target_word" value="{{ word.example }}">
-                                    <input type="hidden" name="translation" value="{{ word.original }}">
+                                    <input type="hidden" name="target_word" value="{{ word.target_word }}">
+                                    <input type="hidden" name="translation" value="{{ word.target_word }}">
                                     <input type="hidden" name="star_boolean" value="0">
                                     <input id="user-guess" type="text" name="user_guess" placeholder="write guess...">
                                 </td>

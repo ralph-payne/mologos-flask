@@ -38,7 +38,7 @@
                     <thead>
                         <tr>
                             <th>English</th>
-                            <th>{{ lng.lng_src }}</th>
+                            <th>{{ lng.lng_eng }} / {{ lng.lng_src }}</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -47,7 +47,7 @@
                     <tbody>
                         {% for word in words %}            
                             <tr>
-                                <td>{{ word.original }}</td>
+                                <td>{{ word.word }}</td>
                                 <td>{{ word.example }}</td>
                                 <td><a href="{{ url_for('main.edit', id=word.id, lng=lng.code) }}"><i class="fa fa-edit"></i></a></td>                             
                                 <td><a href="{{ url_for('main.delete', id=word.id, lng=lng.code ) }}"><i class="fa fa-trash"></i></a></td>
