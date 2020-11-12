@@ -145,16 +145,36 @@ def translate_api(src_text, dest_language):
     while result == None:
         try:
             result = translator.translate(src_text, src='en', dest=dest_language)
-        except Exception as e:
-            print(e)
+        except Exception as error:
+            print(f'error translating {src_text} into {dest_language}')
             translator = Translator()
-            sleep(0.5)
+            sleep(0.0001)
             pass
-    return result.text     
+    return result.text
+
+
+def bulk_translate(src_text):
+    lng_codes = [
+        { 'code': 'de', 'lng_eng': 'German', 'lng_src': 'Deutsch' },
+        { 'code': 'es', 'lng_eng': 'Spanish', 'lng_src': 'español' },
+        { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' },
+        { 'code': 'en', 'lng_eng': 'English', 'lng_src': 'English' },
+        { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' }
+    ]
+
+    foo = []
+
+    for a in lng_codes:
+        goo = translate_api(src_text, a['code'])
+        foo.append(goo)
+
+    for b in foo:
+        print(b)
+
+    return foo
    
 
 def lng_dict(lng):
-
     lng_codes = [
         { 'code': 'de', 'lng_eng': 'German', 'lng_src': 'Deutsch' },
         { 'code': 'es', 'lng_eng': 'Spanish', 'lng_src': 'español' },

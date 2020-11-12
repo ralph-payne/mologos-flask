@@ -12,11 +12,11 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MOLOGOS_MAIL_SUBJECT_PREFIX = '[Mologos]'
     FLASKY_MAIL_SENDER = 'Mologos Admin <mologos@example.com>'
-    FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
     SSL_REDIRECT = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_RECORD_QUERIES = True
-    MAX_SIZE_CHALLENGE = 30
+    MAX_SIZE_CHALLENGE = 4
+    WORDS_PER_PAGE = 5
 
     @staticmethod
     def init_app(app):

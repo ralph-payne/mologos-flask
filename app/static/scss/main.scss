@@ -3,6 +3,11 @@
 @import 'media_queries';
 @import 'auth';
 
+/* 0: WHAT IS THIS CALLED */
+* {
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+}
 
 /* 1: NAVBAR */
 #main-nav {
@@ -37,9 +42,8 @@
 
         #nav-search-bar {
             width: 70%;
-            padding: 0.25rem;
-            border-radius: .25rem;
-            margin-bottom: .25rem;
+            padding: 0.1rem;
+            border-radius: 0.50rem;
             height: 100%;
         }
 
@@ -572,5 +576,56 @@
 #results-table-foreign {
     table {
         grid-template-columns: 5fr 5fr 5fr 1fr;
+    }
+}
+
+
+/* ?: ERROR PAGES */
+#error-page {
+    position: relative;
+    height: 100vh;
+    background: #f6f6f6;
+
+    .error-page {
+        width: 100%;
+        line-height: 1.4;
+        padding: 110px 40px;
+        text-align: center;
+        background: #fff;
+
+        .error-page-404 {
+            position: relative;
+            height: 180px;
+
+            h1 {
+                font-family: 'Roboto', sans-serif;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                -webkit-transform: translate(-50%, -50%);
+                    -ms-transform: translate(-50%, -50%);
+                        transform: translate(-50%, -50%);
+                font-size: 165px;
+                font-weight: 700;
+                margin: 0px;
+                color: #262626;
+                text-transform: uppercase;
+
+                >span {
+                    color: $secondary-color;
+                }
+            }
+        }
+
+        h2 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 22px;
+            font-weight: 400;
+            text-transform: uppercase;
+            color: #151515;
+            margin-top: 0px;
+            margin-bottom: 25px;
+        }
+
     }
 }

@@ -50,6 +50,17 @@
           {% endif %}
         </div>
 
+        <div>
+            {% if translation_list %}
+                <h2>Translation List</h2>
+                <ul>
+                    {% for translation in translation_list %}
+                        <li>{{ translation[0]|upper}}{{translation[1:]}}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+          </div>
+
         </hr>
 
         <div>

@@ -71,6 +71,7 @@ class Role(db.Model):
         return '<Role %r>' % self.name
 
 
+# WORD MODEL
 class Word(db.Model):
     __tablename__ = 'word'
     id = db.Column(db.Integer, primary_key=True)
@@ -85,10 +86,11 @@ class Word(db.Model):
         self.pronunciation = pronunciation
 
 
+# USER EXAMPLE MODEL
 class UserExample(db.Model):
     __tablename__ = 'user_example'
     id = db.Column(db.Integer, primary_key=True)
-    # Example contains either (i) a sentence in English with the target word in or (ii) the translated sentence in the destination language (dst)
+    # Example contains either (1) a sentence in English with the target word in or (2) the translated sentence in the destination language (dst)
     example = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('app_user.id'))
     word = db.Column(db.String)    

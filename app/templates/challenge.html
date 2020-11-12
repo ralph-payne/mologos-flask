@@ -24,15 +24,15 @@ Challenge
                     </thead>
 
                     <tbody>
-                        {% if english %}
-                            {% for word in words %}
+                        {% for word in words %}
+                            {% if english %}
                             <tr>
                                 <td>
-                                    {{ word.first_half_sentence }}
                                     <input type="hidden" name="word_id" value="{{ word.id }}">
                                     <input type="hidden" name="target_word" value="{{ word.target_word }}">
                                     <input type="hidden" name="star_boolean" value="0">
                                     <input type="hidden" name="eye_boolean" value="0">
+                                    {{ word.first_half_sentence }}
                                     <input id="user-guess" type="text" name="user_guess" placeholder="write guess...">
                                     {{ word.second_half_sentence }}
                                 </td>
@@ -43,18 +43,18 @@ Challenge
                                 <td><a id="{{ word.id }}-star-icon" href="#" onclick="toggleColor(this)"><i
                                             class="fa fa-star fa-2x"></i></a></td>
                             </tr>
-                            {% endfor %}
-                        {% else %}
-                            {% for word in words %}
+                            {% else %}
                             <tr>
                                 <td>
+                                    <!-- Word in English -->
                                     {{ word.word }}
                                 </td>
                                 <td>
-                                    <input type="hidden" name="eye_boolean" value="0">
                                     <input type="hidden" name="word_id" value="{{ word.id }}">
-                                    <input type="hidden" name="target_word" value="{{ word.target_word }}">
-                                    <input type="hidden" name="translation" value="{{ word.target_word }}">
+                                    <!-- Translated Word (target_word) -->
+                                    <input type="hidden" name="target_word" value="{{ word.example }}">
+                                    <input type="hidden" name="word-in-english" value="{{ word.word }}">
+                                    <input type="hidden" name="eye_boolean" value="0">
                                     <input type="hidden" name="star_boolean" value="0">
                                     <input id="user-guess" type="text" name="user_guess" placeholder="write guess...">
                                 </td>
@@ -63,8 +63,8 @@ Challenge
                                 <td><a id="{{ word.id }}-star-icon" href="#" onclick="toggleColor(this)"><i
                                             class="fa fa-star fa-2x"></i></a></td>
                             </tr>
-                            {% endfor %}
-                        {% endif %}
+                            {% endif %}
+                        {% endfor %}
                     </tbody>
                 </table>
                 <div id="end-btn-div">

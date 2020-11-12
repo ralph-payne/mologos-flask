@@ -1,0 +1,68 @@
+
+
+{% macro pagination_widget(pagination, endpoint, lng, fragment='') %}
+
+
+<style>
+    .pagination {
+        display: flex;
+        padding-left: 0;
+        list-style: none;
+        border-radius: .25rem;
+    }
+
+    .pagination-page-link {
+        position: relative;
+        display: block;
+        padding: .5rem .75rem;
+        margin-left: -1px;
+        line-height: 1.25;
+        color: #007bff;
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+    }
+
+    .pagination-active {
+        color: red;
+        font-size: 20px;
+    }
+    
+    .pagination-disabled {
+        pointer-events: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        opacity: 0.25;
+    }
+
+</style>
+
+
+<ul class="pagination">
+    <li{% if not pagination.has_prev %} class="disabled"{% endif %}>
+        <a href="{% if pagination.has_prev %}{{ url_for(endpoint, lng=lng, page=pagination.prev_num, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
+            &laquo;
+        </a>
+    </li>
+    {% for p in pagination.iter_pages() %}
+        {% if p %}
+            {% if p == pagination.page %}
+            <li>
+                <a class="pagination-page-link pagination-active" href="{{ url_for(endpoint, lng=lng, page = p, **kwargs) }}{{ fragment }}">{{ p }}</a>
+            </li>
+            {% else %}
+            <li>
+                <a class="pagination-page-link" href="{{ url_for(endpoint, lng=lng, page = p, **kwargs) }}{{ fragment }}">{{ p }}</a>
+            </li>
+            {% endif %}
+        {% else %}
+        <li class="pagination-disabled"><a href="#">&hellip;</a></li>
+        {% endif %}
+    {% endfor %}
+    <li{% if not pagination.has_next %} class="disabled"{% endif %}>
+        <a href="{% if pagination.has_next %}{{ url_for(endpoint, lng=lng, page=pagination.next_num, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
+            &raquo;
+        </a>
+    </li>
+</ul>
+{% endmacro %}

@@ -9,22 +9,9 @@ from ..models import Definition, DictionaryExample, UserExample, User, Word
 from flask_login import current_user, login_required
 
 # Helper functions for parsing results from API and database dictionary
-from .helpers import lookup_api, lookup_db_dictionary, translate_api, lng_dict, is_english
+from .helpers import lookup_api, lookup_db_dictionary, translate_api, bulk_translate, lng_dict, is_english
 
-
-'''
-class InternationalAccent(UserMixin, db.Model):
-    __tablename__ = 'international_accent'
-    id = db.Column(db.Integer, primary_key=True)
-    character = db.Column(db.String(1))
-    language = db.Column(db.String(32))
-    alt_code = db.Column(db.String(32))
-    html_entity = db.Column(db.String(32))
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-'''
-
+# These imports are down here as they will get moved to a new file eventually
 from ..models import InternationalAccent
 from .international_accent_list import international_accent_list
 from .starting_data import starting_data
@@ -41,9 +28,6 @@ def index():
                 password='12341234')
         db.session.add(user)
         db.session.commit()
-
-    # Get rid of all
-    InternationalAccent.query.delete() # temp code because I've changed the data
 
     accent_exists = InternationalAccent.query.filter_by(html_entity='Agrave;').first()
 
@@ -69,13 +53,12 @@ def index():
 
     # If it's the same length, don't add any more
     if len(starting_data) != len(all_examples):
-        # Reset the data by deleting whatever
+        # Reset the data by deleting whatever is already there
         UserExample.query.filter_by(user_id=test_user_id).delete()
         for item in starting_data:
             language = item['language']
             word = item['word']
             example = item['example']
-            # user_id = item['userid']
 
             if language == 'english':
                 record = UserExample(example=example, word=word, user_id=test_user_id, translation=False, src=None, dst='en')
@@ -111,8 +94,7 @@ def add():
 @main.route('/delete/<lng>/<id>')
 @login_required
 def delete(lng, id):
-    # Hard delete data
-    UserExample.query.filter_by(id=id).delete()
+    UserExample.query.filter_by(id=id).delete() # Hard delete data
     db.session.commit()
     return redirect(url_for('main.list', lng=lng))
 
@@ -128,7 +110,7 @@ def define(word):
 
     # If not found in local dictionary, use the API
     else:
-        # Lookup the word in the API (helper function returns a dict)
+        # Lookup the word in the API helper function, which returns a dict
         api_return_val = lookup_api(word)
 
         # Return a cannot find if it couldn't be found
@@ -157,13 +139,16 @@ def define(word):
                 db.session.add(record)
 
             # Add each of the examples to the database
+            # NOT WORKING
             for example in examples:
                 record = DictionaryExample(word, example, source)
                 db.session.add(record)
 
+            translation_list = bulk_translate(word)
+
             db.session.commit()
     
-        return render_template('definition.html', word=api_return_val)
+        return render_template('definition.html', word=api_return_val, translation_list=translation_list)
 
 
 @main.route('/definition', methods=['POST'])
@@ -186,6 +171,11 @@ def translate():
             
             # Translate word with function from helpers.py
             translate_api_output = translate_api(text_to_translate, destination_language)
+
+            # new - 12 nov
+            bulki = bulk_translate(text_to_translate)
+            print(bulki)
+            print(type(bulki))
 
             # Query database to get the language that the user used most recently
             lng_recent = User.query.filter_by(id=current_user.id).first().lng_recent
@@ -219,22 +209,23 @@ def translate():
 
         return render_template('translate.html')
 
-    # GET request
-    else:
+    else: # GET
         id = current_user.id
         # Query database to get the language that the user used most recently
         lng_recent = User.query.filter_by(id=id).first().lng_recent
         return render_template('translate.html', lng_recent=lng_recent)
 
 
-# 6: LIST
-# Returns a list of the user's saved words
+# 6: LIST (returns a list of the user's saved words)
 @main.route('/list/<lng>')
 @login_required
 def list(lng):
-    words = UserExample.query.filter_by(user_id=current_user.id, dst=lng).all()
-    return render_template('list.html', words=words, english=is_english(lng), lng=lng_dict(lng))
-
+    page = request.args.get('page', 1, type=int)
+    pagination = UserExample.query.filter_by(user_id=current_user.id, dst=lng).paginate(
+        page, per_page=current_app.config['WORDS_PER_PAGE'], error_out=False)
+    words = pagination.items
+    return render_template('list.html', words=words, english=is_english(lng), 
+    lng=lng_dict(lng), endpoint='.list', pagination=pagination)
 
 
 # 7: EDIT
@@ -252,7 +243,6 @@ def edit(lng, id):
         metadata.starred = star_bool
         metadata.ignored = hide_bool
         metadata.last_modified = last_modified
-
         db.session.commit()
 
         # Redirect to User List
@@ -264,8 +254,6 @@ def edit(lng, id):
         # Word contains etymology and pronunciation
         word = UserExample.query.filter_by(id=id).first()
         if lng == 'en':
-
-            
             # TODO => make this a lookup on the id rather than the word
             word_details = Word.query.filter_by(word=word.word).first()
 
@@ -273,32 +261,8 @@ def edit(lng, id):
 
             return render_template('edit.html', word=word, word_details=word_details, definition=definition, lng=lng_dict(lng))
         else:
-            # Get Keyboard
-            lng
-
-            '''
-            class InternationalAccent(UserMixin, db.Model):
-                __tablename__ = 'international_accent'
-                id = db.Column(db.Integer, primary_key=True)
-                character = db.Column(db.String(1))
-                language = db.Column(db.String(32))
-                alt_code = db.Column(db.String(32))
-                html_entity = db.Column(db.String(32))
-
-                def __init__(self, *args, **kwargs):
-                    super().__init__(*args, **kwargs)
-
-                "id": 1,
-                "character": "À",
-                "entitycode": "Agrave;",
-                "altcode": "0192",
-                "language": "pt"
-            '''
-
-            # Declare list of keyboard accents for lang
+            # Declare list of keyboard accents for language
             keyboard = InternationalAccent.query.filter_by(language=lng).all()
-
-            print(f'number of accents in {lng} is {len(keyboard)}')
 
             return render_template('edit.html', word=word, keyboard=keyboard, lng=lng_dict(lng))
 
@@ -307,68 +271,70 @@ def edit(lng, id):
 @main.route('/challenge/<lng>', methods=['GET', 'POST'])
 @login_required
 def challenge(lng):
-    # POST request so check results
-    if request.method == 'POST':
-        # Declare arrays to store data from forms
+    # ?: RESULTS
+    if request.method == 'POST': # Check results
+        # Declare arrays to store data from challenge form
         word_ids = request.form.getlist('word_id')
+        target_words = request.form.getlist('target_word')
         stars = request.form.getlist('star_boolean')
         skips = request.form.getlist('eye_boolean')
         guesses = request.form.getlist('user_guess')
-        target_words = request.form.getlist('target_word')
 
         # Temp separating eng and foreign, but on v2 they will merge into one model
         if (lng != 'en'):
-            translations = request.form.getlist('translation')
+            words_in_english = request.form.getlist('word-in-english')
         else:
-            translations = []
+            words_in_english = []
 
-        # Declare empty list to store results and get length of words submitted
+        # Declare empty list to store results
         results = []
         size = len(word_ids)
 
         for i in range(size):
-            if (is_english(lng)):
-                translation = ''
-            else:
-                translation = translations[i]
-                
-            result_bool = 1 if target_words[i].lower() == guesses[i].lower() else 0
+            # result_bool = 1 if target_words[i].lower() == guesses[i].lower() else 0
+            result_bool = 0
+
+            if target_words[i].lower():
+                result_bool = target_words[i].lower() == guesses[i].lower()
 
             metadata = UserExample.query.filter_by(user_id=current_user.id, id=word_ids[i]).first()
-            
+            metadata.attempt = UserExample.attempt + 1
+            metadata.skip = 1 if skips[i] else 0
+            metadata.starred = 1 if stars[i] else 0
+
             if (result_bool):
                 metadata.success = UserExample.success + 1
             else:
                 metadata.fail = UserExample.fail + 1
 
-            metadata.attempt = UserExample.attempt + 1
-
-            if (skips[i]):
-                metadata.skip = 1
-
-            if (stars[i]):
-                metadata.starred = 1
-
+            # Update database
             db.session.commit()
 
+            if (is_english(lng)):
+                 word_in_english = ''
+            else:
+                word_in_english  = words_in_english[i]
+
             result_dict = {
-                'id': word_ids[i], 
+                'id': word_ids[i],
+                # Word (always in English)
                 'target_word': target_words[i],
                 'starred': stars[i],
                 'skipped': skips[i],
                 'user_guess': guesses[i],
                 'result': result_bool,
-                'translation': translation,
-                'example': metadata.example
+                # 'translation': translation,
+                # Either English Example or Foriegn Translation
+                'example': metadata.example,
+                'word_in_english': word_in_english
             }
 
             results.append(result_dict)
 
         return render_template('results.html', results=results, lng=lng_dict(lng), english=is_english(lng))
 
-    # GET
-    else:
-        # English view differs
+    else: # GET (Show Challenge Page)
+        # English view differs from foreign view
         if (is_english(lng)):
             # Filter out words which have been ignored by the user
             words_from_db = UserExample.query.filter_by(user_id=current_user.id, dst=lng, ignored=False).all()
@@ -411,7 +377,7 @@ def challenge(lng):
 
             return render_template('challenge.html', words=words, lng=lng_dict(lng), english=is_english(lng))
 
-        else:
+        else: # Foreign Language Challenge
             words = UserExample.query.filter_by(user_id=current_user.id, dst=lng).all()
             return render_template('challenge.html', words=words, lng=lng_dict(lng), english=is_english(lng))
 

@@ -17,7 +17,7 @@
                     <th>Target Word</th>
                     {% else %}
                     <th>English</th>
-                    <th>{{ lng.lng_src }}</th>
+                    <th>{{ lng.lng_eng }} / {{ lng.lng_src }}</th>
                     {% endif %}
                     <th>Your Guess</th>
                     <th></th>
@@ -25,20 +25,26 @@
             </thead>
         
             <tbody>
-                {% for result in results %}
-                    <tr>
-                        <td>{% if english %}{{ result.example }}{% else %}{{ result.translation }}{% endif %}</td>    
-                        <td><a class="link-color" href="{{ url_for('main.edit', id=result.id, lng=lng.code) }}">{{ result.target_word }}</td>
-                        <td>{{ result.user_guess }}</td>
-                        <td>
-                            {% if result.result %}
-                            <i class="fa fa-check fa-2x">
-                            {% else %}
-                            <i class="fa fa-times fa-2x"></i>
-                            {% endif %}
-                        </td>                            
-                    </tr>
-                {% endfor %}
+            {% for result in results %}
+                <tr>
+                    {% if english %}
+                    <td>{{ result.example }}</td>    
+                    <td><a class="link-color" href="{{ url_for('main.edit', id=result.id, lng=lng.code) }}">{{ result.target_word }}</td>
+                    {% else %}
+
+                    <td>{{ result.word_in_english }}</td>    
+                    <td><a class="link-color" href="{{ url_for('main.edit', id=result.id, lng=lng.code) }}">{{ result.example }}</td>
+                    {% endif %}
+                    <td>{{ result.user_guess }}</td>
+                    <td>
+                        {% if result.result %}
+                        <i class="fa fa-check fa-2x">
+                        {% else %}
+                        <i class="fa fa-times fa-2x"></i>
+                        {% endif %}
+                    </td>                            
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
         <div id="end-btn-div">
