@@ -26,7 +26,7 @@
         <div>
           <ol>
               {% for definition in word.definitions %}
-                  <li> {{definition}} </li>
+                  <li>{{ definition[0]|upper}}{{definition[1:]}}</li>
               {% endfor %}
           </ol>
         </div>
@@ -59,7 +59,7 @@
                     {% endfor %}
                 </ul>
             {% endif %}
-          </div>
+        </div>
 
         </hr>
 

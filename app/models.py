@@ -122,29 +122,34 @@ class UserExample(db.Model):
         self.dst = dst
 
 
+# DEFINITION MODEL
 class Definition(db.Model):
     __tablename__ = 'definition'
     id = db.Column(db.Integer, primary_key=True)
-    word = db.Column(db.String)
-    definition = db.Column(db.Text())
-    source = db.String(32)
+    word_id = db.Column(db.Integer, db.ForeignKey('word.id'))
+    # word = db.Column(db.String)
+    definition = db.Column(db.String(256))
+    source = db.String(16)
+    created = db.Column(db.DateTime, default=datetime.utcnow)
 
-    def __init__(self, word, definition, source):
-        self.word = word
+    def __init__(self, word_id, definition, source):
+        self.word_id = word_id
         self.definition = definition
         self.source = source
 
 
+# DICTIONARY EXAMPLE MODEL
 class DictionaryExample(db.Model):
     __tablename__ = 'dictionary_example'
     id = db.Column(db.Integer, primary_key=True)
-    word = db.Column(db.String)
-    example = db.Column(db.String)
-    source = db.String(32)
+    word_id = db.Column(db.Integer, db.ForeignKey('word.id'))
+    # word = db.Column(db.String)
+    example = db.Column(db.String(256))
+    source = db.String(16)
     created = db.Column(db.DateTime, default=datetime.utcnow)
 
-    def __init__(self, word, example, source):
-        self.word = word
+    def __init__(self, word_id, example, source):
+        self.word_id = word_id
         self.example = example
         self.source = source
 

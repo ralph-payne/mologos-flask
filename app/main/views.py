@@ -103,52 +103,65 @@ def delete(lng, id):
 @main.route('/definition/<word>')
 def define(word):
     # Use helper function (found in helpers.py) to look up word in database dictionary    
-    local_dictionary_res = lookup_db_dictionary(word)
+    local_dictionary_result = lookup_db_dictionary(word)
 
-    if local_dictionary_res is not None:
-        return render_template('definition.html', word=local_dictionary_res, source='local')
+    if local_dictionary_result is not None:
+        return render_template('definition.html', word=local_dictionary_result, source='local')
 
     # If not found in local dictionary, use the API
     else:
         # Lookup the word in the API helper function, which returns a dict
-        api_return_val = lookup_api(word)
+        api_return_value = lookup_api(word)
 
         # Return a cannot find if it couldn't be found
-        if api_return_val is None:
+        if api_return_value is None:
             flash(f'{word} was not found')
             # TODO => change logic to render a "did you mean X" page (Nice to Have Version2 Feature)
             # TODO => get rid of the word in the url parameters as well
 
         else:
-            word = api_return_val['word']
-            pronunciation = api_return_val['pronunciation']
-            etymology = api_return_val['etymology']
-            definitions = api_return_val['definitions']
-            examples = api_return_val['examples']
-            
-            # Temp hardcoding; this should come from a helper function eventually
+            word = api_return_value['word']
+            pronunciation = api_return_value['pronunciation']
+            etymology = api_return_value['etymology']
+            definitions = api_return_value['definitions']
+            examples = api_return_value['examples']
             source = 'oxford'
+
+            print(f'{word}: {etymology} [{source}]')
+
+            if examples == []:
+                print('empty examples')
+
+            for i in examples:
+                print(i)
 
             # Add to local dictionary database
             new_word = Word(word, etymology, pronunciation)
             db.session.add(new_word)
+            
+            # There is a more efficient way with lastrowid but I can't get it to work right now
+            word_query_inefficient = Word.query.filter_by(word=word).one()
+
+            # Get that word ID            
+            last_row_id = word_query_inefficient.id
+
 
             # Add each of the definitions to the database
             for definition in definitions:
-                record = Definition(word, definition, source)
+                record = Definition(last_row_id, definition, source)
                 db.session.add(record)
 
             # Add each of the examples to the database
             # NOT WORKING
             for example in examples:
-                record = DictionaryExample(word, example, source)
+                record = DictionaryExample(last_row_id, example, source)
                 db.session.add(record)
 
             translation_list = bulk_translate(word)
 
             db.session.commit()
     
-        return render_template('definition.html', word=api_return_val, translation_list=translation_list)
+        return render_template('definition.html', word=api_return_value, translation_list=translation_list)
 
 
 @main.route('/definition', methods=['POST'])
