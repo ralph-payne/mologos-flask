@@ -280,6 +280,8 @@ class InternationalAccent(UserMixin, db.Model):
     language = db.Column(db.String(32))
     alt_code = db.Column(db.String(32))
     html_entity = db.Column(db.String(32))
+    row_num = db.Column(db.Integer)
+    in_use = db.Column(db.Boolean)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

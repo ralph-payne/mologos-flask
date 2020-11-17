@@ -4,7 +4,26 @@
     {{ word.word if word else 'Not Found' }}
 {% endblock %}
 
+
 {% block page_content %}
+
+<style>
+    #translation-table-grid {
+        display: grid;
+        grid-gap: 0.1rem;
+        grid-template-columns: 150px 150px;
+    }
+    
+    .translation-table-grid-item {
+        padding: 0.1rem;
+        background: #f4f4f4;
+        border: #ccc 1px solid;
+        text-align: left;
+        font-weight: 500;
+        font-size: 1.1rem;
+    }
+</style>
+
 <div class="inner-container">
 
     <form action={{ url_for('main.add', word=word.word) }} method="POST">
@@ -33,10 +52,10 @@
 
         <div>
           {% if word.examples %}
-              <h2 class="link color">Examples</h2>
+              <h2>Examples</h2>
               <ul>
                   {% for example in word.examples %}
-                      <li>{{ example[0]|upper}}{{example[1:]}}</li>
+                      <li class="bullet-points">{{ example[0]|upper}}{{example[1:]}}</li>
                   {% endfor %}
               </ul>
           {% endif %}
@@ -52,12 +71,12 @@
 
         <div>
             {% if translation_list %}
-                <h2>Translation List</h2>
-                <ul>
-                    {% for translation in translation_list %}
-                        <li>{{ translation[0]|upper}}{{translation[1:]}}</li>
-                    {% endfor %}
-                </ul>
+            <div id="translation-table-grid">
+                {% for translation in translation_list %}
+                    <div class="translation-table-grid-item">{{ translation.language }}</div>
+                    <div class="translation-table-grid-item">{{ translation.text }}</div>
+                {% endfor %}
+            </div>
             {% endif %}
         </div>
 

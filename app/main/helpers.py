@@ -183,36 +183,57 @@ def translate_api(src_text, dest_language):
 
 
 def bulk_translate(src_text):
-    lng_codes = [
+    language_codes = [
         { 'code': 'de', 'lng_eng': 'German', 'lng_src': 'Deutsch' },
         { 'code': 'es', 'lng_eng': 'Spanish', 'lng_src': 'español' },
-        { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' },
-        { 'code': 'en', 'lng_eng': 'English', 'lng_src': 'English' },
-        { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' }
+        { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' },
+        { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' }
     ]
 
-    foo = []
+    translations = []
 
-    for a in lng_codes:
-        goo = translate_api(src_text, a['code'])
-        foo.append(goo)
+    for dict in language_codes:
+        translation = {
+            'text': translate_api(src_text, dict['code']),
+            'language': dict['lng_eng']
+         }
+        translations.append(translation)
 
-    for b in foo:
-        print(b)
+    return translations
 
-    return foo
-   
 
-def lng_dict(lng):
-    lng_codes = [
+def bulk_translate_excluding(src_text, language_to_exclude):
+    language_codes = [
         { 'code': 'de', 'lng_eng': 'German', 'lng_src': 'Deutsch' },
         { 'code': 'es', 'lng_eng': 'Spanish', 'lng_src': 'español' },
-        { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' },
-        { 'code': 'en', 'lng_eng': 'English', 'lng_src': 'English' },
-        { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' }
+        { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' },
+        { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' }
     ]
 
-    for code in lng_codes:
+    new_list = list(filter(lambda x: x['code'] != language_to_exclude, language_codes))
+
+    translations = []
+
+    for dict in new_list:
+        translation = {
+            'text': translate_api(src_text, dict['code']),
+            'language': dict['lng_eng']
+         }
+        translations.append(translation)
+
+    return translations    
+
+
+def create_language_dict(lng):
+    language_codes = [
+        { 'code': 'de', 'lng_eng': 'German', 'lng_src': 'Deutsch' },
+        { 'code': 'es', 'lng_eng': 'Spanish', 'lng_src': 'español' },
+        { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' },
+        { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' },
+        { 'code': 'en', 'lng_eng': 'English', 'lng_src': 'English' }
+    ]
+
+    for code in language_codes:
         if code['code'] == lng:
             return code
 

@@ -1,8 +1,22 @@
+<!-- NAVBAR LINK MACRO -->
+<style>
+    .navbar-link-active {
+        background: #48954e !important;
+        color: #fff !important;
+    }
+</style>
+
+{% macro nav_link(endpoint, language, name) %}
+    {% if request.endpoint.endswith(endpoint) %}
+        <li class="navbar-link-active"><a class="navbar-link-active" href="{{ url_for(endpoint, lng='en') }}">{{ name }} ACTIVE</a></li>
+    {% else %}
+        <li><a href="{{ url_for(endpoint, lng='en') }}">{{ request.endpoint }}</a></li>
+    {% endif %}
+{% endmacro %}
 
 
+<!-- PAGINATION MACRO -->
 {% macro pagination_widget(pagination, endpoint, lng, fragment='') %}
-
-
 <style>
     .pagination {
         display: flex;
@@ -34,9 +48,7 @@
         user-select: none;
         opacity: 0.25;
     }
-
 </style>
-
 
 <ul class="pagination">
     <li{% if not pagination.has_prev %} class="disabled"{% endif %}>

@@ -1,3 +1,5 @@
+{% from "_macros.html" import nav_link with context %}
+
 <nav id="main-nav">
     <div class="container">
         <div>
@@ -15,10 +17,12 @@
         <div class="flex-container items-right">
             <ul>
                 {% if current_user.is_authenticated %}
-                    <li><a href="{{ url_for('main.list', lng='en') }}">List</a></li>
-                    <li><a href="{{ url_for('main.challenge', lng='en') }}">Challenge</a></li>
-                    <li><a href="{{ url_for('main.translate') }}">Translate</a></li>
+
+                    {{ nav_link('main.list', 'en', 'list') }}
+                    {{ nav_link('main.challenge', 'en', 'challenge') }}
+
                     <li><a href="{{ url_for('auth.logout') }}"><i class="fa fa-sign-out-alt"></i></a></td>
+
                 {% else %}
                     <li><a class="login-nav-icon" href="{{ url_for('auth.login') }}">Login</a></li>
                 {% endif %}

@@ -2,41 +2,39 @@
 {% block title %}Edit {{ word.word }} {% endblock %}
 
 {% block page_content %}
+
+
+
 <div class="inner-container">
     <form action="{{ url_for('main.edit', id=word.id, lng=lng.code) }}" method="POST">
     
     <div id="edit-grid">
-        {% if word.word %}
-            <div class="edit-page-box">
-                <section id="top-definitions-section">
-                    <div class="defined-word-container">
-                        <h1 name="defined-word" class="defined-word-content">{{ word.word }}</h1>
-                        <hr>
-                        {{ lng.lng_src }}
-                        <hr>
-                        {{ word.example }}
-                    </div>
-
-                    {% if word_details %}
-                        <div class="pron-ipa-container">
-                            <span class="pron-ipa-content">/{{ word_details.pronunciation }}/<span>
-                        </div>
-                        <div>
-                            {{ definition.definition }}
-                        </div>
-                        <small>
-                            {{ word_details.etymology }}
-                        </small>
-                        <div>
-                            <p><a class="link-color" href="{{ url_for('main.define', word=word.word) }}">Examples</a></p>
-                        </div>
-
-                    {% endif %}
-                </section>
+        <div>
+            <div class="defined-word-container">
+                <h1 name="defined-word" class="defined-word-content">{{ word.example }}</h1>
+                <hr>
+                <hr>
+                {{ word.word }}
             </div>
-        {% endif %}
 
-        <div class="edit-page-box">
+            {% if word_details %}
+                <div class="pron-ipa-container">
+                    <span class="pron-ipa-content">/{{ word_details.pronunciation }}/<span>
+                </div>
+                <div>
+                    {{ definition.definition }}
+                </div>
+                <small>
+                    {{ word_details.etymology }}
+                </small>
+                <div>
+                    <p><a class="link-color" href="{{ url_for('main.define', word=word.word) }}">Examples</a></p>
+                </div>
+
+            {% endif %}
+        </div>
+
+        <div>
             <div class="icon-container">
                 <div class="tooltip-container">
                     <a><i class="fa fa-eye-slash fa-2x {% if word.ignored %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
@@ -57,19 +55,99 @@
             </div>
         </div>
 
-        <div class="edit-page-box">
+        <style>
+            #keyboard-container {
+                background: red;
+                padding: 10px;
+                width: 300px;
+                background: grey;
+                height: 100%;
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                margin-top: 10px;
+                box-sizing: border-box;
+                font-size: 16px;
+                line-height: 29px;
+                margin-right: 3px;
+            }
+        
+            #typeit_buttons {
+                background: green;
+                border-radius: 0.75rem;
+                padding: 3px;
+                margin: 12px;
+                display: flex;
+                /* Horizonatally centered */
+                justify-content: center;
+                flex-wrap: wrap;
+                height: 150px;
+                width: 400px;
+            }
+
+            .placeholder-19 {
+                display: inline;
+                padding: 3px;
+            }
+        
+            .placeholder-20 {
+                border-radius: 0.55rem;
+                background: gold;
+                cursor: pointer;
+                -webkit-transition: transform .1s ease-in;
+                transition: transform .1s ease-in,box-shadow .1s ease-in;
+                font-size: 16px;
+                line-height: 29px;
+                width: 35px;
+                height: 29px;
+                margin-right: 3px;
+                padding: 0;
+                margin-left: 0;
+                margin-bottom: 3px;
+                vertical-align: middle;
+                text-align: center;
+                -webkit-appearance: none;
+                font-size: 13px;
+                border-radius: 2px;
+                border-style: solid;
+                border-color: #999;
+                border-width: 1px;
+                text-rendering: auto;
+                letter-spacing: normal;
+                word-spacing: normal;
+                display: inline-block;
+                text-align: center;
+                align-items: flex-start;
+                cursor: pointer;
+                padding: 1px 6px;
+                border-width: 2px;
+            }
+        
+            .placeholder-20:active:hover {
+                background-color: #3276B1;  
+            }
+        
+
+
+            
+            
+        </style>        
+
+        <div>
             {% if keyboard %}
             <div id="keyboard-container">
                 <div id="typeit_buttons">
                     {% for key in keyboard %}   
-                        <button onclick="addAccentToTextArea(this)" role="button" type="button" value="&{{ key.html_entity }}">{{ key.character}}</button>
+                        <div class="placeholder-19">
+                            <button class="placeholder-20" onclick="addAccentToTextArea(this)" role="button" type="button" value="&{{ key.html_entity }}">{{ key.character}}</button>
+                        </div>
                     {% endfor %}
                 </div>
             </div>
             {% endif %}
         </div>
 
-        <div class="edit-page-box">
+        <div>
             <div class="statistics-container">
                 <ul>
                     <li>Created: {{ moment(word.created).format('D MMM YYYY') }} </li>
@@ -83,17 +161,18 @@
             </div>
         </div>
 
-        <div class="edit-page-box">
+        <div>
         {% if word.word %}
             <div id="edit-page-example">
                 {% if definition %}{% endif %}
+                {{ lng.lng_src }}:
                 <textarea id="edited-example" type="text" name="edited-example">{{ word.example }}</textarea>
             </div>
         {% endif %}
         <button class="btn btn-primary" type="submit">Edit and Update</button>
         </div>
 
-        <div class="edit-page-box">
+        <div>
             <div class="statistics-container">
                 <h3>Did You Know?</h3>
                 <ul>
@@ -107,6 +186,45 @@
                 </ul>
             </div>
         </div>
+
+        <style>
+            #edit-page-translation-table-grid {
+                display: grid;
+                grid-gap: 0.1rem;
+                grid-template-columns: 150px 150px 100px;
+            }
+
+            .edit-page-translation-table-grid-item {
+                padding: 0.1rem;
+                background: #f4f4f4;
+                border: #ccc 1px solid;
+                text-align: left;
+                font-weight: 500;
+                font-size: 1.1rem;
+            }
+
+            .add-button-edit-page {
+                cursor: pointer;
+            }
+        </style>
+
+        <div>
+            {% if translation_list %}
+            <div id="edit-page-translation-table-grid">
+                {% for translation in translation_list %}
+                    <div class="edit-page-translation-table-grid-item">{{ translation.language }}</div>
+                    <div class="edit-page-translation-table-grid-item">{{ translation.text }}</div>
+                    <div class="edit-page-translation-table-grid-item"><button onclick="return false;" class="add-button-edit-page">Add (+)</button></div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div>
+            <div class="statistics-container">
+                <h3>Placeholder</h3>
+            </div>
+        </div>        
 
     </div>
     </form>

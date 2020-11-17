@@ -9,7 +9,7 @@ from ..models import Definition, DictionaryExample, UserExample, User, Word
 from flask_login import current_user, login_required
 
 # Helper functions for parsing results from API and database dictionary
-from .helpers import lookup_api, lookup_db_dictionary, translate_api, bulk_translate, lng_dict, is_english
+from .helpers import lookup_api, lookup_db_dictionary, translate_api, bulk_translate, bulk_translate_excluding, create_language_dict, is_english
 
 # These imports are down here as they will get moved to a new file eventually
 from ..models import InternationalAccent
@@ -22,6 +22,9 @@ def index():
     test_user_email = 'test1234@gmail.com'
     test_user_exists = User.query.filter_by(email=test_user_email).first()
 
+    InternationalAccent.query.delete() # Delete all
+    UserExample.query.delete() # Delete all
+
     if not test_user_exists:
         user = User(email= test_user_email,
                 username='test1234',
@@ -33,14 +36,16 @@ def index():
 
     # Add all the International Accents into the database
     if not accent_exists:
-        for item in international_accent_list: 
+        for item in international_accent_list:
             id = item['id']
             character = item['character']
             html_entity = item['entitycode']
             alt_code = item['altcode']
             language = item['language']
+            row_num = item['rownum']
+            in_use = item['inuse']
 
-            special_character = InternationalAccent(id=id, character=character, language=language, alt_code=alt_code, html_entity=html_entity)
+            special_character = InternationalAccent(id=id, character=character, language=language, alt_code=alt_code, html_entity=html_entity, row_num=row_num, in_use=in_use)
             db.session.add(special_character)
                 
         db.session.commit()
@@ -145,14 +150,12 @@ def define(word):
             # Get that word ID            
             last_row_id = word_query_inefficient.id
 
-
             # Add each of the definitions to the database
             for definition in definitions:
                 record = Definition(last_row_id, definition, source)
                 db.session.add(record)
 
             # Add each of the examples to the database
-            # NOT WORKING
             for example in examples:
                 record = DictionaryExample(last_row_id, example, source)
                 db.session.add(record)
@@ -184,11 +187,6 @@ def translate():
             
             # Translate word with function from helpers.py
             translate_api_output = translate_api(text_to_translate, destination_language)
-
-            # new - 12 nov
-            bulki = bulk_translate(text_to_translate)
-            print(bulki)
-            print(type(bulki))
 
             # Query database to get the language that the user used most recently
             lng_recent = User.query.filter_by(id=current_user.id).first().lng_recent
@@ -238,7 +236,7 @@ def list(lng):
         page, per_page=current_app.config['WORDS_PER_PAGE'], error_out=False)
     words = pagination.items
     return render_template('list.html', words=words, english=is_english(lng), 
-    lng=lng_dict(lng), endpoint='.list', pagination=pagination)
+    lng=create_language_dict(lng), endpoint='.list', pagination=pagination)
 
 
 # 7: EDIT
@@ -272,12 +270,14 @@ def edit(lng, id):
 
             definition = Definition.query.filter_by(word=word.word).first()
 
-            return render_template('edit.html', word=word, word_details=word_details, definition=definition, lng=lng_dict(lng))
+            return render_template('edit.html', word=word, word_details=word_details, definition=definition, lng=create_language_dict(lng))
         else:
             # Declare list of keyboard accents for language
-            keyboard = InternationalAccent.query.filter_by(language=lng).all()
+            keyboard = InternationalAccent.query.filter_by(language=lng, in_use=1).all()
 
-            return render_template('edit.html', word=word, keyboard=keyboard, lng=lng_dict(lng))
+            translation_list = bulk_translate_excluding(word.word, lng)
+
+            return render_template('edit.html', word=word, keyboard=keyboard, lng=create_language_dict(lng), translation_list=translation_list)
 
 
 # 8: CHALLENGE
@@ -344,7 +344,7 @@ def challenge(lng):
 
             results.append(result_dict)
 
-        return render_template('results.html', results=results, lng=lng_dict(lng), english=is_english(lng))
+        return render_template('results.html', results=results, lng=create_language_dict(lng), english=is_english(lng))
 
     else: # GET (Show Challenge Page)
         # English view differs from foreign view
@@ -388,10 +388,10 @@ def challenge(lng):
                     # Skip if word does not appear in target sentence
                     words_from_db.remove(word)
 
-            return render_template('challenge.html', words=words, lng=lng_dict(lng), english=is_english(lng))
+            return render_template('challenge.html', words=words, lng=create_language_dict(lng), english=is_english(lng))
 
         else: # Foreign Language Challenge
             words = UserExample.query.filter_by(user_id=current_user.id, dst=lng).all()
-            return render_template('challenge.html', words=words, lng=lng_dict(lng), english=is_english(lng))
+            return render_template('challenge.html', words=words, lng=create_language_dict(lng), english=is_english(lng))
 
 
