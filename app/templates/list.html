@@ -9,12 +9,12 @@
 
     {% if words %}
         {% if english %}
-            <div id="my-words-table">
+            <div class="my-words-table">
                 <table>
                     <thead>
                         <tr>
                             <th>Word</th>
-                            <th>Example</th>
+                            <th>id</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -24,7 +24,8 @@
                         {% for word in words %}            
                             <tr>
                                 <td><a href="{{ url_for('main.define', word=word.word) }}">{{ word.word }}</a></td>
-                                <td>{{ word.example[0]|upper}}{{word.example[1:] }}</td>
+                                <!-- <td>{{ word.example[0]|upper}}{{word.example[1:] }}</td> -->
+                                <td>{{ word.id }}</td>
                                 <td><a href="{{ url_for('main.edit', id=word.id, lng=lng.code) }}"><i class="fa fa-edit"></i></a></td>
                                 <td><a href="{{ url_for('main.delete', id=word.id, lng=lng.code ) }}"><i class="fa fa-trash"></i></a></td>
                             </tr>
@@ -34,7 +35,7 @@
             </div>
 
         {% else %}
-            <div id="my-words-foreign">
+            <div class="my-words-foreign">
                 <table>
                     <thead>
                         <tr>

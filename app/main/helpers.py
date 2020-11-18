@@ -36,7 +36,7 @@ def lookup_api(word):
     try:
         if is_primary_api_oxford_dictionary:
             oxford = response_oxford.json()
-            # Loop through to get examples and definitions     
+            # Loop through to get examples & definitions     
             definitions_list = []
             examples_list = []
 
@@ -50,20 +50,14 @@ def lookup_api(word):
                             try:
                                 for definition in d['definitions']:
                                     definitions_list.append(definition)
-                                    print('def')
-                                    print(e)
                             except:
-                                print('no def')
                                 erorr_count_def += 1                                
                                 pass
 
                             try: 
                                 for example in d['examples']:
                                     examples_list.append(example['text'])
-                                    print('--- in an example ---')
-                                    print(f['text'])
                             except:
-                                print('out of an example')
                                 erorr_count_exa += 1
                                 pass
 
@@ -86,8 +80,6 @@ def lookup_api(word):
                 pronunciation = oxford['results'][0]['lexicalEntries'][0]['entries'][0]['pronunciations'][0]['phoneticSpelling']
             except:
                 pronunciation = None
-
-            print(oxford)
 
             oxford_return_val = {
                 'word': oxford['results'][0]['id'], # str
@@ -154,6 +146,7 @@ def lookup_db_dictionary(word):
         # Create dictionary and merge results
         word_dict = {
             'word': local_dictionary_result.word,
+            'word_id': word_id,
             'pronunciation': local_dictionary_result.pronunciation,
             'etymology': local_dictionary_result.etymology,
             'definitions': definitions_list,
@@ -246,3 +239,7 @@ def is_english(language):
         return True
     else:
         return False
+
+
+def store_bulk_translate_in_db(translation_list):
+    print('stroin')

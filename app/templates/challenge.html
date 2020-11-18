@@ -11,8 +11,8 @@ Challenge
     {% include 'partials/_flags_challenge.html' %}
 
     {% if words %}
-        {% if english %}<div id="challenge-table-en">{% else %}<div id="challenge-table-foreign">{% endif %}
-            <form id="challenge-form" action="/challenge/{{ lng.code }}" method="POST">
+        {% if english %}<div class="challenge-table-english">{% else %}<div class="challenge-table-foreign">{% endif %}
+            <form class="challenge-form" action="/challenge/{{ lng.code }}" method="POST">
                 <table>
                     <thead>
                         <tr>
@@ -67,8 +67,8 @@ Challenge
                         {% endfor %}
                     </tbody>
                 </table>
-                <div id="end-btn-div">
-                    <button id="submit-btn-challenge" class="btn" type="submit">Submit</button>
+                <div class="submit-btn-wrapper-challenge">
+                    <button class="submit-btn-challenge" class="btn" type="submit">Submit</button>
                 </div>
             </form>
         </div>

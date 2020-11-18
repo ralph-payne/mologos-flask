@@ -91,9 +91,10 @@ class UserExample(db.Model):
     __tablename__ = 'user_example'
     id = db.Column(db.Integer, primary_key=True)
     # Example contains either (1) a sentence in English with the target word in or (2) the translated sentence in the destination language (dst)
-    example = db.Column(db.String)
+    example = db.Column(db.String(256))
     user_id = db.Column(db.Integer, db.ForeignKey('app_user.id'))
-    word = db.Column(db.String)    
+    word = db.Column(db.String(64))
+    word_id = db.Column(db.Integer, db.ForeignKey('word.id'))
     # Translation boolean: 0 indicates that it is an English expression | 1 indicates that it is a foreign translation
     translation = db.Column(db.Boolean)
     src = db.Column(db.String(2))
@@ -113,9 +114,10 @@ class UserExample(db.Model):
     ignored = db.Column(db.Boolean, default=0)
     starred = db.Column(db.Boolean, default=0)
 
-    def __init__(self, example, word, user_id, translation, src, dst):
+    def __init__(self, example, word, word_id, user_id, translation, src, dst):
         self.example = example
         self.word = word
+        self.word_id = word_id
         self.user_id = user_id
         self.translation = translation
         self.src = src
@@ -273,7 +275,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-class InternationalAccent(UserMixin, db.Model):
+class InternationalAccent(db.Model):
     __tablename__ = 'international_accent'
     id = db.Column(db.Integer, primary_key=True)
     character = db.Column(db.String(1))
@@ -285,3 +287,14 @@ class InternationalAccent(UserMixin, db.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+
+# BULK TRANSLATE CLASS
+class BulkTranslate(db.Model)
+    __tablename__ = 'bulk_translate'
+        id = db.Column(db.Integer, primary_key=True)
+    english = db.Column(db.String(128), unique=True, index=True)
+    german = db.Column(db.String(128))
+    italian = db.Column(db.String(128))
+    portuguese = db.Column(db.String(128))
+    spanish = db.Column(db.String(128))

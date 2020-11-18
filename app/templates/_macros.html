@@ -4,13 +4,20 @@
         background: #48954e !important;
         color: #fff !important;
     }
+    .plc901 {
+        width: 100px;
+    }
 </style>
 
 {% macro nav_link(endpoint, language, name) %}
     {% if request.endpoint.endswith(endpoint) %}
-        <li class="navbar-link-active"><a class="navbar-link-active" href="{{ url_for(endpoint, lng='en') }}">{{ name }} ACTIVE</a></li>
+    <div class="plc901">
+        <li class="navbar-link-active"><a class="navbar-link-active" href="{{ url_for(endpoint, lng='en') }}"> {{ name[0]|upper}}{{name[1:]}} </a></li>
+    </div>
     {% else %}
-        <li><a href="{{ url_for(endpoint, lng='en') }}">{{ request.endpoint }}</a></li>
+    <div class="plc901">
+        <li><a href="{{ url_for(endpoint, lng='en') }}">{{ name[0]|upper}}{{name[1:]}}</a></li>
+    </div>
     {% endif %}
 {% endmacro %}
 

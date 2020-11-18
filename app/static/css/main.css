@@ -20,7 +20,7 @@ ul {
 img {
   width: 100%; }
 
-#main-container {
+.main-container {
   width: 100%;
   min-height: 950px; }
 
@@ -251,89 +251,80 @@ table {
   box-sizing: border-box; }
 
 /* 1: NAVBAR */
-#main-nav {
-  background: #f3f3f3;
+.navbar-grid-container {
+  height: 100px;
   position: sticky;
-  top: 0;
-  z-index: 2;
-  height: 100px; }
-  #main-nav .container {
-    display: grid;
-    grid-template-columns: 4fr 4fr 4fr;
-    padding: 1rem;
-    align-items: center; }
-  #main-nav .logo {
+  display: grid;
+  grid-template-columns: 4fr 4fr 4fr;
+  align-items: center;
+  margin: 0 auto;
+  background: #f3f3f3;
+  width: 100%;
+  background-color: yellow; }
+  .navbar-grid-container .logo {
     width: 180px; }
-  #main-nav #search-bar-container {
-    height: 80%;
-    display: block;
-    margin: 0 auto; }
-    #main-nav #search-bar-container form {
-      width: 100%;
-      height: 100%; }
-    #main-nav #search-bar-container #nav-search-bar {
-      width: 70%;
-      padding: 0.1rem;
-      border-radius: 0.50rem;
-      height: 100%; }
-    #main-nav #search-bar-container #nav-btn {
-      height: 100%; }
-  #main-nav ul {
+  .navbar-grid-container .search-bar-container form {
+    width: 100%;
+    height: 100%; }
+  .navbar-grid-container .navbar-links .navbar-link-active {
+    background: #48954e;
+    color: #fff; }
+  .navbar-grid-container ul {
     justify-self: end;
     display: flex; }
-    #main-nav ul li a {
+    .navbar-grid-container ul li a {
       padding: 0.75rem;
       font-weight: bold; }
-    #main-nav ul a.current {
+    .navbar-grid-container ul a.current {
       background: #0F222D;
       color: #fff; }
-    #main-nav ul a.login-nav-icon {
+    .navbar-grid-container ul a.login-nav-icon {
       background: #48954e;
       color: #fff; }
-    #main-nav ul a.logout-nav-icon {
+    .navbar-grid-container ul a.logout-nav-icon {
       background: #0F222D;
       color: #fff; }
-    #main-nav ul a:hover {
+    .navbar-grid-container ul a:hover {
       background: #f3f3f3;
       color: #333; }
 
 /* 2: FOOTER */
-#footer {
+.footer {
   width: 100%;
   background: #333;
   color: #fff;
   overflow: hidden;
   text-align: center;
   margin-top: 5px; }
-  #footer .footer-links {
+  .footer .footer-links {
     padding: 15px 0 10px;
     overflow: hidden;
     display: inline-block; }
-  #footer .footer-links li {
+  .footer .footer-links li {
     float: left;
     padding: 0 10px;
     border-left: 1px solid #797575;
     font-weight: bold; }
-    #footer .footer-links li a {
+    .footer .footer-links li a {
       font-size: 11px;
       color: #fff; }
-  #footer .footer-links li.first {
+  .footer .footer-links li.first {
     border-left-width: 0; }
-  #footer p.copyright {
+  .footer p.copyright {
     padding-bottom: 10px;
     font-size: 9px;
     color: #fff; }
-    #footer p.copyright a {
+    .footer p.copyright a {
       font-size: 9px;
       color: #fff; }
 
 /* 3: HOMEPAGE */
-#showcase {
+.showcase {
   color: #fff;
   background: #333;
   padding: 2rem;
   position: relative; }
-  #showcase:before {
+  .showcase:before {
     content: '';
     background: url("../img/photo_01.jpeg") no-repeat center center/cover;
     position: absolute;
@@ -342,41 +333,41 @@ table {
     width: 100%;
     height: 100%;
     opacity: 0.4; }
-  #showcase .showcase-container {
+  .showcase .showcase-container {
     display: grid;
     /* We only have one item, but we want to make space for another item */
     grid-template-columns: repeat(2, 1fr);
     justify-content: center;
     align-items: center;
     height: 50vh; }
-  #showcase .showcase-content {
+  .showcase .showcase-content {
     /* Make text overlap background image with z-index*/
     z-index: 1; }
-    #showcase .showcase-content p {
+    .showcase .showcase-content p {
       margin-bottom: 1rem; }
 
-#home-articles .articles-container {
+.home-articles .articles-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 1rem; }
 
 /* 4: DEFINITION */
-#definition-container > div {
+.definition-container > div {
   padding: 0.5rem 0rem; }
 
-#definition-container ol {
+.definition-container ol {
   margin: 0.75rem;
   padding: 0.75rem; }
 
-#definition-container .bullet-points {
+.definition-container .bullet-points {
   list-style-type: square;
   padding: 0px; }
 
-#definition-container #add-dict-btn-container {
+.definition-container .add-dict-btn-wrapper {
   padding: 1rem 0rem; }
 
 /* Used for definition.html and edit.html */
-#definition-example textarea {
+.definition-example textarea {
   text-rendering: auto;
   letter-spacing: normal;
   word-spacing: normal;
@@ -395,7 +386,7 @@ table {
   width: 900px;
   height: 100px; }
 
-#edit-page-example textarea {
+.edit-page-example textarea {
   text-rendering: auto;
   letter-spacing: normal;
   word-spacing: normal;
@@ -491,7 +482,7 @@ table {
     grid-gap: 1rem;
     align-items: center; }
 
-#translate-container {
+.translate-container {
   display: grid;
   grid-template-areas: 'language-select language-select language-select' 'box-1 box-2 box-3' 'box-4 box-4 add-btn';
   grid-gap: 1rem;
@@ -499,31 +490,31 @@ table {
   height: 400px;
   grid-template-rows: 1fr 8fr 2fr;
   grid-template-columns: 3fr 1fr 3fr; }
-  #translate-container button {
+  .translate-container button {
     cursor: pointer; }
 
 /* 6: LIST */
-#my-words-table table {
+.my-words-table table {
   margin-bottom: 1rem;
   grid-template-columns: 3fr 8fr 1fr 1fr; }
-  #my-words-table table th,
-  #my-words-table table td {
+  .my-words-table table th,
+  .my-words-table table td {
     padding: 15px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap; }
 
-#my-words-foreign table {
+.my-words-foreign table {
   grid-template-columns: 5fr 5fr 1fr 1fr; }
-  #my-words-foreign table th,
-  #my-words-foreign table td {
+  .my-words-foreign table th,
+  .my-words-foreign table td {
     padding: 15px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap; }
 
 /* 7: EDIT */
-#edit-grid {
+.edit-grid {
   display: grid;
   grid-template-columns: 3fr 4fr;
   grid-template-rows: 1fr 4fr 2fr 3fr;
@@ -531,15 +522,15 @@ table {
   height: 700px;
   /* Tooltip text */
   /* Show tooltip text when you mouse over the tooltip container */ }
-  #edit-grid a {
+  .edit-grid a {
     cursor: pointer;
     display: inline-block;
     height: 100%; }
-  #edit-grid .tooltip-container {
+  .edit-grid .tooltip-container {
     position: relative;
     display: inline-block;
     padding: 0.5rem; }
-  #edit-grid .tooltip-container .tooltiptext {
+  .edit-grid .tooltip-container .tooltiptext {
     visibility: hidden;
     width: 120px;
     background-color: black;
@@ -549,29 +540,29 @@ table {
     border-radius: 6px;
     position: absolute;
     z-index: 1; }
-  #edit-grid .tooltip-container:hover .tooltiptext {
+  .edit-grid .tooltip-container:hover .tooltiptext {
     visibility: visible; }
-  #edit-grid .icon-container {
+  .edit-grid .icon-container {
     height: 100%;
     display: flex;
     padding: 0.5rem;
     justify-content: space-around;
     flex-direction: column; }
-  #edit-grid .statistics-container {
+  .edit-grid .statistics-container {
     height: 100%;
     display: flex;
     padding: 0.5rem;
     justify-content: space-around;
     flex-direction: column; }
-  #edit-grid #edit-example {
+  .edit-grid .edit-page-example {
     min-width: 500px;
     border: 1px solid #888;
     outline: none;
     resize: none;
     overflow: auto; }
-  #edit-grid .icon-selected {
+  .edit-grid .icon-selected {
     color: #FDEAA0; }
-  #edit-grid .trash-extra-padding {
+  .edit-grid .trash-extra-padding {
     /* Extra padding as trash icon is slightly smaller */
     padding: 0px 3px; }
 
@@ -580,81 +571,77 @@ table {
   /* temp inline */ }
 
 /* 8: CHALLENGE */
-#challenge-table-en form table {
+.challenge-table-english form table {
   grid-template-columns: 13fr 1fr 1fr 1fr; }
-  #challenge-table-en form table input[type='text'] {
+  .challenge-table-english form table input[type='text'] {
     width: 140px;
     padding: 0.25rem;
     border-radius: .20rem;
     margin-bottom: .15rem;
     font-size: 1.05rem; }
 
-#challenge-table-foreign form table {
+.challenge-table-foreign form table {
   grid-template-columns: 7fr 7fr 1fr 1fr; }
-  #challenge-table-foreign form table input[type='text'] {
+  .challenge-table-foreign form table input[type='text'] {
     width: 300px;
     padding: 0.25rem;
     border-radius: .20rem;
     margin-bottom: .15rem;
     font-size: 1.05rem; }
 
-#challenge-form {
+.challenge-form {
   height: 100%; }
 
-#submit-btn-challenge, #next-btn-challenge {
-  cursor: pointer;
-  font-size: 1.15rem;
-  margin-bottom: 0.5rem;
-  background: #48954e; }
-
-#end-btn-div {
+.submit-btn-wrapper-challenge {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 50px;
   margin-top: 50px; }
+  .submit-btn-wrapper-challenge .submit-btn-challenge {
+    cursor: pointer;
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+    background: #48954e; }
 
 /* 9: RESULTS */
-#results-table-english table {
+.results-table-english table {
   grid-template-columns: 9fr 3fr 3fr 1fr; }
 
-#results-table-foreign table {
+.results-table-foreign table {
   grid-template-columns: 5fr 5fr 5fr 1fr; }
 
 /* ?: ERROR PAGES */
-#error-page {
-  position: relative;
+.error-page {
+  width: 100%;
   height: 100vh;
+  line-height: 1.4;
+  padding: 110px 40px;
+  text-align: center;
   background: #f6f6f6; }
-  #error-page .error-page {
-    width: 100%;
-    line-height: 1.4;
-    padding: 110px 40px;
-    text-align: center;
-    background: #fff; }
-    #error-page .error-page .error-page-404 {
-      position: relative;
-      height: 180px; }
-      #error-page .error-page .error-page-404 h1 {
-        font-family: 'Roboto', sans-serif;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        -webkit-transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-        font-size: 165px;
-        font-weight: 700;
-        margin: 0px;
-        color: #262626;
-        text-transform: uppercase; }
-        #error-page .error-page .error-page-404 h1 > span {
-          color: #FDEAA0; }
-    #error-page .error-page h2 {
+  .error-page .error-page-404 {
+    position: relative;
+    height: 180px; }
+    .error-page .error-page-404 h1 {
       font-family: 'Roboto', sans-serif;
-      font-size: 22px;
-      font-weight: 400;
-      text-transform: uppercase;
-      color: #151515;
-      margin-top: 0px;
-      margin-bottom: 25px; }
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      font-size: 165px;
+      font-weight: 700;
+      margin: 0px;
+      color: #262626;
+      text-transform: uppercase; }
+      .error-page .error-page-404 h1 > span {
+        color: #FDEAA0; }
+  .error-page h2 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: #151515;
+    margin-top: 0px;
+    margin-bottom: 25px; }

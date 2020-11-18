@@ -10,48 +10,29 @@
 }
 
 /* 1: NAVBAR */
-#main-nav {
-    background: $light-color;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    height: 100px;
+.navbar-grid-container {
 
-    .container {
-        display: grid;
-        grid-template-columns: 4fr 4fr 4fr;
-        padding: 1rem;
-        align-items: center;
-    }
 
-    // Reduce size of Mologos logo
+
     .logo {
         width: 180px;
     }
 
-    #search-bar-container {
-        height: 80%;
+    .search-bar-container {
 
         form {
             width: 100%;
             height: 100%;
         }
 
-        display: block;
-        margin : 0 auto;
+    }
 
-        #nav-search-bar {
-            width: 70%;
-            padding: 0.1rem;
-            border-radius: 0.50rem;
-            height: 100%;
-        }
-
-        #nav-btn {
-            height: 100%;
+    .navbar-links {
+        .navbar-link-active {
+            background: $green-color;
+            color: set-text-color($green-color);
         }
     }
-    
 
     ul {
         justify-self: end;
@@ -90,7 +71,7 @@
 
 
 /* 2: FOOTER */
-#footer {
+.footer {
     width: 100%;
     background: $dark-color;
     color: set-text-color($dark-color);
@@ -134,7 +115,7 @@
 
 
 /* 3: HOMEPAGE */
-#showcase {
+.showcase {
     color: #fff;
     background: #333;
     padding: 2rem;
@@ -170,7 +151,7 @@
     }
 }
 
-#home-articles .articles-container {
+.home-articles .articles-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr); // Two in a row
     grid-gap: 1rem;
@@ -178,7 +159,7 @@
 
 
 /* 4: DEFINITION */
-#definition-container {
+.definition-container {
     > div {
         padding: 0.5rem 0rem;
     }
@@ -193,13 +174,13 @@
         padding: 0px;
     }
   
-    #add-dict-btn-container {
+    .add-dict-btn-wrapper {
         padding: 1rem 0rem;
     }
 }
   
 /* Used for definition.html and edit.html */
-#definition-example {
+.definition-example {
     textarea {
         text-rendering: auto;
         letter-spacing: normal;
@@ -221,7 +202,7 @@
     }
 }
 
-#edit-page-example {
+.edit-page-example {
     textarea {
         text-rendering: auto;
         letter-spacing: normal;
@@ -348,7 +329,7 @@
     }
 }
 
-#translate-container {
+.translate-container {
     display: grid;
     grid-template-areas:
         'language-select language-select language-select'
@@ -368,7 +349,7 @@
 
 
 /* 6: LIST */
-#my-words-table table {
+.my-words-table table {
     margin-bottom: 1rem;
 
     grid-template-columns: 3fr 8fr 1fr 1fr;
@@ -382,8 +363,7 @@
     }
 }
 
-#my-words-foreign table {
-
+.my-words-foreign table {
     grid-template-columns: 5fr 5fr 1fr 1fr;
 
     th,
@@ -398,7 +378,7 @@
 
 
 /* 7: EDIT */
-#edit-grid {
+.edit-grid {
     display: grid;
     grid-template-columns: 3fr 4fr;
     grid-template-rows: 1fr 4fr 2fr 3fr;
@@ -451,7 +431,7 @@
         flex-direction: column;
     }
 
-    #edit-example {
+    .edit-page-example {
         min-width: 500px;
         border: 1px solid #888;
         outline: none;
@@ -477,7 +457,7 @@
 
 
 /* 8: CHALLENGE */
-#challenge-table-en form table {
+.challenge-table-english form table {
     grid-template-columns: 13fr 1fr 1fr 1fr;
 
     input[type='text'] {
@@ -489,7 +469,7 @@
     }
 }
 
-#challenge-table-foreign form table {
+.challenge-table-foreign form table {
     grid-template-columns: 7fr 7fr 1fr 1fr;
 
     input[type='text'] {
@@ -501,34 +481,35 @@
     }
 }
 
-#challenge-form {
+.challenge-form {
     height: 100%;
 }
 
-#submit-btn-challenge, #next-btn-challenge {
-    cursor: pointer;
-    font-size: 1.15rem;
-    margin-bottom: 0.5rem;
-    background: $green-color;
-}
-
-#end-btn-div {
+.submit-btn-wrapper-challenge {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 50px;
     margin-top: 50px;
+
+    .submit-btn-challenge {
+        cursor: pointer;
+        font-size: 1.15rem;
+        margin-bottom: 0.5rem;
+        background: $green-color;
+    }
+
 }
 
 
 /* 9: RESULTS */
-#results-table-english {
+.results-table-english {
     table {
         grid-template-columns: 9fr 3fr 3fr 1fr;
     }
 }
 
-#results-table-foreign {
+.results-table-foreign {
     table {
         grid-template-columns: 5fr 5fr 5fr 1fr;
     }
@@ -536,51 +517,47 @@
 
 
 /* ?: ERROR PAGES */
-#error-page {
-    position: relative;
+.error-page {
+    width: 100%;
     height: 100vh;
+    line-height: 1.4;
+    padding: 110px 40px;
+    text-align: center;
     background: #f6f6f6;
 
-    .error-page {
-        width: 100%;
-        line-height: 1.4;
-        padding: 110px 40px;
-        text-align: center;
-        background: #fff;
+    .error-page-404 {
+        position: relative;
+        height: 180px;
 
-        .error-page-404 {
-            position: relative;
-            height: 180px;
+        h1 {
+            font-family: 'Roboto', sans-serif;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            -webkit-transform: translate(-50%, -50%);
+                -ms-transform: translate(-50%, -50%);
+                    transform: translate(-50%, -50%);
+            font-size: 165px;
+            font-weight: 700;
+            margin: 0px;
+            color: #262626;
+            text-transform: uppercase;
 
-            h1 {
-                font-family: 'Roboto', sans-serif;
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                -webkit-transform: translate(-50%, -50%);
-                    -ms-transform: translate(-50%, -50%);
-                        transform: translate(-50%, -50%);
-                font-size: 165px;
-                font-weight: 700;
-                margin: 0px;
-                color: #262626;
-                text-transform: uppercase;
-
-                >span {
-                    color: $secondary-color;
-                }
+            >span {
+                color: $secondary-color;
             }
         }
+    }
 
-        h2 {
-            font-family: 'Roboto', sans-serif;
-            font-size: 22px;
-            font-weight: 400;
-            text-transform: uppercase;
-            color: #151515;
-            margin-top: 0px;
-            margin-bottom: 25px;
-        }
+    h2 {
+        font-family: 'Roboto', sans-serif;
+        font-size: 22px;
+        font-weight: 400;
+        text-transform: uppercase;
+        color: #151515;
+        margin-top: 0px;
+        margin-bottom: 25px;
+    }
 
     }
-}
+

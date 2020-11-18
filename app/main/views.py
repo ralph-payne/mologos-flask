@@ -9,7 +9,7 @@ from ..models import Definition, DictionaryExample, UserExample, User, Word
 from flask_login import current_user, login_required
 
 # Helper functions for parsing results from API and database dictionary
-from .helpers import lookup_api, lookup_db_dictionary, translate_api, bulk_translate, bulk_translate_excluding, create_language_dict, is_english
+from .helpers import lookup_api, lookup_db_dictionary, translate_api, bulk_translate, bulk_translate_excluding, create_language_dict, is_english, store_bulk_translate_in_db
 
 # These imports are down here as they will get moved to a new file eventually
 from ..models import InternationalAccent
@@ -19,11 +19,14 @@ from .starting_data import starting_data
 # Homepage
 @main.route('/')
 def index():
+    # INITIALIZE DATABASE WITH STARTING DATA
     test_user_email = 'test1234@gmail.com'
     test_user_exists = User.query.filter_by(email=test_user_email).first()
 
-    InternationalAccent.query.delete() # Delete all
-    UserExample.query.delete() # Delete all
+    # Delete all test data
+    InternationalAccent.query.delete()
+    UserExample.query.delete()
+    Word.query.delete()
 
     if not test_user_exists:
         user = User(email= test_user_email,
@@ -37,7 +40,7 @@ def index():
     # Add all the International Accents into the database
     if not accent_exists:
         for item in international_accent_list:
-            id = item['id']
+            id = int(item['id'])
             character = item['character']
             html_entity = item['entitycode']
             alt_code = item['altcode']
@@ -66,12 +69,24 @@ def index():
             example = item['example']
 
             if language == 'english':
-                record = UserExample(example=example, word=word, user_id=test_user_id, translation=False, src=None, dst='en')
-                db.session.add(record)
+                # Check word already exists
+                # use first() instead of one() https://stackoverflow.com/questions/24985989/check-if-one-is-empty-sqlalchemy
+                word_already_exists_in_db = Word.query.filter_by(word=word).first()
+                if not word_already_exists_in_db:
+                    record_word = Word(word=word, etymology='', pronunciation='')
+                    db.session.add(record_word)
+
+                    word_query_inefficient = Word.query.filter_by(word=word).one()
+                    last_row_id_inefficient = word_query_inefficient.id
+
+                    record_user_example = UserExample(example=example, word=word, word_id=last_row_id_inefficient, user_id=test_user_id, translation=False, src=None, dst='en')
+
+
+                    db.session.add(record_user_example)
 
             else:
                 dst = item['dst']
-                record = UserExample(example=example, word=word, user_id=test_user_id, translation=True, src='en', dst=dst)
+                record = UserExample(example=example, word=word, word_id=None, user_id=test_user_id, translation=True, src='en', dst=dst)
                 db.session.add(record)
 
         db.session.commit()
@@ -86,10 +101,11 @@ def add():
         # Get word from URL query parameters
         word = request.args.get('word')
         # Get posted form input
-        user_example = request.form.get('user-example')
+        user_example = request.form.get('user_example')
+        word_id = request.form.get('word_id')
     
         # Insert User's Example sentence into database
-        record = UserExample(example=user_example, word=word, user_id=current_user.id, translation=False, src=None, dst='en')
+        record = UserExample(example=user_example, word=word, word_id=1, user_id=current_user.id, translation=False, src=None, dst='en')
         db.session.add(record)
         db.session.commit()
 
@@ -109,11 +125,23 @@ def delete(lng, id):
 def define(word):
     # Use helper function (found in helpers.py) to look up word in database dictionary    
     local_dictionary_result = lookup_db_dictionary(word)
+    try:
+        result_has_etymology = local_dictionary_result['etymology']
+    except:
+        result_has_etymology = False
 
-    if local_dictionary_result is not None:
-        return render_template('definition.html', word=local_dictionary_result, source='local')
+    if local_dictionary_result is not None and result_has_etymology:
+        word_id = local_dictionary_result['word_id']
 
-    # If not found in local dictionary, use the API
+        # Get the user_example if any
+        try:
+            user_example = UserExample.query.filter_by(user_id=current_user.id, word_id=word_id).first()
+        except:
+            user_example = None
+        return render_template('definition.html', word=local_dictionary_result, user_example=user_example, source='local')
+
+
+    # If not found in local dictionary, use the API this means it is a new word and will have to be added to the Word table
     else:
         # Lookup the word in the API helper function, which returns a dict
         api_return_value = lookup_api(word)
@@ -132,23 +160,32 @@ def define(word):
             examples = api_return_value['examples']
             source = 'oxford'
 
-            print(f'{word}: {etymology} [{source}]')
-
             if examples == []:
                 print('empty examples')
 
-            for i in examples:
-                print(i)
+            word_already_exists_in_db = Word.query.filter_by(word=word).first()
 
-            # Add to local dictionary database
-            new_word = Word(word, etymology, pronunciation)
-            db.session.add(new_word)
+            if not word_already_exists_in_db:
+                # Add to local dictionary database
+                new_word = Word(word, etymology, pronunciation)
+                db.session.add(new_word)
+            else:
+                # It's not a new word if the user has already done a bulk upload with the word
+                # If this is the case, you need to update the existing entry
+                # Update the database
+                metadata = Word.query.filter_by(word=word).first()
+                metadata.etymology = etymology
+                metadata.pronuncation = pronunciation
+                db.session.commit()
             
             # There is a more efficient way with lastrowid but I can't get it to work right now
             word_query_inefficient = Word.query.filter_by(word=word).one()
 
             # Get that word ID            
             last_row_id = word_query_inefficient.id
+
+            # Add the id to the returned dict (this is the primary key that we be used for all lookups)
+            api_return_value['word_id'] = word_query_inefficient.id
 
             # Add each of the definitions to the database
             for definition in definitions:
@@ -161,10 +198,40 @@ def define(word):
                 db.session.add(record)
 
             translation_list = bulk_translate(word)
+            store_bulk_translate_in_db(translation_list)
+
+            ####
+            language_codes = [
+                { 'code': 'de', 'lng_eng': 'German', 'lng_src': 'Deutsch' },
+                { 'code': 'es', 'lng_eng': 'Spanish', 'lng_src': 'español' },
+                { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' },
+                { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' },
+                { 'code': 'en', 'lng_eng': 'English', 'lng_src': 'English' }
+            ]
+
+            class BulkTranslate(db.Model)
+                __tablename__ = 'bulk_translate'
+                    id = db.Column(db.Integer, primary_key=True)
+                english = db.Column(db.String(128), unique=True, index=True)
+                german = db.Column(db.String(128))
+                italian = db.Column(db.String(128))
+                portuguese = db.Column(db.String(128))
+                spanish = db.Column(db.String(128))
+
+            ###
 
             db.session.commit()
-    
-        return render_template('definition.html', word=api_return_value, translation_list=translation_list)
+
+        user_example = None
+
+        # Check if a user is logged in
+        # user_id = current_user.id
+
+        if current_user.id:
+            # Look up to see if there is a UserExample
+            user_example = UserExample.query.filter_by(user_id=current_user.id, word_id=api_return_value['word_id']).first()
+
+        return render_template('definition.html', word=api_return_value, translation_list=translation_list, user_example=user_example)
 
 
 @main.route('/definition', methods=['POST'])
@@ -176,8 +243,8 @@ def lookup():
 
 
 # 5: TRANSLATE
-@main.route('/translate', methods=['GET', 'POST'])
-def translate():
+@main.route('/translate/<lng>/', methods=['GET', 'POST'])
+def translate(lng):
     if request.method == 'POST':
         # Check which of the 2 forms has been submitted
         # Form 1 calls the Translation API
@@ -210,7 +277,7 @@ def translate():
             input = request.form.get('src_tra_2')
             output = request.form.get('dst_tra_2')
             
-            record = UserExample(example=output, word=input, user_id=current_user.id, translation=True, src='en', dst=dst)
+            record = UserExample(example=output, word=input, word_id=None, user_id=current_user.id, translation=True, src='en', dst=dst)
 
             db.session.add(record)
             db.session.commit()
@@ -244,10 +311,10 @@ def list(lng):
 @login_required
 def edit(lng, id):
     if request.method == 'POST':
-        updated_example = request.form.get('edited-example') 
-        last_modified = datetime.utcnow()
+        updated_example = request.form.get('edited-example')
         star_bool = int(request.form.get('star_boolean'))
         hide_bool = int(request.form.get('eye_boolean'))
+        last_modified = datetime.utcnow()
 
         metadata = UserExample.query.filter_by(user_id=current_user.id, id=id).first()
         metadata.example = updated_example
@@ -265,10 +332,8 @@ def edit(lng, id):
         # Word contains etymology and pronunciation
         word = UserExample.query.filter_by(id=id).first()
         if lng == 'en':
-            # TODO => make this a lookup on the id rather than the word
-            word_details = Word.query.filter_by(word=word.word).first()
-
-            definition = Definition.query.filter_by(word=word.word).first()
+            word_details = Word.query.filter_by(id=id).first()
+            definition = Definition.query.filter_by(word_id=id).first()
 
             return render_template('edit.html', word=word, word_details=word_details, definition=definition, lng=create_language_dict(lng))
         else:

@@ -20,7 +20,7 @@
 
 <!-- Body -->
 <body>
-<div id="main-container">
+<div class="main-container">
 
 
 <!-- 1: NAVBAR -->
@@ -28,23 +28,21 @@
 
 <div>
     <!-- PAGE CONTENT -->
-    <div id="page-content" class="container min-height">
+    <div class="page-content container min-height">
         {% block page_content %}
         {% endblock %}
     </div>
 </div>
 
 <!-- 2: FOOTER -->
-<div id="footer">
-    <div id="footer-links-wrapper">
-        <ul class="footer-links">
-            <li class="first"><a href="#">Help & Support</a></li>
-            <li><a href="#">FAQ</a></li>
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
-        <p class="copyright">Copyright &copy; Mologos 2020, All Rights Reserved</a>.</p>			
-    </div>
+<div class="footer">
+    <ul class="footer-links">
+        <li class="first"><a href="#">Help & Support</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+    <p class="copyright">Copyright &copy; Mologos 2020, All Rights Reserved</a>.</p>			
 </div>
 
 <!-- SCRIPTS -->
@@ -53,27 +51,6 @@
     <!-- Formatting of dates and times in Flask templates using moment.js. -->
     {{ moment.include_jquery() }}
     {{ moment.include_moment() }}
-
-    <!-- Script to change height of page container according to screen height -->
-    <script type="text/javascript">
-        
-        document.addEventListener("DOMContentLoaded", function() { 
-            let homePage = document.getElementById("home-articles");
-
-            if (!homePage) {
-                /*  Navbar and Footer both have a height of 100px  */
-                const navbar = 100;
-                const footer = 100;
-                let innerHeight = window.innerHeight;
-                let mainContentHeight = innerHeight - navbar - footer;
-                let heightInPixels = mainContentHeight.toString().concat('px');
-            
-                // Make the min height
-                let pageContent = document.getElementById("page-content");
-                pageContent.style.height = heightInPixels;
-            }
-        });
-    </script>
 
     <script>
       function delete_flash(flash){

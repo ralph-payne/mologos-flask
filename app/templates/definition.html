@@ -6,7 +6,6 @@
 
 
 {% block page_content %}
-
 <style>
     #translation-table-grid {
         display: grid;
@@ -29,7 +28,7 @@
     <form action={{ url_for('main.add', word=word.word) }} method="POST">
     {% if word %}
 
-      <div id="definition-container">
+      <div class="definition-container">
 
         <div>
             <div class="defined-word-container">
@@ -37,6 +36,9 @@
             </div>
             <div class="pron-ipa-container">
                 <span class="pron-ipa-content">/{{ word.pronunciation }}/<span>
+                    <div>Word ID: {{ word.word_id }}</div>
+                    <div>User Example {{ user_example.example }}</div>
+                    <div>User Example ID (TBC){{ user_example.id }}</div>
             </div>
         </div>
 
@@ -84,11 +86,12 @@
 
         <div>
             <h4>My Example</h4>
-            <div id="definition-example">
-                <textarea type="text" name="user-example" class="form-control" id="area-2" rows="2"></textarea>
+            <div class="definition-example">
+                <input type="hidden" name="word_id" value="{{ word.id }}">
+                <textarea type="text" name="user_example" class="form-control" id="area-2" rows="2">{% if user_example %}{{ user_example.example }}{% endif %}</textarea>
             </div>
             
-            <div id="add-dict-btn-container">
+            <div class="add-dict-btn-wrapper">
                 <button class="btn btn-primary" type="submit">Add to my dictionary</button>
             </div>
         </div>

@@ -3,15 +3,19 @@
 
 {% block page_content %}
 
-
-
 <div class="inner-container">
     <form action="{{ url_for('main.edit', id=word.id, lng=lng.code) }}" method="POST">
     
-    <div id="edit-grid">
+    <div class="edit-grid">
         <div>
             <div class="defined-word-container">
-                <h1 name="defined-word" class="defined-word-content">{{ word.example }}</h1>
+                <h1 name="defined-word" class="defined-word-content">
+                    {% if word_details %}
+                    {{ word.word }} 
+                    {% else %}
+                    {{ word.example }}
+                    {% endif %}
+                </h1>
                 <hr>
                 <hr>
                 {{ word.word }}
@@ -30,7 +34,6 @@
                 <div>
                     <p><a class="link-color" href="{{ url_for('main.define', word=word.word) }}">Examples</a></p>
                 </div>
-
             {% endif %}
         </div>
 
@@ -126,11 +129,6 @@
             .placeholder-20:active:hover {
                 background-color: #3276B1;  
             }
-        
-
-
-            
-            
         </style>        
 
         <div>
@@ -163,7 +161,7 @@
 
         <div>
         {% if word.word %}
-            <div id="edit-page-example">
+            <div class="edit-page-example">
                 {% if definition %}{% endif %}
                 {{ lng.lng_src }}:
                 <textarea id="edited-example" type="text" name="edited-example">{{ word.example }}</textarea>
