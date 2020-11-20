@@ -4,21 +4,21 @@ import random
 from flask import flash, redirect, render_template, request, session, url_for, current_app
 from . import main
 from .. import db
-from ..models import Definition, DictionaryExample, UserExample, User, Word
+from ..models import BulkTranslate, Definition, DictionaryExample, UserExample, User, Word 
 
 from flask_login import current_user, login_required
 
 # Helper functions for parsing results from API and database dictionary
-from .helpers import lookup_api, lookup_db_dictionary, translate_api, bulk_translate, bulk_translate_excluding, create_language_dict, is_english, store_bulk_translate_in_db
+from .helpers import lookup_api, lookup_db_dictionary, translate_api, bulk_translate, bulk_translate_excluding, create_language_dict, is_english, parse_translation_list, to_bool, create_bulk_translate_dict, split_keyboard_into_rows
 
 # These imports are down here as they will get moved to a new file eventually
 from ..models import InternationalAccent
 from .international_accent_list import international_accent_list
 from .starting_data import starting_data
 
-# Homepage
-@main.route('/')
-def index():
+
+@main.route('/init')
+def init():
     # INITIALIZE DATABASE WITH STARTING DATA
     test_user_email = 'test1234@gmail.com'
     test_user_exists = User.query.filter_by(email=test_user_email).first()
@@ -93,6 +93,11 @@ def index():
 
     return render_template('index.html')
 
+# Homepage
+@main.route('/')
+def index():
+    return render_template('index.html')
+
 
 @main.route('/add', methods=['POST'])
 @login_required
@@ -100,13 +105,19 @@ def add():
     if request.method == 'POST':
         # Get word from URL query parameters
         word = request.args.get('word')
+
         # Get posted form input
         user_example = request.form.get('user_example')
         word_id = request.form.get('word_id')
-    
-        # Insert User's Example sentence into database
-        record = UserExample(example=user_example, word=word, word_id=1, user_id=current_user.id, translation=False, src=None, dst='en')
-        db.session.add(record)
+        example_already_exists = to_bool(request.form.get('example_already_exists'))
+
+        if example_already_exists:
+            # Insert User's Example sentence into database
+            UserExample.query.filter_by(user_id=current_user.id).filter_by(word=word).update({'example': user_example})
+        else:
+            record = UserExample(example=user_example, word=word, word_id=word_id, user_id=current_user.id, translation=False, src=None, dst='en')
+            db.session.add(record)
+        
         db.session.commit()
 
         return redirect(url_for('main.list', lng='en'))
@@ -120,7 +131,7 @@ def delete(lng, id):
     return redirect(url_for('main.list', lng=lng))
 
 
-# 4: DEFINITION
+# 4: DEFINITION ROUTE
 @main.route('/definition/<word>')
 def define(word):
     # Use helper function (found in helpers.py) to look up word in database dictionary    
@@ -135,10 +146,19 @@ def define(word):
 
         # Get the user_example if any
         try:
-            user_example = UserExample.query.filter_by(user_id=current_user.id, word_id=word_id).first()
+            user_example = UserExample.query.filter_by(user_id=current_user.id, word=word).first()
         except:
             user_example = None
-        return render_template('definition.html', word=local_dictionary_result, user_example=user_example, source='local')
+
+        # Bulk translate
+        bulk_translate_from_db = BulkTranslate.query.filter_by(english=word).first()
+        translation_list = []
+
+        if bulk_translate_from_db:
+            # Use helper function to parse the returned value from the database
+            translation_list = parse_translation_list(bulk_translate_from_db)
+
+        return render_template('definition.html', word=local_dictionary_result, user_example=user_example, source='local', translation_list=translation_list)
 
 
     # If not found in local dictionary, use the API this means it is a new word and will have to be added to the Word table
@@ -160,9 +180,6 @@ def define(word):
             examples = api_return_value['examples']
             source = 'oxford'
 
-            if examples == []:
-                print('empty examples')
-
             word_already_exists_in_db = Word.query.filter_by(word=word).first()
 
             if not word_already_exists_in_db:
@@ -181,55 +198,35 @@ def define(word):
             # There is a more efficient way with lastrowid but I can't get it to work right now
             word_query_inefficient = Word.query.filter_by(word=word).one()
 
-            # Get that word ID            
-            last_row_id = word_query_inefficient.id
-
             # Add the id to the returned dict (this is the primary key that we be used for all lookups)
             api_return_value['word_id'] = word_query_inefficient.id
 
             # Add each of the definitions to the database
             for definition in definitions:
-                record = Definition(last_row_id, definition, source)
+                record = Definition(word, definition, source)
                 db.session.add(record)
 
             # Add each of the examples to the database
             for example in examples:
-                record = DictionaryExample(last_row_id, example, source)
+                record = DictionaryExample(word, example, source)
                 db.session.add(record)
 
-            translation_list = bulk_translate(word)
-            store_bulk_translate_in_db(translation_list)
+            # Check that word hasn't been translated already
+            bulk_translate_from_db = BulkTranslate.query.filter_by(english=word).first()
 
-            ####
-            language_codes = [
-                { 'code': 'de', 'lng_eng': 'German', 'lng_src': 'Deutsch' },
-                { 'code': 'es', 'lng_eng': 'Spanish', 'lng_src': 'español' },
-                { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' },
-                { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' },
-                { 'code': 'en', 'lng_eng': 'English', 'lng_src': 'English' }
-            ]
+            if bulk_translate_from_db:
+                # Use helper function to parse the returned value from the database
+                translation_list = parse_translation_list(bulk_translate_from_db)
+            else:
+                # Use the API to look up a Bulk Translation
+                translation_list = bulk_translate(word)
+                # Parse the returned value in order to store in the BulkTranslate model
+                record_bulk_translate = create_bulk_translate_dict(word, translation_list)
+                db.session.add(record_bulk_translate)
+                db.session.commit()
 
-            class BulkTranslate(db.Model)
-                __tablename__ = 'bulk_translate'
-                    id = db.Column(db.Integer, primary_key=True)
-                english = db.Column(db.String(128), unique=True, index=True)
-                german = db.Column(db.String(128))
-                italian = db.Column(db.String(128))
-                portuguese = db.Column(db.String(128))
-                spanish = db.Column(db.String(128))
-
-            ###
-
-            db.session.commit()
-
-        user_example = None
-
-        # Check if a user is logged in
-        # user_id = current_user.id
-
-        if current_user.id:
-            # Look up to see if there is a UserExample
-            user_example = UserExample.query.filter_by(user_id=current_user.id, word_id=api_return_value['word_id']).first()
+        # first() returns the first result, or None if there are no results.
+        user_example = UserExample.query.filter_by(user_id=current_user.id, word=word).first()
 
         return render_template('definition.html', word=api_return_value, translation_list=translation_list, user_example=user_example)
 
@@ -237,7 +234,6 @@ def define(word):
 @main.route('/definition', methods=['POST'])
 def lookup():
     if request.method == 'POST':
-        # TODO => parse the word
         word_to_lookup = request.form.get('word-to-lookup')
         return redirect(url_for('main.define', word=word_to_lookup))
 
@@ -246,11 +242,13 @@ def lookup():
 @main.route('/translate/<lng>/', methods=['GET', 'POST'])
 def translate(lng):
     if request.method == 'POST':
-        # Check which of the 2 forms has been submitted
         # Form 1 calls the Translation API
         if ('src_tra_1' in request.form): 
             text_to_translate = request.form.get('src_tra_1').strip()
             destination_language = request.form.get('dst_lng_1')
+
+            print('translating')
+            print(text_to_translate)
             
             # Translate word with function from helpers.py
             translate_api_output = translate_api(text_to_translate, destination_language)
@@ -283,7 +281,7 @@ def translate(lng):
             db.session.commit()
 
             flash(f'This word has been succesfully added to your dictionary!', 'flash-success')
-            return redirect(url_for('main.translate'))
+            return redirect(url_for('main.translate', lng=lng))
 
         return render_template('translate.html')
 
@@ -302,8 +300,7 @@ def list(lng):
     pagination = UserExample.query.filter_by(user_id=current_user.id, dst=lng).paginate(
         page, per_page=current_app.config['WORDS_PER_PAGE'], error_out=False)
     words = pagination.items
-    return render_template('list.html', words=words, english=is_english(lng), 
-    lng=create_language_dict(lng), endpoint='.list', pagination=pagination)
+    return render_template('list.html', words=words, english=is_english(lng), lng=create_language_dict(lng), endpoint='.list', pagination=pagination)
 
 
 # 7: EDIT
@@ -327,22 +324,36 @@ def edit(lng, id):
         return redirect(url_for('main.list', lng=lng))
 
     else: # GET
-        word_details = False
-        definition = False
         # Word contains etymology and pronunciation
         word = UserExample.query.filter_by(id=id).first()
         if lng == 'en':
             word_details = Word.query.filter_by(id=id).first()
-            definition = Definition.query.filter_by(word_id=id).first()
-
+            definition = Definition.query.filter_by(word=word_details.word).first()
             return render_template('edit.html', word=word, word_details=word_details, definition=definition, lng=create_language_dict(lng))
         else:
             # Declare list of keyboard accents for language
             keyboard = InternationalAccent.query.filter_by(language=lng, in_use=1).all()
+            keyboard_split_into_rows = split_keyboard_into_rows(keyboard)
 
-            translation_list = bulk_translate_excluding(word.word, lng)
+            print(keyboard_split_into_rows)
+            print(type(keyboard_split_into_rows))
 
-            return render_template('edit.html', word=word, keyboard=keyboard, lng=create_language_dict(lng), translation_list=translation_list)
+            # Check if there already is a bulk translate
+            bulk_translate_from_db = BulkTranslate.query.filter_by(english=word.word).first()
+            translation_list = []
+
+            if bulk_translate_from_db:
+                # Use helper function to parse the returned value from the database
+                translation_list = parse_translation_list(bulk_translate_from_db)
+            else:
+                # Use the API to bulk translate
+                translation_list = bulk_translate_excluding(word.word, 'en')
+                # Save the results to the database
+                record_bulk_translate = create_bulk_translate_dict(word.word, translation_list)
+                db.session.add(record_bulk_translate)
+                db.session.commit()
+
+            return render_template('edit.html', word=word, keyboard=keyboard_split_into_rows, lng=create_language_dict(lng), translation_list=translation_list)
 
 
 # 8: CHALLENGE
@@ -458,5 +469,3 @@ def challenge(lng):
         else: # Foreign Language Challenge
             words = UserExample.query.filter_by(user_id=current_user.id, dst=lng).all()
             return render_template('challenge.html', words=words, lng=create_language_dict(lng), english=is_english(lng))
-
-

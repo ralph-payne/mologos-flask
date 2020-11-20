@@ -75,9 +75,10 @@ Challenge
         {% else %}
         <div class="inner-container">
             <p>You don't have any saved words or expressions in {{ lng.lng_eng }}</p>
-            {% if english %}{% else %}
-            <p>Go to the <a class="link-color" href="{{ url_for('main.translate') }}">translation</a> page to add some!</p>
-            {% endif %}
+                {% if english %}
+                {% else %}
+                <p>Go to the <a class="link-color" href="{{ url_for('main.translate', lng=lng) }}">translation</a> page to add some!</p>
+                {% endif %}
         </div>
         {% endif %}
     </div>

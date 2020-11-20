@@ -4,7 +4,6 @@
     {{ word.word if word else 'Not Found' }}
 {% endblock %}
 
-
 {% block page_content %}
 <style>
     #translation-table-grid {
@@ -73,12 +72,14 @@
 
         <div>
             {% if translation_list %}
-            <div id="translation-table-grid">
-                {% for translation in translation_list %}
-                    <div class="translation-table-grid-item">{{ translation.language }}</div>
-                    <div class="translation-table-grid-item">{{ translation.text }}</div>
-                {% endfor %}
-            </div>
+                <div id="translation-table-grid">
+                    {% for translation_item in translation_list %}
+                        {% for language, translation in translation_item.items() %}
+                            <div class="translation-table-grid-item">{{ language }}</div>
+                            <div class="translation-table-grid-item">{{ translation }}</div>                    
+                        {% endfor %}
+                    {% endfor %}
+                </div>
             {% endif %}
         </div>
 
@@ -88,11 +89,18 @@
             <h4>My Example</h4>
             <div class="definition-example">
                 <input type="hidden" name="word_id" value="{{ word.id }}">
+                <input type="hidden" name="example_already_exists" value="{{ user_example }}">
                 <textarea type="text" name="user_example" class="form-control" id="area-2" rows="2">{% if user_example %}{{ user_example.example }}{% endif %}</textarea>
             </div>
             
             <div class="add-dict-btn-wrapper">
-                <button class="btn btn-primary" type="submit">Add to my dictionary</button>
+                <button class="btn btn-primary" type="submit">
+                    {% if user_example %}
+                        Update Entry
+                    {% else %}
+                        Add to my dictionary
+                    {% endif %}
+                </button>
             </div>
         </div>
         </div>

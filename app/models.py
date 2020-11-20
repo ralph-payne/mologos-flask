@@ -93,15 +93,13 @@ class UserExample(db.Model):
     # Example contains either (1) a sentence in English with the target word in or (2) the translated sentence in the destination language (dst)
     example = db.Column(db.String(256))
     user_id = db.Column(db.Integer, db.ForeignKey('app_user.id'))
-    word = db.Column(db.String(64))
+    word = db.Column(db.String(64), db.ForeignKey('word.word'), index=True)
     word_id = db.Column(db.Integer, db.ForeignKey('word.id'))
     # Translation boolean: 0 indicates that it is an English expression | 1 indicates that it is a foreign translation
     translation = db.Column(db.Boolean)
     src = db.Column(db.String(2))
     dst = db.Column(db.String(2))
     # Original is used to store the original English text if the data contains a translation
-    # Original is a lecacy field
-    original = db.Column(db.String) # to delete
     comment = db.Column(db.String())
     created = db.Column(db.DateTime, default=datetime.utcnow)
     last_modified = db.Column(db.DateTime)
@@ -128,14 +126,13 @@ class UserExample(db.Model):
 class Definition(db.Model):
     __tablename__ = 'definition'
     id = db.Column(db.Integer, primary_key=True)
-    word_id = db.Column(db.Integer, db.ForeignKey('word.id'))
-    # word = db.Column(db.String)
+    word = db.Column(db.String(64), db.ForeignKey('word.word'), index=True)
     definition = db.Column(db.String(256))
     source = db.String(16)
     created = db.Column(db.DateTime, default=datetime.utcnow)
 
-    def __init__(self, word_id, definition, source):
-        self.word_id = word_id
+    def __init__(self, word, definition, source):
+        self.word = word
         self.definition = definition
         self.source = source
 
@@ -144,14 +141,15 @@ class Definition(db.Model):
 class DictionaryExample(db.Model):
     __tablename__ = 'dictionary_example'
     id = db.Column(db.Integer, primary_key=True)
+    # Legacy; moving to word instead of word id
     word_id = db.Column(db.Integer, db.ForeignKey('word.id'))
-    # word = db.Column(db.String)
+    word = db.Column(db.String(64), db.ForeignKey('word.word'), index=True)    
     example = db.Column(db.String(256))
     source = db.String(16)
     created = db.Column(db.DateTime, default=datetime.utcnow)
 
-    def __init__(self, word_id, example, source):
-        self.word_id = word_id
+    def __init__(self, word, example, source):
+        self.word = word
         self.example = example
         self.source = source
 
@@ -163,8 +161,8 @@ class Translation(db.Model):
     created = db.Column(db.DateTime, default=datetime.utcnow)
     source_language = db.Column(db.String(2))
     destination_language = db.Column(db.String(2))
-    input = db.Column(db.Text())
-    output = db.Column(db.Text())
+    input = db.Column(db.String(512))
+    output = db.Column(db.String(512))
 
     def __init__(self, word, definition, source):
         self.word = word
@@ -290,11 +288,13 @@ class InternationalAccent(db.Model):
 
 
 # BULK TRANSLATE CLASS
-class BulkTranslate(db.Model)
+class BulkTranslate(db.Model):
     __tablename__ = 'bulk_translate'
-        id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     english = db.Column(db.String(128), unique=True, index=True)
     german = db.Column(db.String(128))
     italian = db.Column(db.String(128))
     portuguese = db.Column(db.String(128))
     spanish = db.Column(db.String(128))
+    latin = db.Column(db.String(128))
+    greek = db.Column(db.String(128))

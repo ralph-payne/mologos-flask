@@ -21,6 +21,7 @@
                 {{ word.word }}
             </div>
 
+            <!-- For English Words with Pronunciation, Definition and Etymology -->
             {% if word_details %}
                 <div class="pron-ipa-container">
                     <span class="pron-ipa-content">/{{ word_details.pronunciation }}/<span>
@@ -58,8 +59,25 @@
             </div>
         </div>
 
+        <div>
+            {% if translation_list %}
+            <div class="edit-page-translation-table-grid">
+                {% for translation_item in translation_list %}
+                    {% for language, translation in translation_item.items() %}
+                        <div class="edit-page-translation-table-grid-item">{{ language }}</div>
+                        <div class="edit-page-translation-table-grid-item">{{ translation }}</div>                    
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div>
+            tbc
+        </div>
+
         <style>
-            #keyboard-container {
+            .placeholder-17 {
                 background: red;
                 padding: 10px;
                 width: 300px;
@@ -74,8 +92,8 @@
                 line-height: 29px;
                 margin-right: 3px;
             }
-        
-            #typeit_buttons {
+
+            .placeholder-18 {
                 background: green;
                 border-radius: 0.75rem;
                 padding: 3px;
@@ -85,14 +103,14 @@
                 justify-content: center;
                 flex-wrap: wrap;
                 height: 150px;
-                width: 400px;
+                width: 100%;
             }
 
             .placeholder-19 {
                 display: inline;
                 padding: 3px;
             }
-        
+
             .placeholder-20 {
                 border-radius: 0.55rem;
                 background: gold;
@@ -104,20 +122,15 @@
                 width: 35px;
                 height: 29px;
                 margin-right: 3px;
-                padding: 0;
-                margin-left: 0;
                 margin-bottom: 3px;
                 vertical-align: middle;
                 text-align: center;
-                -webkit-appearance: none;
                 font-size: 13px;
                 border-radius: 2px;
                 border-style: solid;
                 border-color: #999;
                 border-width: 1px;
                 text-rendering: auto;
-                letter-spacing: normal;
-                word-spacing: normal;
                 display: inline-block;
                 text-align: center;
                 align-items: flex-start;
@@ -129,50 +142,28 @@
             .placeholder-20:active:hover {
                 background-color: #3276B1;  
             }
+
         </style>        
 
         <div>
             {% if keyboard %}
-            <div id="keyboard-container">
-                <div id="typeit_buttons">
-                    {% for key in keyboard %}   
+            <div class="placeholder-17">
+                <div class="placeholder-18">
+                    {% for row in keyboard %}
                         <div class="placeholder-19">
-                            <button class="placeholder-20" onclick="addAccentToTextArea(this)" role="button" type="button" value="&{{ key.html_entity }}">{{ key.character}}</button>
+                            {% for key in row %}
+                                <button class="placeholder-20" onclick="addAccentToTextArea(this)" role="button" type="button" value="&{{ key.html_entity }}">{{ key.character }}</button>
+                            {% endfor %}
                         </div>
                     {% endfor %}
                 </div>
             </div>
             {% endif %}
-        </div>
+        </div>        
 
         <div>
             <div class="statistics-container">
-                <ul>
-                    <li>Created: {{ moment(word.created).format('D MMM YYYY') }} </li>
-                    {% if word.last_modified %}
-                    <li>Last Modified: {{ moment(word.last_modified).format('D MMM YYYY') }} </li>
-                    {% endif %}
-                    <li>Attempts: {{ word.attempt }} </li>
-                    <li>Correct: {{ word.success }} </li>
-                    <li>Incorrect: {{ word.fail }} </li>
-                </ul>
-            </div>
-        </div>
-
-        <div>
-        {% if word.word %}
-            <div class="edit-page-example">
-                {% if definition %}{% endif %}
-                {{ lng.lng_src }}:
-                <textarea id="edited-example" type="text" name="edited-example">{{ word.example }}</textarea>
-            </div>
-        {% endif %}
-        <button class="btn btn-primary" type="submit">Edit and Update</button>
-        </div>
-
-        <div>
-            <div class="statistics-container">
-                <h3>Did You Know?</h3>
+                <h3>Statistics</h3>
                 <ul>
                     <li>Created: {{ moment(word.created).format('D MMM YYYY') }} </li>
                     {% if word.last_modified %}
@@ -186,12 +177,16 @@
         </div>
 
         <style>
-            #edit-page-translation-table-grid {
-                display: grid;
-                grid-gap: 0.1rem;
-                grid-template-columns: 150px 150px 100px;
+            .edit-page-add-button {
+                cursor: pointer;
             }
 
+            .edit-page-translation-table-grid {
+                display: grid;
+                grid-gap: 0.1rem;
+                grid-template-columns: 150px 150px;
+            }
+    
             .edit-page-translation-table-grid-item {
                 padding: 0.1rem;
                 background: #f4f4f4;
@@ -199,23 +194,18 @@
                 text-align: left;
                 font-weight: 500;
                 font-size: 1.1rem;
-            }
-
-            .add-button-edit-page {
-                cursor: pointer;
-            }
+            }            
         </style>
 
         <div>
-            {% if translation_list %}
-            <div id="edit-page-translation-table-grid">
-                {% for translation in translation_list %}
-                    <div class="edit-page-translation-table-grid-item">{{ translation.language }}</div>
-                    <div class="edit-page-translation-table-grid-item">{{ translation.text }}</div>
-                    <div class="edit-page-translation-table-grid-item"><button onclick="return false;" class="add-button-edit-page">Add (+)</button></div>
-                {% endfor %}
-            </div>
+            {% if word.word %}
+                <div class="edit-page-example">
+                    {% if definition %}{% endif %}
+                    {{ lng.lng_src }}:
+                    <textarea id="edited-example" type="text" name="edited-example">{{ word.example }}</textarea>
+                </div>
             {% endif %}
+            <button class="btn btn-primary edit-page-add-button" type="submit">Edit and Update</button>
         </div>
 
         <div>

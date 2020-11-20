@@ -6,9 +6,20 @@ from googletrans import Translator
 from time import sleep
 
 from .. import db
-from ..models import Definition, DictionaryExample, UserExample, User, Word
+from ..models import BulkTranslate, Definition, DictionaryExample, UserExample, User, Word
 
 translator = Translator()
+
+# Declare constant list which holds the languages
+LANGUAGE_CODES = [
+    { 'code': 'en', 'lng_eng': 'English', 'lng_src': 'English', 'active': False },
+    { 'code': 'de', 'lng_eng': 'German', 'lng_src': 'Deutsch' ,'active': False },
+    { 'code': 'es', 'lng_eng': 'Spanish', 'lng_src': 'español' ,'active': False },
+    { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' ,'active': False },
+    { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' ,'active': True },
+    { 'code': 'la', 'lng_eng': 'Latin', 'lng_src': 'Latine' ,'active': False },
+    { 'code': 'el', 'lng_eng': 'Greek', 'lng_src': 'Ελληνικά', 'active': False }
+]
 
 def lookup_api(word):
     # Toggle for switching between APIs (Oxford API has a monthly limit of 1000)
@@ -40,8 +51,8 @@ def lookup_api(word):
             definitions_list = []
             examples_list = []
 
-            erorr_count_def = 0
-            erorr_count_exa = 0
+            erorr_count_definition = 0
+            erorr_count_example = 0
 
             for a in oxford['results']:
                 for b in a['lexicalEntries']:
@@ -51,24 +62,18 @@ def lookup_api(word):
                                 for definition in d['definitions']:
                                     definitions_list.append(definition)
                             except:
-                                erorr_count_def += 1                                
+                                erorr_count_definition += 1                                
                                 pass
 
                             try: 
                                 for example in d['examples']:
                                     examples_list.append(example['text'])
                             except:
-                                erorr_count_exa += 1
+                                erorr_count_example += 1
                                 pass
 
-
-            print('total errors')
-            print(f'definition: {erorr_count_def}')
-            print(f'examples  : {erorr_count_exa}')
-
-            print('total results')
-            print(f'definitions: {len(definitions_list)}')
-            print(f'examples: {len(examples_list)}')
+            print(f'total results for "{word}" | definition: {len(definitions_list)} | examples  : {len(examples_list)}')
+            print(f'total errors  for "{word}" | definition: {erorr_count_definition} | examples  : {erorr_count_example}')
 
             # Anticipate that not all words have an etymology
             try:
@@ -119,29 +124,23 @@ def lookup_db_dictionary(word):
 
     # If found, display template with data from the local dictionary
     if local_dictionary_result is not None:
-        # Get the id
+        definitions_base_query = Definition.query.filter_by(word=word)
         word_id = local_dictionary_result.id
 
-        # TODO => Check efficiency of having three different database look ups.
-        # TODO => Can you use JOIN TABLES instead here?
-
-        # Returns Type <class 'flask_sqlalchemy.BaseQuery'>
-        # definitions_base_query = Definition.query.filter_by(word=word)
-        definitions_base_query = Definition.query.filter_by(word_id=word_id)
-        # This is a list of type <class 'app.models.Definition'>
-
-        # Parse to list <class 'flask_sqlalchemy.BaseQuery'>
-        # TODO => Make this more efficient (it shouldn't be two steps)
         definitions_list = []
         for row in definitions_base_query:
             definitions_list.append(row.definition)
 
-        examples_base_query = DictionaryExample.query.filter_by(word_id=word_id).all()
+        examples_base_query = DictionaryExample.query.filter_by(word=word).all()
         db.session.close()
 
         examples_list = []
         for example in examples_base_query:
             examples_list.append(example.example)
+
+        print(f'Results from the local dict for {word}')
+        print(f'Number of definitions: {len(definitions_list)}')
+        print(f'Number of examples:    {len(examples_list)}')
 
         # Create dictionary and merge results
         word_dict = {
@@ -168,7 +167,7 @@ def translate_api(src_text, dest_language):
         try:
             result = translator.translate(src_text, src='en', dest=dest_language)
         except Exception as error:
-            print(f'error translating {src_text} into {dest_language}')
+            print(f'Error translating {src_text} into {dest_language}')
             translator = Translator()
             sleep(0.0001)
             pass
@@ -176,64 +175,61 @@ def translate_api(src_text, dest_language):
 
 
 def bulk_translate(src_text):
-    language_codes = [
-        { 'code': 'de', 'lng_eng': 'German', 'lng_src': 'Deutsch' },
-        { 'code': 'es', 'lng_eng': 'Spanish', 'lng_src': 'español' },
-        { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' },
-        { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' }
-    ]
+    # language_codes = filter_out_english(LANGUAGE_CODES)
+    language_codes = select_active_languages(LANGUAGE_CODES)
 
     translations = []
 
     for dict in language_codes:
+        key_language = dict['lng_eng'].lower()
+        value_translation = translate_api(src_text, dict['code'])
+
         translation = {
-            'text': translate_api(src_text, dict['code']),
-            'language': dict['lng_eng']
-         }
+            key_language: value_translation,
+        }
+
         translations.append(translation)
 
     return translations
 
 
 def bulk_translate_excluding(src_text, language_to_exclude):
-    language_codes = [
-        { 'code': 'de', 'lng_eng': 'German', 'lng_src': 'Deutsch' },
-        { 'code': 'es', 'lng_eng': 'Spanish', 'lng_src': 'español' },
-        { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' },
-        { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' }
-    ]
-
-    new_list = list(filter(lambda x: x['code'] != language_to_exclude, language_codes))
-
+    language_codes = filter_out_english(LANGUAGE_CODES)
     translations = []
 
-    for dict in new_list:
+    for dict in language_codes:
+        key_language = dict['lng_eng'].lower()
+        value_translation = translate_api(src_text, dict['code'])
+
         translation = {
-            'text': translate_api(src_text, dict['code']),
-            'language': dict['lng_eng']
-         }
+            key_language: value_translation,
+        }
         translations.append(translation)
 
-    return translations    
+    return translations
 
 
 def create_language_dict(lng):
-    language_codes = [
-        { 'code': 'de', 'lng_eng': 'German', 'lng_src': 'Deutsch' },
-        { 'code': 'es', 'lng_eng': 'Spanish', 'lng_src': 'español' },
-        { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' },
-        { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' },
-        { 'code': 'en', 'lng_eng': 'English', 'lng_src': 'English' }
-    ]
-
-    for code in language_codes:
+    for code in LANGUAGE_CODES:
         if code['code'] == lng:
             return code
 
     return None
 
 
-# Is English Helper returns a boolean result, which in turn determines the relevant view for the templates
+def filter_out_english(CONSTANT_LANG_LIST):
+    filtered_list = list(filter(lambda x: x['code'] != 'en', CONSTANT_LANG_LIST))
+
+    return filtered_list
+
+
+def select_active_languages(CONSTANT_LANG_LIST):
+    filtered_list = list(filter(lambda x: x['active'] != False, CONSTANT_LANG_LIST))
+
+    return filtered_list
+
+
+# IsEnglish Helper returns a boolean result, which in turn determines the relevant view for the templates
 def is_english(language):
     if language == 'en':
         return True
@@ -241,5 +237,113 @@ def is_english(language):
         return False
 
 
-def store_bulk_translate_in_db(translation_list):
-    print('stroin')
+def parse_translation_list(bulk_translate_model):
+    # Point to constant list of language codes
+    language_codes = LANGUAGE_CODES
+
+    english = bulk_translate_model.english
+    german = bulk_translate_model.german
+    italian = bulk_translate_model.italian
+    portuguese = bulk_translate_model.portuguese
+    spanish = bulk_translate_model.spanish
+    latin = bulk_translate_model.latin
+    greek = bulk_translate_model.greek
+
+    extracted_list =  [english, german, italian, portuguese, spanish, latin, greek]
+
+    list_of_translations = []
+
+    for i in range(len(language_codes)):
+        key_language = language_codes[i]['lng_eng'].lower()
+        value_translation = extracted_list[i]
+
+        translation = {
+            key_language: value_translation,
+        }
+
+        list_of_translations.append(translation)
+
+    return list_of_translations
+
+
+def to_bool(string_value):
+    """
+        Converts 'a string' to a boolean. Raises exception for invalid formats
+    """
+    if str(string_value).lower() in ("no",  "n", "false", "f", "0", "0.0", "", "none", "[]", "{}"): 
+        return False
+    else:
+        return True
+
+
+
+
+def create_bulk_translate_dict(word, translation_list):
+    # BAD CODE (18.11.2020). This should be cleaned up
+    dict = {
+        'english': word,
+        'german':       '',
+        'italian':      '',
+        'portuguese':   '',
+        'spanish':      '',
+        'latin':        '',
+        'greek':        ''
+    }
+
+    for translation_dict in translation_list:
+        for language, translated_word in translation_dict.items():
+            if language == 'german':
+                dict['german'] = translated_word
+            if language == 'spanish':
+                dict['spanish'] = translated_word
+            if language == 'italian':
+                dict['italian'] = translated_word
+            if language == 'portuguese':
+                dict['portuguese'] = translated_word
+            if language == 'latin':
+                dict['latin'] = translated_word
+            if language == 'greek':
+                dict['greek'] = translated_word
+
+    record_bulk_translate = BulkTranslate(
+        english = dict['english'],
+        german = dict['german'],
+        italian = dict['italian'],
+        portuguese = dict['portuguese'],
+        spanish = dict['spanish'],
+        latin = dict['latin'],
+        greek = dict['greek']
+    )                                             
+
+    return record_bulk_translate
+
+
+def split_keyboard_into_rows(keyboard):
+    keyboard_split_into_rows = []
+
+    number_of_accents = len(keyboard)
+    print(f'total no. of accents: {number_of_accents}')
+
+    # Declare empty lists
+    # https://stackoverflow.com/questions/13520876/how-can-i-make-multiple-empty-lists-in-python
+    row_one, row_two, row_three = ([] for i in range(3))
+
+    # id = db.Column(db.Integer, primary_key=True)
+    # character = db.Column(db.String(1))
+    # language = db.Column(db.String(32))
+    # alt_code = db.Column(db.String(32))
+    # html_entity = db.Column(db.String(32))
+    # row_num = db.Column(db.Integer)
+    # in_use = db.Column(db.Boolean)
+
+    for element in keyboard:
+        if element.row_num == 1:
+            row_one.append(element)
+        if element.row_num == 2:
+            row_two.append(element)
+        if element.row_num == 3:
+            row_three.append(element)
+
+    keyboard_split_into_rows = [row_one, row_two, row_three]
+
+    return keyboard_split_into_rows

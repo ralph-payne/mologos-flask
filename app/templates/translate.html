@@ -8,7 +8,7 @@
 
 {% include 'partials/_flashes.html' %}
 
-<!-- Translate Contaidddner -->
+<!-- Translate Container -->
     <div class="translate-container">
         <div class="language-select flex-container">
             <div class="inner-lang-select">
@@ -30,7 +30,7 @@
             {% endif %}
         </div>
         <div class="box-2 btn-wrapper">
-            <form id="form-1" action="{{ url_for('main.translate', lng=lng) }}" method="POST">
+            <form id="form-1" action="{{ url_for('main.translate', lng='en') }}" method="POST">
                 <input type="hidden" id="src-tra-1" name="src_tra_1">
                 <input type="hidden" id="dst-lng-1" name="dst_lng_1">
                 <button type="submit" class="btn btn-primary" id="translate-btn" onclick="fetchInput(this)">Translate</button>
@@ -49,7 +49,7 @@
             </p>
         </div>
         <div class="add-btn">
-            <form id="form-2" action="{{ url_for('main.translate', lng=lng) }}" method="POST">
+            <form id="form-2" action="{{ url_for('main.translate', lng='en') }}" method="POST">
                 <input type="hidden" id="src-tra-2" name="src_tra_2">
                 <input type="hidden" id="dst-tra-2" name="dst_tra_2">
                 <input type="hidden" id="dst-lng-2" name="dst_lng_2">

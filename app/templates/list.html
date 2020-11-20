@@ -24,8 +24,7 @@
                         {% for word in words %}            
                             <tr>
                                 <td><a href="{{ url_for('main.define', word=word.word) }}">{{ word.word }}</a></td>
-                                <!-- <td>{{ word.example[0]|upper}}{{word.example[1:] }}</td> -->
-                                <td>{{ word.id }}</td>
+                                <td>{{ word.example[0]|upper}}{{word.example[1:] }}</td>
                                 <td><a href="{{ url_for('main.edit', id=word.id, lng=lng.code) }}"><i class="fa fa-edit"></i></a></td>
                                 <td><a href="{{ url_for('main.delete', id=word.id, lng=lng.code ) }}"><i class="fa fa-trash"></i></a></td>
                             </tr>
@@ -64,15 +63,13 @@
     <div class="inner-container">
         <p>You don't have any saved words or expressions in {{ lng.lng_eng }}</p>
         {% if english %}{% else %}
-        <p>Go to the <a class="link-color" href="{{ url_for('main.translate') }}">translation</a> page to add some!</p>
+        <p>Go to the <a class="link-color" href="{{ url_for('main.translate', lng='en') }}">translation</a> page to add some!</p>
         {% endif %}
     </div>
     {% endif %}
 
     {% if pagination %}
-        <div class="pagination">
-            {{ macros.pagination_widget(pagination, endpoint=endpoint, lng=lng.code, username="test1234@gmail.com") }}
-        </div>
+        {{ macros.pagination_widget(pagination, endpoint=endpoint, lng=lng.code, username="test1234@gmail.com") }}
     {% endif %}
 
 {% endblock %}
