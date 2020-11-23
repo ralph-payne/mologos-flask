@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Translate
+{% endblock %}
+
+{% block page_content %}
+
+{% include 'partials/_flashes.html' %}
+
+id = db.Column(db.Integer, primary_key=True)
+email = db.Column(db.String(64), unique=True, index=True)
+username = db.Column(db.String(64), unique=True, index=True)
+role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+password_hash = db.Column(db.String(128))
+name = db.Column(db.String(64))
+location = db.Column(db.String(64))
+about_me = db.Column(db.Text())
+member_since = db.Column(db.DateTime(), default=datetime.utcnow)
+last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+confirmed = db.Column(db.Boolean, default=False)
+is_admin = db.Column(db.Boolean, default=False)
+lng_preferred = db.Column(db.String(3))
+lng_recent = db.Column(db.String(3))
+
+
+
+
+
+<!-- End of page_content -->
+{% endblock %}

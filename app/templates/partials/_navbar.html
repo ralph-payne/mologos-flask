@@ -8,50 +8,58 @@
         </div>
         <style>
             .navbar-grid-container {
-                height: 100px;
+                padding-top: 10px;
+                height: 80px;
                 position: sticky;
                 display: grid;
                 grid-template-columns: 4fr 4fr 4fr;
                 align-items: center;
                 margin: 0 auto;
-                background: #f3f3f3;
+                background-color: #f3f3f3;
                 width: 100%;
-                background-color: yellow;
-                width: 900px;
+                width: 1100px;
             }
             .plc800 {
-                background: blue;
+                padding: 5px 0px;
+                background-color: #f3f3f3;
                 height: 100%;
-                width: 100%;
+                width: 350px;
+                margin: auto;
             }
             .plc801 {
                 height: 100%;
                 width: 100%;
-                background: orange;
+                display: flex;
             }
             .plc802 {
-                display: inline;
+                float: left;
                 height: 100%;
-                width: 50%
+                width: 250px;
             }
             .plc803 {
-                display: inline;
-                height: 100%;
-                width: 50%
-            }
-            .nav-search-bar {
-                border-top-left-radius: 15px;
-                border-bottom-left-radius: 15px;
+                float: right;
                 height: 100%;
                 width: 100px;
             }
-
+            .nav-search-bar-input-element {
+                border-top-left-radius: 15px;
+                border-bottom-left-radius: 15px;
+                height: 100%;
+                font-family: 'Lato', sans-serif;
+                outline: none;
+                font-size: 1.1rem;
+                padding-left: 10px;
+                width: 100%;
+                border-right: none;
+            }
             .navbar-magnifying-glass-search {
                 height: 100%;
                 cursor: pointer;
-                width: 30%;
+                width: 100%;
                 border-top-right-radius: 15px;
                 border-bottom-right-radius: 15px;
+                border-left: none;
+                background: #f3f3f3;                
             }
         </style>
         
@@ -59,7 +67,7 @@
             <div class="plc801">
                 <form action="/definition" method="POST">
                     <div class="plc802">
-                        <input class="nav-search-bar" name="word-to-lookup" type="search" placeholder="Look up a definition..." aria-label="Search">
+                        <input class="nav-search-bar-input-element" name="word-to-lookup" type="search" placeholder="Look up a definition..." aria-label="Search">
                     </div>
                     <div class="plc803">
                         <button class="navbar-magnifying-glass-search" type="submit" class="btn">
@@ -76,6 +84,7 @@
                     {{ nav_link('main.list', 'en', 'list') }}
                     {{ nav_link('main.challenge', 'en', 'challenge') }}
                     {{ nav_link('main.translate', 'en', 'translate') }}
+                    {{ nav_link('main.profile', 'en', 'profile') }}
                     <li><a href="{{ url_for('auth.logout') }}"><i class="fa fa-sign-out-alt"></i></a></td>
                 {% else %}
                     <li><a class="login-nav-icon" href="{{ url_for('auth.login') }}">Login</a></li>

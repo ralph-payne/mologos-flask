@@ -9,7 +9,7 @@
 {% include 'partials/_flashes.html' %}
 
 <!-- Translate Container -->
-    <div class="translate-container">
+    <div class="translate-grid">
         <div class="language-select flex-container">
             <div class="inner-lang-select">
                 <input type="hidden" id="usr-recent-lang" value="{{ lng_recent}}">
@@ -19,6 +19,8 @@
                     <option value="it">Italian</option>
                     <option value="pt">Portuguese</option>
                     <option value="es">Spanish</option>
+                    <option value="la">Latin</option>
+                    <option value="el">Greek</option>
                 </select>
             </div>
         </div>     
@@ -56,6 +58,13 @@
                 <button type="submit" class="btn btn-primary" onclick="fetchInput(this)">Add to My Dictionary</button>
             </form>
         </div>
+        <div class="box-5">
+            box 5
+            <h3>List of Previous Translations</h3>
+        </div>
+        <div class="box-6">
+            box 6
+        </div>   
     </div>
 
 <!-- Script to Fetch text inputs and add to hidden fields -->
@@ -104,6 +113,23 @@
             document.getElementById("form-2").submit();
         }
     }
+</script>
+
+<!-- Script to Trigger Translate on Pressing Enter Button -->
+<script type="text/javascript">    
+    // Get the input field
+    const textBoxInput = document.getElementById("text-to-translate");
+    
+    // Execute a function when the user releases a key on the keyboard
+    textBoxInput.addEventListener("keyup", function(event) {
+      // Number 13 is the "Enter" key on the keyboard
+      if (event.keyCode === 13) {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        document.getElementById("translate-btn").click();
+      }
+    });
 </script>
 
 <!-- End of page_content -->

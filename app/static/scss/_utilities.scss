@@ -11,12 +11,6 @@ body {
     background: $light-color;
 }
 
-
-// Add space after each paragraph
-p {
-    margin: .5rem 0;
-}
-
 // Remove bullet points from list items
 ul {
     list-style: none;
@@ -25,11 +19,6 @@ ul {
 // Prevent images from stretching beyond their containers
 img {
     width: 100%;
-}
-
-.main-container {
-    width: 100%;
-    min-height: 950px;
 }
 
 .flex-container {
@@ -41,10 +30,6 @@ img {
     margin: auto;
     padding: 0 2rem;
     overflow: hidden;
-}
-
-.inner-container {
-    min-height: $min-height;
 }
 
 .page-container {
@@ -150,6 +135,7 @@ a {
 
 .container-flash {
     min-height: 60px;
+    padding-top: 0.25rem;
     padding-bottom: 0.5rem;
 }
 

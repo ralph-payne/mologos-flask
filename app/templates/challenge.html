@@ -17,8 +17,7 @@ Challenge
                     <thead>
                         <tr>
                             <th>Example</th>
-                            <th>{% if english %} {% else %} {{ lng.lng_eng }} / {{ lng.lng_src }} {% endif %}</th>
-                            <th></th>
+                            <th>{% if english %} {% else %} {{ lng.lng_eng }} / {{ lng.lng_src }} </th><th> {% endif %}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -32,12 +31,10 @@ Challenge
                                     <input type="hidden" name="target_word" value="{{ word.target_word }}">
                                     <input type="hidden" name="star_boolean" value="0">
                                     <input type="hidden" name="eye_boolean" value="0">
-                                    {{ word.first_half_sentence }}
+                                    {{ word.first_half_sentence[0]|upper}}{{word.first_half_sentence[1:]}}
                                     <input id="user-guess" type="text" name="user_guess" placeholder="write guess...">
                                     {{ word.second_half_sentence }}
                                 </td>
-                                <td><a href="{{ url_for('main.edit', id=word.id, lng=lng.code) }}" target="_blank"><i
-                                            class="fa fa-edit fa-2x"></i></a></td>
                                 <td><a id="{{ word.id }}-eye-icon" href="#"><i class="fa fa-eye-slash fa-2x"
                                             onclick="toggleColor(this)"></i></a></td>
                                 <td><a id="{{ word.id }}-star-icon" href="#" onclick="toggleColor(this)"><i
@@ -67,8 +64,19 @@ Challenge
                         {% endfor %}
                     </tbody>
                 </table>
+
+                <style>
+                .submit-btn-challenge {
+                    cursor: pointer;
+                    background-color: #48954e;
+                    color: #fff;
+                    padding: 0.5rem 1.5rem;
+                    border-radius: .25rem;             
+                }
+                </style>
+
                 <div class="submit-btn-wrapper-challenge">
-                    <button class="submit-btn-challenge" class="btn" type="submit">Submit</button>
+                    <button class="submit-btn-challenge" type="submit">Submit</button>
                 </div>
             </form>
         </div>

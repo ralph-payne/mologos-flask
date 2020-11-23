@@ -47,8 +47,23 @@
             {% endfor %}
             </tbody>
         </table>
-        <div id="end-btn-div">
-            <a href="{{ url_for('main.challenge', lng=lng.code) }}" id="next-btn-challenge" class="btn">Next</a>
+        <style>
+        .next-btn-wrapper-results {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50px;
+        }
+        .next-btn-results {
+            cursor: pointer;
+            background-color: #333;
+            color: #fff;
+            padding: 0.5rem 1.5rem;
+            border-radius: .25rem;                    
+        }
+        </style>
+        <div class="next-btn-wrapper-results">
+            <a href="{{ url_for('main.challenge', lng=lng.code) }}" class="next-btn-results">Next</a>
         </div>
     </div>
 

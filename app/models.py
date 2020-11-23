@@ -171,7 +171,7 @@ class Translation(db.Model):
 
 
 class User(UserMixin, db.Model):
-    # user is a reserved word in Postgres: https://www.postgresql.org/docs/7.3/sql-keywords-appendix.html
+    # user is a reserved word in Postgres: https://www.postgresql.org/docs/7.3/sql-keywords-appendix.html so don't use it as a table name or you will encounter issues!
     __tablename__ = 'app_user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
@@ -298,3 +298,18 @@ class BulkTranslate(db.Model):
     spanish = db.Column(db.String(128))
     latin = db.Column(db.String(128))
     greek = db.Column(db.String(128))
+
+
+# USER LANGUAGE PREFERENCE CLASS
+class UserLanguagePreference(db.Model):
+    __tablename__ = 'user_language_preference'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('app_user.id'), index=True)
+    english = db.Column(db.Boolean, default=True)
+    german = db.Column(db.Boolean, default=True)
+    italian = db.Column(db.Boolean, default=True)
+    portuguese = db.Column(db.Boolean, default=True)
+    spanish = db.Column(db.Boolean, default=True)
+    latin = db.Column(db.Boolean, default=True)
+    greek = db.Column(db.Boolean, default=True)
+    created = db.Column(db.DateTime, default=datetime.utcnow)

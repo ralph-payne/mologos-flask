@@ -1,4 +1,10 @@
-<div>
+<style>
+    .flag-container {
+        padding-top: 20px;
+    }
+</style>
+    
+<div class="flag-container">
     <a href="{{ url_for('main.list', lng='en') }}"><img src="{{url_for('static', filename='img/flags/en.png')}}" alt="flag-en" class="flag"></a>
     <a href="{{ url_for('main.list', lng='es') }}"><img src="{{url_for('static', filename='img/flags/es.png')}}" alt="flag-es" class="flag"></a>
     <a href="{{ url_for('main.list', lng='de') }}"><img src="{{url_for('static', filename='img/flags/de.png')}}" alt="flag-de" class="flag"></a>

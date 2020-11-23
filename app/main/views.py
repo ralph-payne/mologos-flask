@@ -469,3 +469,18 @@ def challenge(lng):
         else: # Foreign Language Challenge
             words = UserExample.query.filter_by(user_id=current_user.id, dst=lng).all()
             return render_template('challenge.html', words=words, lng=create_language_dict(lng), english=is_english(lng))
+
+
+# ?: PROFILE
+@main.route('/profile/<lng>', methods=['GET', 'POST'])
+@login_required
+def profile(lng):
+    if request.method == 'POST':
+        pass
+    
+    else: # GET Request
+        user_details = User.query.filter_by(id=current_user.id).first()
+
+        UserLanguagePreference.query.filter_by(user_id=current_user.id).all()
+
+        return render_template('profile.html', user_details=user_details, languages=languages)

@@ -27,28 +27,32 @@
     <form action={{ url_for('main.add', word=word.word) }} method="POST">
     {% if word %}
 
-      <div class="definition-container">
 
+    <style>
+        .definition-container{
+            min-height: 500px;
+        }
+    </style>
+      <div class="definition-container">
         <div>
             <div class="defined-word-container">
                 <h1 name="defined-word" class="defined-word-content">{{ word.word }}</h1>
             </div>
             <div class="pron-ipa-container">
                 <span class="pron-ipa-content">/{{ word.pronunciation }}/<span>
-                    <div>Word ID: {{ word.word_id }}</div>
-                    <div>User Example {{ user_example.example }}</div>
-                    <div>User Example ID (TBC){{ user_example.id }}</div>
             </div>
         </div>
 
         <hr>
 
         <div>
-          <ol>
-              {% for definition in word.definitions %}
-                  <li>{{ definition[0]|upper}}{{definition[1:]}}</li>
-              {% endfor %}
-          </ol>
+            <h2>Definitions</h2>            
+                <ol>              
+                {% for definition in word.definitions %}
+                    <li>{{ definition[0]|upper}}{{definition[1:]}}</li>
+                {% endfor %}
+                </ol>
+        <hr>   
         </div>
 
         <div>
@@ -58,7 +62,7 @@
                   {% for example in word.examples %}
                       <li class="bullet-points">{{ example[0]|upper}}{{example[1:]}}</li>
                   {% endfor %}
-              </ul>
+              </ul>              
           {% endif %}
         </div>
 
