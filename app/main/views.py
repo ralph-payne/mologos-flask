@@ -4,12 +4,12 @@ import random
 from flask import flash, redirect, render_template, request, session, url_for, current_app
 from . import main
 from .. import db
-from ..models import BulkTranslate, Definition, DictionaryExample, UserExample, User, Word 
+from ..models import BulkTranslate, Definition, DictionaryExample, UserExample, User, UserLanguagePreference, Word 
 
 from flask_login import current_user, login_required
 
 # Helper functions for parsing results from API and database dictionary
-from .helpers import lookup_api, lookup_db_dictionary, translate_api, bulk_translate, bulk_translate_excluding, create_language_dict, is_english, parse_translation_list, to_bool, create_bulk_translate_dict, split_keyboard_into_rows
+from .helpers import lookup_api, lookup_db_dictionary, translate_api, bulk_translate, bulk_translate_excluding, create_language_dict, is_english, parse_translation_list, to_bool, create_bulk_translate_dict, split_keyboard_into_rows, parse_user_examples_with_split
 
 # These imports are down here as they will get moved to a new file eventually
 from ..models import InternationalAccent
@@ -29,9 +29,9 @@ def init():
     Word.query.delete()
 
     if not test_user_exists:
-        user = User(email= test_user_email,
-                username='test1234',
-                password='12341234')
+        user = User(email=test_user_email, 
+                    username='test1234',
+                    password='12341234')
         db.session.add(user)
         db.session.commit()
 
@@ -80,7 +80,6 @@ def init():
                     last_row_id_inefficient = word_query_inefficient.id
 
                     record_user_example = UserExample(example=example, word=word, word_id=last_row_id_inefficient, user_id=test_user_id, translation=False, src=None, dst='en')
-
 
                     db.session.add(record_user_example)
 
@@ -247,9 +246,6 @@ def translate(lng):
             text_to_translate = request.form.get('src_tra_1').strip()
             destination_language = request.form.get('dst_lng_1')
 
-            print('translating')
-            print(text_to_translate)
-            
             # Translate word with function from helpers.py
             translate_api_output = translate_api(text_to_translate, destination_language)
 
@@ -334,9 +330,6 @@ def edit(lng, id):
             # Declare list of keyboard accents for language
             keyboard = InternationalAccent.query.filter_by(language=lng, in_use=1).all()
             keyboard_split_into_rows = split_keyboard_into_rows(keyboard)
-
-            print(keyboard_split_into_rows)
-            print(type(keyboard_split_into_rows))
 
             # Check if there already is a bulk translate
             bulk_translate_from_db = BulkTranslate.query.filter_by(english=word.word).first()
@@ -472,15 +465,76 @@ def challenge(lng):
 
 
 # ?: PROFILE
-@main.route('/profile/<lng>', methods=['GET', 'POST'])
+@main.route('/profile/<lng>')
 @login_required
 def profile(lng):
+    user_details = User.query.filter_by(id=current_user.id).first()
+
+    languages = UserLanguagePreference.query.filter_by(user_id=current_user.id).all()
+
+    if not languages:
+        # Create new
+        record_preferences = UserLanguagePreference(user_id=current_user.id)
+        db.session.add(record_preferences)
+        db.session.commit()
+
+    # if None, create a language prefs for the user
+    return render_template('profile.html', user_details=user_details, languages=languages)
+
+
+# ?: UPLOAD
+@main.route('/upload/<lng>', methods=['GET', 'POST'])
+@login_required
+def upload(lng):
     if request.method == 'POST':
-        pass
+        uploaded_text = request.form.get('upload_text_area').strip()
+        uploaded_language = request.form.get('select_language')
+        user_id = current_user.id
+
+        # Count number of newlines
+        newlines = len(uploaded_text.split('\n'))
+        split_list = uploaded_text.split('\n')
+
+        for example in split_list:
+            record_user_example = UserExample(example=example, word=None, word_id=None, user_id=current_user.id, translation=False, src=None, dst='en')
+            db.session.add(record_user_example)
+
+        db.session.commit()
+
+        return redirect(url_for('main.select_target_word', lng=lng))
     
     else: # GET Request
-        user_details = User.query.filter_by(id=current_user.id).first()
+        lng_recent = User.query.filter_by(id=current_user.id).first().lng_recent
 
-        UserLanguagePreference.query.filter_by(user_id=current_user.id).all()
+        return render_template('upload.html', lng_recent=lng_recent)
 
-        return render_template('profile.html', user_details=user_details, languages=languages)
+
+# ?: UPLOAD
+@main.route('/select-target-word/<lng>')
+@login_required
+def select_target_word(lng):
+    # Use user id to find the most recent examples; filter on any without a target word
+    user_examples_from_db = UserExample.query.filter_by(user_id=current_user.id).filter_by(word=None).all()
+
+    user_examples = parse_user_examples_with_split(user_examples_from_db)
+
+    return render_template('select_target_word.html', user_examples=user_examples, lng=create_language_dict(lng))
+
+
+@main.route('/add-target-words/<lng>', methods=['POST'])
+@login_required
+def add_target_words(lng):
+    # Get all the hidden inputs from the form
+    target_words = request.form.getlist('target_word')
+    user_example_ids = request.form.getlist('user_example_id')
+
+    # Loop through
+    for i in range(len(target_words)):
+        word = target_words[i]
+        id = user_example_ids[i]
+        UserExample.query.filter_by(user_id=current_user.id).filter_by(id=id).update({'word': word})
+
+    # Update the database
+    db.session.commit()
+
+    return redirect(url_for('main.list', lng=lng))

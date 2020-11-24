@@ -1,3 +1,5 @@
+{% from "_macros.html" import flag with context %}
+
 <style>
 .flag-container {
     padding-top: 20px;
@@ -5,9 +7,12 @@
 </style>
 
 <div class="flag-container">
-    <a href="{{ url_for('main.challenge', lng='en') }}"><img src="{{url_for('static', filename='img/flags/en.png')}}" alt="flag-en" class="flag"></a>
-    <a href="{{ url_for('main.challenge', lng='es') }}"><img src="{{url_for('static', filename='img/flags/es.png')}}" alt="flag-es" class="flag"></a>
-    <a href="{{ url_for('main.challenge', lng='de') }}"><img src="{{url_for('static', filename='img/flags/de.png')}}" alt="flag-de" class="flag"></a>
-    <a href="{{ url_for('main.challenge', lng='it') }}"><img src="{{url_for('static', filename='img/flags/it.png')}}" alt="flag-it" class="flag"></a>
-    <a href="{{ url_for('main.challenge', lng='pt') }}"><img src="{{url_for('static', filename='img/flags/pt.png')}}" alt="flag-pt" class="flag"></a>
+    {{ flag('main.challenge', 'en', "img/flags/en.png") }}
+    {{ flag('main.challenge', 'de', "img/flags/de.png") }}
+    {{ flag('main.challenge', 'it', "img/flags/it.png") }}
+    {{ flag('main.challenge', 'pt', "img/flags/pt.png") }}
+    {{ flag('main.challenge', 'pl', "img/flags/pl.png") }}
+    {{ flag('main.challenge', 'la', "img/flags/la.png") }}
+    {{ flag('main.challenge', 'fr', "img/flags/fr.png") }}
+    {{ flag('main.challenge', 'el', "img/flags/el.png") }}
 </div>

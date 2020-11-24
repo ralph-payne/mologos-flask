@@ -1,3 +1,5 @@
+{% from "_macros.html" import flag with context %}
+
 <style>
     .flag-container {
         padding-top: 20px;
@@ -5,9 +7,12 @@
 </style>
     
 <div class="flag-container">
-    <a href="{{ url_for('main.list', lng='en') }}"><img src="{{url_for('static', filename='img/flags/en.png')}}" alt="flag-en" class="flag"></a>
-    <a href="{{ url_for('main.list', lng='es') }}"><img src="{{url_for('static', filename='img/flags/es.png')}}" alt="flag-es" class="flag"></a>
-    <a href="{{ url_for('main.list', lng='de') }}"><img src="{{url_for('static', filename='img/flags/de.png')}}" alt="flag-de" class="flag"></a>
-    <a href="{{ url_for('main.list', lng='it') }}"><img src="{{url_for('static', filename='img/flags/it.png')}}" alt="flag-it" class="flag"></a>
-    <a href="{{ url_for('main.list', lng='pt') }}"><img src="{{url_for('static', filename='img/flags/pt.png')}}" alt="flag-pt" class="flag"></a>
+    {{ flag('main.list', 'en', "img/flags/en.png") }}
+    {{ flag('main.list', 'de', "img/flags/de.png") }}
+    {{ flag('main.list', 'it', "img/flags/it.png") }}
+    {{ flag('main.list', 'pt', "img/flags/pt.png") }}
+    {{ flag('main.list', 'pl', "img/flags/pl.png") }}
+    {{ flag('main.list', 'la', "img/flags/la.png") }}
+    {{ flag('main.list', 'fr', "img/flags/fr.png") }}
+    {{ flag('main.list', 'el', "img/flags/el.png") }}
 </div>

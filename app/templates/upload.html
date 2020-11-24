@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    Translate
+{% endblock %}
+
+{% block page_content %}
+
+{% include 'partials/_flashes.html' %}
+
+Upload your own examples
+<hr>
+Each example should appear on a newline
+
+
+<style>
+    .upload-text-area {
+        background-color: #f3f3f3;
+        height: 300px;
+        width: 600px;
+        display: block;
+    }
+</style>
+
+<form class="upload-form" action="/upload/en" method="POST">
+
+<div class="language-select flex-container">
+    <div class="inner-lang-select">
+        <input type="hidden" id="usr-recent-lang" value="{{ lng_recent}}">
+        <label for="select-language"><strong>Language</strong></label>
+        <select name="select_language" id="select-language">
+            <option value="en">English</option>
+            <option value="de">German</option>
+            <option value="it">Italian</option>
+            <option value="pt">Portuguese</option>
+            <option value="es">Spanish</option>
+            <option value="la">Latin</option>
+            <option value="el">Greek</option>
+        </select>
+    </div>
+</div>
+
+<textarea type="text" name="upload_text_area" id="upload-text-area" class="upload-text-area">
+
+</textarea>
+
+<style>
+.upload-examples-btn-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+}
+</style>
+
+<div class="upload-examples-btn-wrapper">
+    <button class="btn btn-primary" type="submit">
+        Upload Examples
+    </button>
+</div>
+
+</form>
+<!-- End of page_content -->
+{% endblock %}

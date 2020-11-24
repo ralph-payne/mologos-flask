@@ -1,0 +1,106 @@
+<style>
+    .target-word-selected {
+        background-color: green;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .select-target-word-button-container {
+        background-color: orange;
+    }
+
+    .select-target-word-button {
+        cursor: pointer;
+    }
+
+    .submit-btn-select-target-word {
+        cursor: pointer;
+        background-color: #48954e;
+        color: #fff;
+        padding: 0.5rem 1.5rem;
+        border-radius: .25rem;             
+    }
+</style>
+
+<form action="/add-target-words/{{ lng.code }}" method="POST">
+    <h2>Instructions</h2>
+        <p>Select the word..</p>
+
+    {% for user_example in user_examples %}
+        id: {{ user_example.id }}
+        <hr>
+        {{ user_example.user_example }}
+        <input type="hidden" name="user_example_id" value="{{ user_example.id }}">
+        
+        <div class="select-target-word-button-container">
+            <input type="hidden" name="target_word" value="">
+            {% for word in user_example.user_examples_parsed %}
+                <button class="select-target-word-button" onClick=toggleColorOfButton(this) value="{{ word }}">{{ word }}</button>
+            {% endfor %}
+        </div>
+        <hr>
+    {% endfor %}
+
+    <div class="submit-btn-wrapper-select-target-word">
+        <button class="submit-btn-select-target-word" type="submit">Submit</button>
+    </div>
+</form>
+
+<!-- Script for ..... -->
+<script type="text/javascript">
+
+    const getSiblingsHelper = (elem) => {
+
+        // Setup siblings array and get the first sibling
+        const siblings = [];
+        let sibling = elem.parentNode.firstChild;
+
+        // Loop through each sibling and push to the array
+        while (sibling) {
+            if (sibling.nodeType === 1 && sibling !== elem) {
+                siblings.push(sibling);
+            }
+            sibling = sibling.nextSibling
+        }
+
+        return siblings;
+
+    };
+
+    const toggleColorOfButton = (button) => {
+        // Get all the siblings of the button
+        const siblings = getSiblingsHelper(button);
+
+        // Remove style if it already has it
+        if (button.classList.contains("target-word-selected")) {
+            button.classList.remove("target-word-selected");
+
+            for (let i = 0; i < siblings.length; i++) {
+                // Delete the hidden input
+                if (siblings[i].nodeName == "INPUT") {                    
+                    // Delete previous hidden input
+                    siblings[i].remove();
+            }}
+
+        } else {
+            // Loop through and delete any other words that have got the class
+            for (let i = 0; i < siblings.length; i++) {
+                // If it's a hidden input, delete it
+                if (siblings[i].nodeName == "INPUT") {                    
+                    // Delete previous hidden input
+                    siblings[i].remove();
+                } else if (siblings[i].classList.contains("target-word-selected")) {
+                    // Remove class which indicates button is active
+                    siblings[i].classList.remove("target-word-selected");
+                }
+            }
+
+            button.classList.add("target-word-selected");
+            parentElement = button.parentElement;
+            text = button.value
+
+            // Add a hidden element to the parent
+            parentElement.innerHTML = `<input type="hidden" name="target_word" value="${text}">` + parentElement.innerHTML
+        }
+    }
+</script>

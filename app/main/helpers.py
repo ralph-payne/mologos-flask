@@ -1,9 +1,9 @@
-import os
-import requests
+import os, requests, re
 
 # https://pypi.org/project/googletrans/
 from googletrans import Translator
 from time import sleep
+
 
 from .. import db
 from ..models import BulkTranslate, Definition, DictionaryExample, UserExample, User, Word
@@ -322,19 +322,10 @@ def split_keyboard_into_rows(keyboard):
     keyboard_split_into_rows = []
 
     number_of_accents = len(keyboard)
-    print(f'total no. of accents: {number_of_accents}')
 
     # Declare empty lists
     # https://stackoverflow.com/questions/13520876/how-can-i-make-multiple-empty-lists-in-python
     row_one, row_two, row_three = ([] for i in range(3))
-
-    # id = db.Column(db.Integer, primary_key=True)
-    # character = db.Column(db.String(1))
-    # language = db.Column(db.String(32))
-    # alt_code = db.Column(db.String(32))
-    # html_entity = db.Column(db.String(32))
-    # row_num = db.Column(db.Integer)
-    # in_use = db.Column(db.Boolean)
 
     for element in keyboard:
         if element.row_num == 1:
@@ -347,3 +338,39 @@ def split_keyboard_into_rows(keyboard):
     keyboard_split_into_rows = [row_one, row_two, row_three]
 
     return keyboard_split_into_rows
+
+
+
+# Example:
+# user_examples = {
+#     'id': 3,
+#     'user_example': 'god here is',
+#     'user_example_parased': ['god', 'here', 'is']
+# }
+def parse_user_examples_with_split(user_examples_from_db):
+    ids = list(map(lambda x: x.id, user_examples_from_db))
+    user_examples_examples = list(map(lambda x: x.example, user_examples_from_db))    
+
+    user_examples_parsed = []
+    size = len(user_examples_from_db)
+
+    for element in user_examples_from_db:
+        list_of_split_words = split_to_words(element.example)
+
+        user_examples_parsed.append(list_of_split_words)
+
+    user_examples = []
+
+    for i in range(size):
+        dict = {
+            'id': ids[i],
+            'user_example': user_examples_examples[i],
+            'user_examples_parsed': user_examples_parsed[i]
+        }
+        user_examples.append(dict)
+
+    return user_examples
+
+
+def split_to_words(sentence):
+    return list(filter(lambda w: len(w) > 0, re.split('\W+', sentence)))

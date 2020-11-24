@@ -51,6 +51,7 @@
                 padding-left: 10px;
                 width: 100%;
                 border-right: none;
+                border-color: #000;                
             }
             .navbar-magnifying-glass-search {
                 height: 100%;
@@ -58,6 +59,7 @@
                 width: 100%;
                 border-top-right-radius: 15px;
                 border-bottom-right-radius: 15px;
+                border-color: #000;                
                 border-left: none;
                 background: #f3f3f3;                
             }
@@ -84,6 +86,7 @@
                     {{ nav_link('main.list', 'en', 'list') }}
                     {{ nav_link('main.challenge', 'en', 'challenge') }}
                     {{ nav_link('main.translate', 'en', 'translate') }}
+                    {{ nav_link('main.upload', 'en', 'upload') }}                    
                     {{ nav_link('main.profile', 'en', 'profile') }}
                     <li><a href="{{ url_for('auth.logout') }}"><i class="fa fa-sign-out-alt"></i></a></td>
                 {% else %}
