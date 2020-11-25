@@ -1,11 +1,22 @@
 {% extends "base.html" %}
-{% import "_macros.html" as macros %}
 
-{% block title %}My Words{% endblock %}
+{% block title %}: My Words{% endblock %}
 
 {% block page_content %}
 
-    {% include 'partials/_flags_list.html' %}
+    <style>
+        .flag-container {
+            padding-top: 20px;
+        }
+    </style>
+        
+    <div class="flag-container">
+        {% for language in language_codes %}
+            {% if language.active %}
+                {{ macros.generate_flag(endpoint=endpoint, country=language.code, filename=language.filename) }}
+            {% endif %}
+        {% endfor %}
+    </div>
 
     {% if words %}
         {% if english %}
@@ -46,7 +57,7 @@
                     </thead>
                 
                     <tbody>
-                        {% for word in words %}            
+                        {% for word in words %}      
                             <tr>
                                 <td>{{ word.word }}</td>
                                 <td>{{ word.example }}</td>
@@ -60,12 +71,7 @@
         {% endif %}
 
     {% else %}
-    <div class="inner-container">
-        <p>You don't have any saved words or expressions in {{ lng.lng_eng }}</p>
-        {% if english %}{% else %}
-        <p>Go to the <a class="link-color" href="{{ url_for('main.translate', lng='en') }}">translation</a> page to add some!</p>
-        {% endif %}
-    </div>
+        {{ macros.no_saved_words_message(endpoint=endpoint, language=lng.code, is_english=english) }}
     {% endif %}
 
     {% if pagination %}

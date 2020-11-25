@@ -69,17 +69,17 @@
             <div class="plc801">
                 <form action="/definition" method="POST">
                     <div class="plc802">
-                        <input class="nav-search-bar-input-element" name="word-to-lookup" type="search" placeholder="Look up a definition..." aria-label="Search">
+                        <input id="nav-search-bar-input-element" class="nav-search-bar-input-element" name="word-to-lookup" type="text" placeholder="Look up a definition..." onkeyup="checkTextFieldIsNotEmpty()">
                     </div>
                     <div class="plc803">
-                        <button class="navbar-magnifying-glass-search" type="submit" class="btn">
+                        <button id="navbar-magnifying-glass-search" class="navbar-magnifying-glass-search" type="submit" class="btn" onclick="checkTextFieldIsNotEmpty()">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
                 </form>
             </div>
         </div>
-        
+
         <div class="navbar-links flex-container items-right">
             <ul>
                 {% if current_user.is_authenticated %}
@@ -96,3 +96,17 @@
         </div>
     </div>
 </div>
+
+<!-- Script to Disable Search button if there is nothing in the text input -->
+<script type="text/javascript">
+    const checkTextFieldIsNotEmpty = () => {
+        const navSearchBarInput = document.getElementById('nav-search-bar-input-element')
+        const magnifyingGlassSearch = document.getElementById('navbar-magnifying-glass-search')
+
+        if (navSearchBarInput.value.length > 0) { 
+            magnifyingGlassSearch.disabled = false;
+        } else { 
+            magnifyingGlassSearch.disabled = true;
+        }
+    }
+</script>

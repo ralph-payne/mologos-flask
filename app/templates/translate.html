@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}
-    Translate
-{% endblock %}
+{% block title %}: Translate{% endblock %}
 
 {% block page_content %}
 
@@ -12,15 +10,14 @@
     <div class="translate-grid">
         <div class="language-select flex-container">
             <div class="inner-lang-select">
-                <input type="hidden" id="usr-recent-lang" value="{{ lng_recent}}">
+                <input type="hidden" id="usr-recent-lang" value="{{ lng_recent }}">
                 <label for="select-language"><strong>Translate to:</strong></label>
                 <select name="select_language" id="select-language">
-                    <option value="de">German</option>
-                    <option value="it">Italian</option>
-                    <option value="pt">Portuguese</option>
-                    <option value="es">Spanish</option>
-                    <option value="la">Latin</option>
-                    <option value="el">Greek</option>
+                    {% for language in language_codes %}
+                        {% if language.active %}
+                            <option value="{{ language.lng_code }}">{{ language.lng_eng }}</option>
+                        {% endif %}
+                    {% endfor %}
                 </select>
             </div>
         </div>     
@@ -33,8 +30,8 @@
         </div>
         <div class="box-2 btn-wrapper">
             <form id="form-1" action="{{ url_for('main.translate', lng='en') }}" method="POST">
-                <input type="hidden" id="src-tra-1" name="src_tra_1">
-                <input type="hidden" id="dst-lng-1" name="dst_lng_1">
+                <input type="hidden" id="src-tra-1" name="text_to_translate">
+                <input type="hidden" id="dst-lng-1" name="destination_language_api">
                 <button type="submit" class="btn btn-primary" id="translate-btn" onclick="fetchInput(this)">Translate</button>
             </form>
         </div>
@@ -53,18 +50,30 @@
         <div class="add-btn">
             <form id="form-2" action="{{ url_for('main.translate', lng='en') }}" method="POST">
                 <input type="hidden" id="src-tra-2" name="src_tra_2">
-                <input type="hidden" id="dst-tra-2" name="dst_tra_2">
+                <input type="hidden" id="dst-tra-2" name="destination_language_add_db">
                 <input type="hidden" id="dst-lng-2" name="dst_lng_2">
                 <button type="submit" class="btn btn-primary" onclick="fetchInput(this)">Add to My Dictionary</button>
             </form>
         </div>
         <div class="box-5">
-            box 5
-            <h3>List of Previous Translations</h3>
+            <h3>Previous Translations</h3>
+
+            <style>
+                .previous-translations-grid {
+                    background-color: #f9a8e3;
+                    display: grid;
+                    grid-template-columns: 3fr 1fr 3fr;
+                }
+            </style>
+
+            <div class="previous-translations-grid">
+                {% for element in recent_translations %}
+                    <div>{{ element.word }}</div>
+                    <div>{{ element.dst }}</div>
+                    <div>{{ element.example }}</div>
+                {% endfor %}
+            </div>
         </div>
-        <div class="box-6">
-            box 6
-        </div>   
     </div>
 
 <!-- Script to Fetch text inputs and add to hidden fields -->

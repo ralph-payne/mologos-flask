@@ -18,8 +18,27 @@ LANGUAGE_CODES = [
     { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' ,'active': False },
     { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' ,'active': True },
     { 'code': 'la', 'lng_eng': 'Latin', 'lng_src': 'Latine' ,'active': False },
-    { 'code': 'el', 'lng_eng': 'Greek', 'lng_src': 'Ελληνικά', 'active': False }
+    { 'code': 'el', 'lng_eng': 'Greek', 'lng_src': 'Ελληνικά', 'active': False },
+    { 'code': 'fr', 'lng_eng': 'French', 'lng_src': 'Français', 'active': False },
+    { 'code': 'pl', 'lng_eng': 'Polish', 'lng_src': 'Polskie', 'active': False }
 ]
+
+
+def generate_language_codes():
+    list_of_language_codes = [
+        { 'code': 'en', 'lng_eng': 'English', 'lng_src': 'English', 'filename': 'img/flags/en.png', 'active': True },
+        { 'code': 'de', 'lng_eng': 'German', 'lng_src': 'Deutsch' ,'filename': 'img/flags/de.png', 'active': False },
+        { 'code': 'es', 'lng_eng': 'Spanish', 'lng_src': 'español' ,'filename': 'img/flags/es.png', 'active': True },
+        { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' ,'filename': 'img/flags/it.png', 'active': False },
+        { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' ,'filename': 'img/flags/pt.png', 'active': True },
+        { 'code': 'la', 'lng_eng': 'Latin', 'lng_src': 'Latine' ,'filename': 'img/flags/la.png', 'active': False },
+        { 'code': 'el', 'lng_eng': 'Greek', 'lng_src': 'Ελληνικά', 'filename': 'img/flags/el.png', 'active': False },
+        { 'code': 'fr', 'lng_eng': 'French', 'lng_src': 'Français', 'filename': 'img/flags/fr.png', 'active': False },
+        { 'code': 'pl', 'lng_eng': 'Polish', 'lng_src': 'Polskie', 'filename': 'img/flags/pl.png', 'active': False }
+    ]
+
+    return list_of_language_codes
+
 
 def lookup_api(word):
     # Toggle for switching between APIs (Oxford API has a monthly limit of 1000)
@@ -163,6 +182,10 @@ def lookup_db_dictionary(word):
 def translate_api(src_text, dest_language):
     translator = Translator()
     result = None
+
+    if len(dest_language) != 2:
+        return None
+
     while result == None:
         try:
             result = translator.translate(src_text, src='en', dest=dest_language)
@@ -171,6 +194,7 @@ def translate_api(src_text, dest_language):
             translator = Translator()
             sleep(0.0001)
             pass
+
     return result.text
 
 
@@ -274,8 +298,6 @@ def to_bool(string_value):
         return False
     else:
         return True
-
-
 
 
 def create_bulk_translate_dict(word, translation_list):

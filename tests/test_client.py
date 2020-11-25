@@ -45,8 +45,8 @@ class FlaskClientTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 302)
         user_all = User.query.all()
         response = self.client.post('/add', data={
-            'src_tra_1': 'house',
-            'dst_lng_1': 'es'
+            'text_to_translate': 'house',
+            'destination_language_api': 'es'
         })
         self.assertEqual(response.status_code, 302)
 

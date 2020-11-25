@@ -1,15 +1,25 @@
 {% extends "base.html" %}
 
-{% block title %}
-Challenge
-{% endblock %}
+{% block title %}: Challenge{% endblock %}
 
 {% block page_content %}
 
 <div class="inner-container">
 
-    {% include 'partials/_flags_challenge.html' %}
-
+    <style>
+        .flag-container {
+            padding-top: 20px;
+        }
+    </style>
+        
+    <div class="flag-container">
+        {% for language in language_codes %}
+            {% if language.active %}
+                {{ macros.generate_flag(endpoint=endpoint, country=language.code, filename=language.filename) }}
+            {% endif %}
+        {% endfor %}
+    </div>
+        
     {% if words %}
         {% if english %}<div class="challenge-table-english">{% else %}<div class="challenge-table-foreign">{% endif %}
             <form class="challenge-form" action="/challenge/{{ lng.code }}" method="POST">
@@ -81,20 +91,13 @@ Challenge
             </form>
         </div>
         {% else %}
-        <div class="inner-container">
-            <p>You don't have any saved words or expressions in {{ lng.lng_eng }}</p>
-                {% if english %}
-                {% else %}
-                <p>Go to the <a class="link-color" href="{{ url_for('main.translate', lng=lng) }}">translation</a> page to add some!</p>
-                {% endif %}
-        </div>
+            {{ macros.no_saved_words_message(endpoint=endpoint, language=lng.code, is_english=english) }}
         {% endif %}
     </div>
 
 <!-- Script for Changing Color of Star and Eye-->
 <script type="text/javascript">
-
-    function toggleColor(e) {
+    const toggleColor = (e) => {
         // Remove style if it already has it
         if (e.classList.contains("icon-selected")) {
             e.classList.remove("icon-selected");

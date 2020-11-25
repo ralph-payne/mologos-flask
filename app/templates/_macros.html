@@ -1,5 +1,4 @@
 <!-- NAVBAR LINK MACRO -->
-
 <style>
     .navbar-link-active {
         background: #48954e !important;
@@ -91,8 +90,6 @@
         user-select: none;
         opacity: 0.25;
     }
-
-
 </style>
 
 <div class="pagination-wrapper-inner">
@@ -130,7 +127,30 @@
 </div>
 {% endmacro %}
 
-<!-- FLAG MACRO -->
-{% macro flag(endpoint, country, filename) %}
+
+<!-- GENERATE FLAG MACRO -->
+{% macro generate_flag(endpoint, country, filename) %}
 <a href="{{ url_for(endpoint, lng=country) }}"><img src="{{ url_for('static', filename=filename) }}" alt="flag-{{ country }}" class="flag"></a>
+{% endmacro %}
+
+
+<!-- NO SAVED WORDS MACRO -->
+{% macro no_saved_words_message(endpoint, language, is_english) %}
+
+<style>
+    .no-words-message-div {
+        padding-top: 30px;
+    }
+</style>
+
+<div class="no-words-message-div">
+    <p>You don't have any saved words or expressions in {{ language.lng_eng }}</p>
+
+    {% if is_english %}
+        <p>Use the Search Bar at the top of the page to add some!</p>
+    {% else %}
+        <p>Go to the <a class="link-color" href="{{ url_for('main.translate', lng=language) }}">translation</a> page to add some!</p>
+    {% endif %}
+</div>
+
 {% endmacro %}

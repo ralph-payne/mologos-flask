@@ -9,7 +9,7 @@ from ..models import BulkTranslate, Definition, DictionaryExample, UserExample, 
 from flask_login import current_user, login_required
 
 # Helper functions for parsing results from API and database dictionary
-from .helpers import lookup_api, lookup_db_dictionary, translate_api, bulk_translate, bulk_translate_excluding, create_language_dict, is_english, parse_translation_list, to_bool, create_bulk_translate_dict, split_keyboard_into_rows, parse_user_examples_with_split
+from .helpers import lookup_api, lookup_db_dictionary, translate_api, bulk_translate, bulk_translate_excluding, create_language_dict, is_english, parse_translation_list, to_bool, create_bulk_translate_dict, split_keyboard_into_rows, parse_user_examples_with_split, generate_language_codes
 
 # These imports are down here as they will get moved to a new file eventually
 from ..models import InternationalAccent
@@ -240,28 +240,37 @@ def lookup():
 # 5: TRANSLATE
 @main.route('/translate/<lng>/', methods=['GET', 'POST'])
 def translate(lng):
-    if request.method == 'POST':
+    if request.method == 'GET':
+        id = current_user.id
+        # Get the language that the user used most recently
+        lng_recent = User.query.filter_by(id=id).first().lng_recent
+
+        # Get the most recent translations from the user
+        recent_translations = UserExample.query.filter_by(user_id=current_user.id).filter(UserExample.translation==True).all()
+
+        language_codes = generate_language_codes()
+
+        return render_template('translate.html', lng_recent=lng_recent, recent_translations=recent_translations, language_codes=language_codes)
+
+    else: # POST
         # Form 1 calls the Translation API
-        if ('src_tra_1' in request.form): 
-            text_to_translate = request.form.get('src_tra_1').strip()
-            destination_language = request.form.get('dst_lng_1')
+        if ('text_to_translate' in request.form): 
+            text_to_translate = request.form.get('text_to_translate').strip()
+            destination_language_api = request.form.get('destination_language_api')
 
             # Translate word with function from helpers.py
-            translate_api_output = translate_api(text_to_translate, destination_language)
+            translate_api_output = translate_api(text_to_translate, destination_language_api)
 
-            # Query database to get the language that the user used most recently
             lng_recent = User.query.filter_by(id=current_user.id).first().lng_recent
 
             # If not the same, update the most recent
-            if destination_language != lng_recent:
-                User.query.filter_by(id=current_user.id).update({'lng_recent': destination_language})
+            if destination_language_api != lng_recent:
+                User.query.filter_by(id=current_user.id).update({'lng_recent': destination_language_api})
                 db.session.commit()
-                # Reassign the dst language for the page reload
-                lng_recent = destination_language
+                lng_recent = destination_language_api
             
             if translate_api_output is None:
-                # return error
-                return render_template('404.html', dev_text='error with translation helper')
+                return render_template('errors/404.html', dev_text='Error with translation helper')
             else:
                 return render_template('translate.html', input=text_to_translate, output=translate_api_output, lng_recent=lng_recent)
 
@@ -269,34 +278,29 @@ def translate(lng):
         else:
             dst = request.form.get('dst_lng_2')
             input = request.form.get('src_tra_2')
-            output = request.form.get('dst_tra_2')
-            
+            output = request.form.get('destination_language_add_db')
             record = UserExample(example=output, word=input, word_id=None, user_id=current_user.id, translation=True, src='en', dst=dst)
-
             db.session.add(record)
             db.session.commit()
 
-            flash(f'This word has been succesfully added to your dictionary!', 'flash-success')
+            flash(f'You have have succesfully added {output} to your dictionary!', 'flash-success')
             return redirect(url_for('main.translate', lng=lng))
 
         return render_template('translate.html')
-
-    else: # GET
-        id = current_user.id
-        # Query database to get the language that the user used most recently
-        lng_recent = User.query.filter_by(id=id).first().lng_recent
-        return render_template('translate.html', lng_recent=lng_recent)
 
 
 # 6: LIST (returns a list of the user's saved words)
 @main.route('/list/<lng>')
 @login_required
 def list(lng):
+    language_codes = generate_language_codes()    
     page = request.args.get('page', 1, type=int)
-    pagination = UserExample.query.filter_by(user_id=current_user.id, dst=lng).paginate(
+    # https://stackoverflow.com/questions/2128505/difference-between-filter-and-filter-by-in-sqlalchemy
+    pagination = UserExample.query.filter_by(user_id=current_user.id, dst=lng).filter(UserExample.word != '').paginate(
         page, per_page=current_app.config['WORDS_PER_PAGE'], error_out=False)
     words = pagination.items
-    return render_template('list.html', words=words, english=is_english(lng), lng=create_language_dict(lng), endpoint='.list', pagination=pagination)
+
+    return render_template('list.html', words=words, english=is_english(lng), lng=create_language_dict(lng), endpoint='.list', pagination=pagination, language_codes=language_codes)
 
 
 # 7: EDIT
@@ -416,10 +420,12 @@ def challenge(lng):
         return render_template('results.html', results=results, lng=create_language_dict(lng), english=is_english(lng))
 
     else: # GET (Show Challenge Page)
+        language_codes = generate_language_codes()
         # English view differs from foreign view
         if (is_english(lng)):
             # Filter out words which have been ignored by the user
-            words_from_db = UserExample.query.filter_by(user_id=current_user.id, dst=lng, ignored=False).all()
+            # Filter out any blanks
+            words_from_db = UserExample.query.filter_by(user_id=current_user.id, dst=lng, ignored=False).filter(UserExample.word != '').filter(UserExample.example != '').all()
             # Declare list which will hold dictionaries of each word
             words = []
 
@@ -457,11 +463,11 @@ def challenge(lng):
                     # Skip if word does not appear in target sentence
                     words_from_db.remove(word)
 
-            return render_template('challenge.html', words=words, lng=create_language_dict(lng), english=is_english(lng))
+            return render_template('challenge.html', words=words, lng=create_language_dict(lng), english=is_english(lng), language_codes=language_codes, endpoint='.challenge')
 
         else: # Foreign Language Challenge
             words = UserExample.query.filter_by(user_id=current_user.id, dst=lng).all()
-            return render_template('challenge.html', words=words, lng=create_language_dict(lng), english=is_english(lng))
+            return render_template('challenge.html', words=words, lng=create_language_dict(lng), english=is_english(lng), language_codes=language_codes, endpoint='.challenge')
 
 
 # ?: PROFILE
@@ -470,6 +476,7 @@ def challenge(lng):
 def profile(lng):
     user_details = User.query.filter_by(id=current_user.id).first()
 
+    # Not in use right now, but it will be on Thu 26 Nov 2020
     languages = UserLanguagePreference.query.filter_by(user_id=current_user.id).all()
 
     if not languages:
@@ -479,7 +486,7 @@ def profile(lng):
         db.session.commit()
 
     # if None, create a language prefs for the user
-    return render_template('profile.html', user_details=user_details, languages=languages)
+    return render_template('profile.html', user_details=user_details, languages=languages, language_codes=generate_language_codes())
 
 
 # ?: UPLOAD
@@ -538,3 +545,18 @@ def add_target_words(lng):
     db.session.commit()
 
     return redirect(url_for('main.list', lng=lng))
+
+
+@main.route('/update_preferences/', methods=['POST'])
+@login_required
+def update_preferences():
+    # Get list of new preferences with request.form.getlist
+
+    # Update database
+
+    # Commit to database
+
+    # Redirect to Profile
+    
+    # Give alert saying that your preferences have been updated
+    return redirect(url_for('main.profile'))
