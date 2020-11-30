@@ -1,8 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}: Upload{% endblock %}
+
+{% block page_content %}
+
+{% include 'partials/_flashes.html' %}
+
+
 <style>
     .target-word-selected {
         background-color: green;
         color: #fff;
         font-weight: 600;
+        
     }
 
     .select-target-word-button-container {
@@ -104,3 +114,6 @@
         }
     }
 </script>
+
+<!-- End of page_content -->
+{% endblock %}

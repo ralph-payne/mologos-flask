@@ -6,46 +6,84 @@
 
 {% include 'partials/_flashes.html' %}
 
-id = db.Column(db.Integer, primary_key=True)
-email = db.Column(db.String(64), unique=True, index=True)
-username = db.Column(db.String(64), unique=True, index=True)
-role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
-password_hash = db.Column(db.String(128))
-name = db.Column(db.String(64))
-location = db.Column(db.String(64))
-about_me = db.Column(db.Text())
-member_since = db.Column(db.DateTime(), default=datetime.utcnow)
-last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
-confirmed = db.Column(db.Boolean, default=False)
-is_admin = db.Column(db.Boolean, default=False)
-lng_preferred = db.Column(db.String(3))
-lng_recent = db.Column(db.String(3))
+<div id="javascript-accordion">
+    <p>Choose the languages you want to appear</p>
 
-<hr>
-You want to get the boolean values from the database
-Put them into a parsing function
-You then want to put them through that helper function
-Then they get sent to the Profile HTML template
-Inside the Profile HTML template, you want them displayed as a toggles
+    <form action="{{ url_for('main.update_preferences') }}" method="POST">
 
-<hr>
-<form action="{{ url_for('main.update_preferences') }}" method="POST">
+    <div class="flags-preferences-wrapper">
+        {% for language in language_codes %}
+        <div>
+            <div class="pl82020">
+                {{ macros.generate_flag(endpoint='.list', country=language.code, filename=language.filename) }}
+            </div>
 
-{% for language in language_codes %}
-<div>
-    {{ macros.generate_flag(endpoint='.list', country=language.code, filename=language.filename) }}
-    
-    <label class="switch">
-        <input type="checkbox" {% if language.active %}checked{% endif %}>
-        <span class="slider round"></span>
-    </label>
-    
-</div>    
-{% endfor %}
-    <button type="submit" class="btn btn-primary">Update Preferences</button>
-</form>
+            <div class="pl82020">
+                <label class="switch">
+                    <input type="hidden" name="language_name" value="{{ language.lng_eng.lower() }}">
+                    <input type="hidden" name="hidden_input_value" value="{% if language.active %}1{% else %}0{% endif %}">
+                    <input onChange="myFunction(this)" type="checkbox" name="checkbox_input" {% if language.active %}checked{% endif %} value="{% if language.active %}1{% else %}0{% endif %}">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            
+        </div>
+        {% endfor %}
+    </div>
+        <style>
+            .pl82020 {
+                display: inline;
+                padding: 0 10px;
+            }
+            .flags-preferences-wrapper {
+                padding: 30px 0 ;
+            }
+            .update-preferences-btn-wrapper {
+                padding-top: 30px;
+            }
+        </style>
+        <div class="update-preferences-btn-wrapper">
+            <button type="submit" class="btn btn-primary update-preferences-btn">Update Preferences</button>
+        </div>
+    </form>
+</div>
+
+<!-- Script which toggles the value of the switch element on change -->
+<script>
+    const myFunction = (element) => {
+        // If the value is 1, switch
+        // All input values are strings. They can be converted to ints on the backend
+        if (element.previousElementSibling.value == "1")
+        {
+            console.log(element.previousElementSibling);
+            element.previousElementSibling.value = "0";
+        }
+        else
+        {
+            console.log(element.previousElementSibling);
+            element.previousElementSibling.value = "1";
+        }
+    }
+</script>
+
+<script>
+    const displayBlockOnWindowLoad = () => {
+        // get element
+        const javascriptAccordion = document.getElementById('javascript-accordion')
+        // alert(" Alert inside displayBlockOnWindowLoad function");
+
+        console.log(javascriptAccordion);
+
+        javascriptAccordion.style.display = 'block';
+    }
+
+    window.onload = displayBlockOnWindowLoad();
+</script>
 
 <style>
+#javascript-accordion {
+    display: none;
+}
 .switch {
   position: relative;
   display: inline-block;
@@ -109,3 +147,18 @@ input:checked + .slider:before {
 
 <!-- End of page_content -->
 {% endblock %}
+
+id = db.Column(db.Integer, primary_key=True)
+email = db.Column(db.String(64), unique=True, index=True)
+username = db.Column(db.String(64), unique=True, index=True)
+role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+password_hash = db.Column(db.String(128))
+name = db.Column(db.String(64))
+location = db.Column(db.String(64))
+about_me = db.Column(db.Text())
+member_since = db.Column(db.DateTime(), default=datetime.utcnow)
+last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
+confirmed = db.Column(db.Boolean, default=False)
+is_admin = db.Column(db.Boolean, default=False)
+lng_preferred = db.Column(db.String(3))
+lng_recent = db.Column(db.String(3))

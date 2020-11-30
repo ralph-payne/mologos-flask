@@ -16,7 +16,8 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_RECORD_QUERIES = True
     MAX_SIZE_CHALLENGE = 4
-    WORDS_PER_PAGE = 5
+    WORDS_PER_PAGE = 8
+    UPLOAD_MAXIMUM_CONSTANT = 20
 
     @staticmethod
     def init_app(app):

@@ -83,11 +83,11 @@
         <div class="navbar-links flex-container items-right">
             <ul>
                 {% if current_user.is_authenticated %}
-                    {{ nav_link('main.list', 'en', 'list') }}
-                    {{ nav_link('main.challenge', 'en', 'challenge') }}
-                    {{ nav_link('main.translate', 'en', 'translate') }}
-                    {{ nav_link('main.upload', 'en', 'upload') }}                    
-                    {{ nav_link('main.profile', 'en', 'profile') }}
+                    {{ nav_link('main.list', 'en', 'list', True) }}
+                    {{ nav_link('main.challenge', 'en', 'challenge', True) }}
+                    {{ nav_link('main.translate', 'en', 'translate', False) }}
+                    {{ nav_link('main.upload', 'en', 'upload', False) }}                    
+                    {{ nav_link('main.profile', 'en', 'profile', False) }}
                     <li><a href="{{ url_for('auth.logout') }}"><i class="fa fa-sign-out-alt"></i></a></td>
                 {% else %}
                     <li><a class="login-nav-icon" href="{{ url_for('auth.login') }}">Login</a></li>

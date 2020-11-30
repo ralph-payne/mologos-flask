@@ -75,16 +75,17 @@
         </div>
 
         <div>
-            {% if translation_list %}
+            {% if translation_dict %}
                 <div id="translation-table-grid">
-                    {% for translation_item in translation_list %}
-                        {% for language, translation in translation_item.items() %}
-                            <div class="translation-table-grid-item">{{ language }}</div>
-                            <div class="translation-table-grid-item">{{ translation }}</div>                    
-                        {% endfor %}
+                    {% for translation_item, ab12 in translation_dict.items() %}
+                            <div class="translation-table-grid-item">{{ translation_item }}</div>
+                            <div class="translation-table-grid-item">{{ ab12 }}</div>
                     {% endfor %}
                 </div>
+            {% else %}
+                no tran dictionary becuase you are sending a list instead
             {% endif %}
+
         </div>
 
         </hr>

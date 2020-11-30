@@ -3,10 +3,10 @@ import os, requests, re
 # https://pypi.org/project/googletrans/
 from googletrans import Translator
 from time import sleep
-
+import copy # Used for Deep Copying lists
 
 from .. import db
-from ..models import BulkTranslate, Definition, DictionaryExample, UserExample, User, Word
+from ..models import BulkTranslate, Definition, DictionaryExample, UserExample, User, Word, UserLanguagePreference
 
 translator = Translator()
 
@@ -40,7 +40,7 @@ def generate_language_codes():
     return list_of_language_codes
 
 
-def lookup_api(word):
+def lookup_definition_api(word):
     # Toggle for switching between APIs (Oxford API has a monthly limit of 1000)
     is_primary_api_oxford_dictionary = True
 
@@ -183,6 +183,7 @@ def translate_api(src_text, dest_language):
     translator = Translator()
     result = None
 
+    # Check that dest_language is a language code
     if len(dest_language) != 2:
         return None
 
@@ -199,8 +200,7 @@ def translate_api(src_text, dest_language):
 
 
 def bulk_translate(src_text):
-    # language_codes = filter_out_english(LANGUAGE_CODES)
-    language_codes = select_active_languages(LANGUAGE_CODES)
+    language_codes = select_active_languages(generate_language_codes())
 
     translations = []
 
@@ -218,7 +218,7 @@ def bulk_translate(src_text):
 
 
 def bulk_translate_excluding(src_text, language_to_exclude):
-    language_codes = filter_out_english(LANGUAGE_CODES)
+    language_codes = filter_out_english(generate_language_codes())
     translations = []
 
     for dict in language_codes:
@@ -234,9 +234,17 @@ def bulk_translate_excluding(src_text, language_to_exclude):
 
 
 def create_language_dict(lng):
-    for code in LANGUAGE_CODES:
+    for code in generate_language_codes():
         if code['code'] == lng:
             return code
+
+    return None
+
+
+def convert_language_to_two_letter_code(language):
+    for code in generate_language_codes():
+        if code['lng_eng'].lower() == language.lower():
+            return code['code']
 
     return None
 
@@ -261,33 +269,70 @@ def is_english(language):
         return False
 
 
-def parse_translation_list(bulk_translate_model):
-    # Point to constant list of language codes
-    language_codes = LANGUAGE_CODES
+def parse_translation_list(bulk_translate_model, word_to_translate, user_id):
+    langs_already_translated = []
+    new_personalised_user_dict = {}
+    language_codes = generate_language_codes()
 
-    english = bulk_translate_model.english
-    german = bulk_translate_model.german
-    italian = bulk_translate_model.italian
-    portuguese = bulk_translate_model.portuguese
-    spanish = bulk_translate_model.spanish
-    latin = bulk_translate_model.latin
-    greek = bulk_translate_model.greek
+    if bulk_translate_model is None:
+        print('nothing from the database 12341')
+        # Bulk Translate everything
+        # Create a new Bulk Translate thing in database
+        
+        new_entry_for_bulk_translate = BulkTranslate(english=word_to_translate)
+        db.session.add(new_entry_for_bulk_translate)
+        db.session.commit()
 
-    extracted_list =  [english, german, italian, portuguese, spanish, latin, greek]
+    else:
+        # https://stackoverflow.com/questions/16947276/flask-sqlalchemy-iterate-column-values-on-a-single-row
+        bulk_translate_dict = dict((col, getattr(bulk_translate_model, col)) for col in bulk_translate_model.__table__.columns.keys())
 
-    list_of_translations = []
+        for language, translation in bulk_translate_dict.items():
+            # Skip blank columns or the ID column
+            if language == 'id' :
+                # Skip the ID column
+                pass
+            if translation == None:
+                # Skip any languages which haven't been translated yet
+                pass
+            else:
+                # It's already been translated
+                langs_already_translated.append(language)
 
-    for i in range(len(language_codes)):
-        key_language = language_codes[i]['lng_eng'].lower()
-        value_translation = extracted_list[i]
+        print(f'The number of langs for {word_to_translate} already translated is: {len(langs_already_translated)}')
 
-        translation = {
-            key_language: value_translation,
-        }
+    # Compare this against what the user's current lanugage preferences are
+    user_language_preference = UserLanguagePreference.query.filter_by(user_id=user_id).first()
+    user_language_prefs_dict = dict((col, getattr(user_language_preference, col)) for col in user_language_preference.__table__.columns.keys())
 
-        list_of_translations.append(translation)
+    for language, boolean_value in user_language_prefs_dict.items():
+        if boolean_value == True and language != 'id' and language != 'user_id' and language != 'created':
+            # Create a new key value pair inside the new dictionary
+            new_personalised_user_dict[language] = ''
 
-    return list_of_translations
+    # Loop through the new dict
+    # The new dict new_personalised_user_dict tells you what the user wants
+    for language in new_personalised_user_dict:
+        # Check if it's already been translated
+        if language in langs_already_translated:
+            new_personalised_user_dict[language] = bulk_translate_dict[language]
+        else:
+            # Look up the translation using the API
+            two_letter_language_code = convert_language_to_two_letter_code(language)
+            new_translation = translate_api(word_to_translate, two_letter_language_code)
+
+            # Update database
+            BulkTranslate.query.filter_by(english=word_to_translate).update({language: new_translation})
+            print(f'updated {language} with {new_translation} in Bulk Translate db')
+
+            # Add to new dictionary
+            new_personalised_user_dict[language] = new_translation
+
+    # Close database connection
+    db.session.commit()
+
+    # Return a dictionary with what the user wants
+    return new_personalised_user_dict
 
 
 def to_bool(string_value):
@@ -396,3 +441,21 @@ def parse_user_examples_with_split(user_examples_from_db):
 
 def split_to_words(sentence):
     return list(filter(lambda w: len(w) > 0, re.split('\W+', sentence)))
+
+
+def map_users_prefs_onto_langs(language_codes, user_id):
+    # https://stackoverflow.com/questions/16947276/flask-sqlalchemy-iterate-column-values-on-a-single-row
+
+    user_language_preference = UserLanguagePreference.query.filter_by(user_id=user_id).first()
+
+    user_language_prefs = dict((col, getattr(user_language_preference, col)) for col in user_language_preference.__table__.columns.keys())
+    
+    deep_copy_of_lang_codes = copy.deepcopy(language_codes) # Deep Copy the Original List
+
+    for col, active_boolean in user_language_prefs.items():
+        for language_code in deep_copy_of_lang_codes:
+            # print(language_code['lng_eng'].lower())
+            if col == language_code['lng_eng'].lower():
+                language_code['active'] = active_boolean
+
+    return deep_copy_of_lang_codes

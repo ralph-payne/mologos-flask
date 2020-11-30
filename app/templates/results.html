@@ -1,70 +1,116 @@
+<style>
+    .next-btn-wrapper-results {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+    }
+    .next-btn-results {
+        cursor: pointer;
+        background-color: #333;
+        color: #fff;
+        padding: 0.5rem 1.5rem;
+        border-radius: .25rem;                    
+    }
+    .table-row-results {
+        background-color: green;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 13fr 1fr 1fr 1fr;
+        border: 2px dotted blue;
+        height: 60px;
+    }    
+    .results-table-english {
+        width: 100%;
+    }
+    .results-table-foreign {
+        width: 100%;
+    }
+    .table-cell-text {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        margin: auto;
+
+        /* Vertically aligns */
+        align-items: center;
+
+        background-color: orange;
+        border: 1px dotted blue;
+    }
+    .table-row-results {
+        background-color: pink;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 4fr 4fr 4fr 1fr 1fr 1fr 1fr;
+    }    
+</style>
+
 {% extends "base.html" %}
 
 {% block title %}: Results{% endblock %}
 
 {% block page_content %}
+    
+    <div class="results-table-{% if english %}english{% else %}foreign{% endif %}">
 
-    {% if english %} 
-    <div class="results-table-english">
-    {% else %}
-    <div class="results-table-foreign">
-    {% endif %}
-        <table>
-            <thead>
-                <tr>
-                    {% if english %}
-                    <th>Example Sentence</th>
-                    <th>Target Word</th>
-                    {% else %}
-                    <th>English</th>
-                    <th>{{ lng.lng_eng }} / {{ lng.lng_src }}</th>
-                    {% endif %}
-                    <th>Your Guess</th>
-                    <th></th>
-                </tr>
-            </thead>
+
         
-            <tbody>
             {% for result in results %}
-                <tr>
+                <div class="table-row-results">
                     {% if english %}
-                    <td>{{ result.example }}</td>    
-                    <td><a class="link-color" href="{{ url_for('main.edit', id=result.id, lng=lng.code) }}">{{ result.target_word }}</td>
+                    <div class="table-cell-text">{{ result.example }}</div>   
+                    <div class="table-cell-text"><a class="link-color" href="{{ url_for('main.edit', id=result.id, lng=lng.code) }}">{{ result.target_word }} 
+                        [ {{ result.id }} ]
+                    </div>
                     {% else %}
 
-                    <td>{{ result.word_in_english }}</td>    
-                    <td><a class="link-color" href="{{ url_for('main.edit', id=result.id, lng=lng.code) }}">{{ result.example }}</td>
+                    <div class="table-cell-text">{{ result.word_in_english }}</div>    
+                    
+                    <div class="table-cell-text">
+                        <a class="link-color" href="{{ url_for('main.edit', id=result.id, lng=lng.code) }}">{{ result.example }}</a>
+                    </div>
                     {% endif %}
-                    <td>{{ result.user_guess }}</td>
-                    <td>
+
+                    <div class="table-cell-text">{{ result.user_guess }}</div>
+                    
+                    <div class="table-cell-text">
                         {% if result.result %}
-                        <i class="fa fa-check fa-2x">
+                        <i class="fa fa-check fa-2x"></i>
                         {% else %}
                         <i class="fa fa-times fa-2x"></i>
                         {% endif %}
-                    </td>                            
-                </tr>
+                    </div>
+                    
+                    <div class="table-cell-text">5 v 9</div>
+                    
+                    <div class="table-cell-text"><a href="{{ url_for('main.edit', id=result.id, lng=lng.code) }}"><i class="fa fa-edit"></i></a></div>
+                    
+                    <div class="table-cell-text"><a href="{{ url_for('main.delete', id=result.id, lng=lng.code ) }}"><i class="fa fa-trash"></i></a></div>
+                </div>
             {% endfor %}
-            </tbody>
-        </table>
-        <style>
-        .next-btn-wrapper-results {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 50px;
-        }
-        .next-btn-results {
-            cursor: pointer;
-            background-color: #333;
-            color: #fff;
-            padding: 0.5rem 1.5rem;
-            border-radius: .25rem;                    
-        }
-        </style>
-        <div class="next-btn-wrapper-results">
-            <a href="{{ url_for('main.challenge', lng=lng.code) }}" class="next-btn-results">Next</a>
-        </div>
-    </div>
 
+    </div>
 {% endblock %}
+
+
+<div class="next-btn-wrapper-results">
+    <a href="{{ url_for('main.challenge', lng=lng.code) }}" class="next-btn-results">Next</a>
+</div>
+
+<div>
+    <div class="table-row-results">
+        {% if english %}
+        <div class="table-cell-text">Example Sentence</div>
+        <div class="table-cell-text">Target Word</div>
+        {% else %}
+        <div class="table-cell-text">English</div>
+        <div class="table-cell-text">{{ lng.lng_eng }} / {{ lng.lng_src }}</div>
+        {% endif %}
+        <div class="table-cell-text">Your Guess</div>
+        <div class="table-cell-text">a</div>
+        <div class="table-cell-text">b</div>
+        <div class="table-cell-text">c</div>
+        <div class="table-cell-text">d</div>
+    </div>
+</div>

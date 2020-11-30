@@ -68,14 +68,14 @@
                     </tbody>
                 </table>
             </div>
+
+            
         {% endif %}
+
+        {{ macros.pagination_widget(pagination, endpoint=endpoint, lng=lng.code, username="test1234@gmail.com") }}
 
     {% else %}
         {{ macros.no_saved_words_message(endpoint=endpoint, language=lng.code, is_english=english) }}
-    {% endif %}
-
-    {% if pagination %}
-        {{ macros.pagination_widget(pagination, endpoint=endpoint, lng=lng.code, username="test1234@gmail.com") }}
     {% endif %}
 
 {% endblock %}

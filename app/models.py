@@ -102,7 +102,7 @@ class UserExample(db.Model):
     # Original is used to store the original English text if the data contains a translation
     comment = db.Column(db.String())
     created = db.Column(db.DateTime, default=datetime.utcnow)
-    last_modified = db.Column(db.DateTime)
+    last_modified = db.Column(db.DateTime, default=datetime.utcnow)
     last_tested = db.Column(db.DateTime)
     attempt = db.Column(db.Integer, default=0)
     success = db.Column(db.Integer, default=0)
@@ -298,6 +298,8 @@ class BulkTranslate(db.Model):
     spanish = db.Column(db.String(128))
     latin = db.Column(db.String(128))
     greek = db.Column(db.String(128))
+    french = db.Column(db.String(128))
+    polish = db.Column(db.String(128))
 
 
 # USER LANGUAGE PREFERENCE CLASS
@@ -305,11 +307,14 @@ class UserLanguagePreference(db.Model):
     __tablename__ = 'user_language_preference'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('app_user.id'), index=True)
+    # The order has to be the same as the order of the language_codes
     english = db.Column(db.Boolean, default=True)
     german = db.Column(db.Boolean, default=True)
+    spanish = db.Column(db.Boolean, default=True)    
     italian = db.Column(db.Boolean, default=True)
     portuguese = db.Column(db.Boolean, default=True)
-    spanish = db.Column(db.Boolean, default=True)
     latin = db.Column(db.Boolean, default=True)
     greek = db.Column(db.Boolean, default=True)
+    french = db.Column(db.Boolean, default=True)
+    polish = db.Column(db.Boolean, default=True)
     created = db.Column(db.DateTime, default=datetime.utcnow)

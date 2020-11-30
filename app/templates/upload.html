@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 
-
 {% block title %}: Upload{% endblock %}
 
 {% block page_content %}
@@ -13,51 +12,72 @@ Each example should appear on a newline
 
 
 <style>
+    .upload-form-grid {
+        display: grid;
+        grid-template-columns: 3fr 4fr;
+        grid-template-rows: 1fr 6fr 2fr;
+        grid-gap: 10px;
+    }
+    .upload-1 {
+        grid-column-start: 1;
+		grid-column-end: 4;
+    }
     .upload-text-area {
         background-color: #f3f3f3;
         height: 300px;
         width: 600px;
         display: block;
     }
+    .upload-examples-btn-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+    }
+    .optional-target-words-text-area {
+        background-color: #f3f3f3;
+        height: 300px;
+        width: 200px;
+        display: block;
+    }
 </style>
 
 <form class="upload-form" action="/upload/en" method="POST">
+    <div class="upload-form-grid">
+        <div class="upload-1">
+            <div class="language-select flex-container">
+                <div class="inner-lang-select">
+                    <input type="hidden" id="usr-recent-lang" value="{{ lng_recent}}">
+                    <label for="select-language"><strong>Language</strong></label>
+                    <select name="select_language" id="select-language">
+                    {% for language in language_codes %}
+                        {% if language.active %}
+                            <option value="{{ language.code }}">{{ language.lng_eng }}</option>
+                        {% endif %}
+                    {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="upload-2">
+            <textarea type="text" name="upload_text_area" id="upload-text-area" class="upload-text-area">
 
-<div class="language-select flex-container">
-    <div class="inner-lang-select">
-        <input type="hidden" id="usr-recent-lang" value="{{ lng_recent}}">
-        <label for="select-language"><strong>Language</strong></label>
-        <select name="select_language" id="select-language">
-            <option value="en">English</option>
-            <option value="de">German</option>
-            <option value="it">Italian</option>
-            <option value="pt">Portuguese</option>
-            <option value="es">Spanish</option>
-            <option value="la">Latin</option>
-            <option value="el">Greek</option>
-        </select>
+            </textarea>
+            <div class="upload-examples-btn-wrapper">
+                <button class="btn btn-primary" type="submit">
+                    Upload Examples
+                </button>
+            </div>
+        </div>
+        <div class="upload-3">
+            <textarea type="text" class="optional-target-words-text-area">
+
+
+            </textarea>
+
+        </div>
+
     </div>
-</div>
-
-<textarea type="text" name="upload_text_area" id="upload-text-area" class="upload-text-area">
-
-</textarea>
-
-<style>
-.upload-examples-btn-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
-}
-</style>
-
-<div class="upload-examples-btn-wrapper">
-    <button class="btn btn-primary" type="submit">
-        Upload Examples
-    </button>
-</div>
-
 </form>
 <!-- End of page_content -->
 {% endblock %}
