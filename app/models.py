@@ -170,6 +170,7 @@ class Translation(db.Model):
         self.source = source
 
 
+# USER MODEL
 class User(UserMixin, db.Model):
     # user is a reserved word in Postgres: https://www.postgresql.org/docs/7.3/sql-keywords-appendix.html so don't use it as a table name or you will encounter issues!
     __tablename__ = 'app_user'

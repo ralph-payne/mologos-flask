@@ -6,13 +6,19 @@
 
 {% include 'partials/_flashes.html' %}
 
+<style>
+.dropdown-select-942 {
+    min-width: 120px;
+}
+</style>
+
 <!-- Translate Container -->
     <div class="translate-grid">
         <div id="language-select-container" class="language-select flex-container" style="display: none;">
             <div class="inner-lang-select">
                 <input type="hidden" id="usr-recent-lang" value="{{ lng_recent }}">
                 <label for="select-language"><strong>Translate to:</strong></label>
-                <select name="select_language" id="select-language" value="{{ lng_recent }}">
+                <select name="select_language" class="dropdown-select-942" id="select-language">
                     {% for language in language_codes %}
                         {% if language.active %}
                             <option value="{{ language.code }}">{{ language.lng_eng }}</option>
@@ -52,7 +58,7 @@
                 <input type="hidden" id="src-tra-2" name="text_in_english_add_db">
                 <input type="hidden" id="dst-tra-2" name="translation_output_add_db">
                 <input type="hidden" id="dst-lng-2" name="destination_language_add_db">
-                <input type="hidden" id="most-recent-translation-lang" name="most_recent_translation_lang" value="{{ lng_recent }}">                
+                <input type="hidden" id="most-recent-translation-lang" name="most_recent_translation_lang" value="{{ lng_recent }}">   
                 <button type="submit" class="btn btn-primary" onclick="fetchInput(this)">Add to My Dictionary</button>
             </form>
         </div>
@@ -97,13 +103,14 @@
                         <div class="table-cell-symbol">
                             {{ macros.generate_flag(endpoint='main.list', country=element.dst, filename='img/flags/pl.png') }}
                         </div>
-                        <div class="table-cell-symbol">{{ element.example }}</div>
+                        <div class="table-cell-symbol"><a href="{{ url_for('main.edit', id=element.id, lng=element.dst) }}">{{ element.example }} {{ element.id }} {{ element.dst }}</a></div>
                     </div>
                 {% endfor %}
             </div>
             {% endif %}
         </div>
     </div>
+
 
 <!-- Script to update Hidden Values for Translations -->
 <script type="text/javascript">
@@ -145,7 +152,12 @@
 </script>
 
 
+<!-- Script which grabs most recent language and updates the select value -->
 <script>
+    // Get Most recent language from hidden input
+    const mostRecentLanguage = document.getElementById("most-recent-translation-lang").value;
+
+    // Declare function
     const selectFromOptions = (selectId, optionValToSelect) => {
         //Get the select element by it's unique ID.
         const selectElement = document.getElementById(selectId);
@@ -162,13 +174,11 @@
         }
     }
 
-    const mostRecentLanguage = document.getElementById("most-recent-translation-lang").value;
-
+    // Call function
     selectFromOptions("select-language", mostRecentLanguage)
 
-    // Display the block (This prevents stutterly loading)
+    // Display the block which was previously hidden (This prevents stutterly loading)
     document.getElementById("language-select-container").style.display = "block";
-
 </script>
 
 
@@ -176,9 +186,9 @@
 <script type="text/javascript">    
     // Get the input field
     const textBoxInput = document.getElementById("text-to-translate");
-    
+
     // Execute a function when the user releases a key on the keyboard
-    textBoxInput.addEventListener("keyup", function(event) {
+    textBoxInput.addEventListener("keydown", function(event) {
       // Number 13 is the "Enter" key on the keyboard
       if (event.keyCode === 13) {
         // Cancel the default action, if needed

@@ -9,7 +9,7 @@ from ..models import BulkTranslate, Definition, DictionaryExample, UserExample, 
 from flask_login import current_user, login_required
 
 # Helper functions for parsing results from API and database dictionary
-from .helpers import lookup_definition_api, lookup_db_dictionary, translate_api, bulk_translate, bulk_translate_excluding, create_language_dict, is_english, parse_translation_list, to_bool, create_bulk_translate_dict, split_keyboard_into_rows, parse_user_examples_with_split, generate_language_codes, map_users_prefs_onto_langs
+from .helpers import lookup_definition_api, lookup_db_dictionary, translate_api, bulk_translate, create_language_dict, is_english, parse_translation_list, to_bool, create_bulk_translate_dict, split_keyboard_into_rows, parse_user_examples_with_split, generate_language_codes, map_users_prefs_onto_langs,  convert_translation_dict_to_two_letters
 
 # These imports are down here as they will get moved to a new file eventually
 from ..models import InternationalAccent
@@ -17,20 +17,36 @@ from .international_accent_list import international_accent_list
 from .starting_data import starting_data
 
 
+@main.route('/hard_delete')
+def hard_delete():
+
+    UserExample.query.delete()
+    Word.query.delete()
+    BulkTranslate.query.delete()
+    User.query.delete()
+    
+    db.session.commit()
+    db.session.close()
+
+    return redirect(url_for('main.index'))
+
+
 @main.route('/init')
 def init():
-    # INITIALIZE DATABASE WITH STARTING DATA
-    test_user_email = 'test1234@gmail.com'
-    test_user_exists = User.query.filter_by(email=test_user_email).first()
-
     # Delete all test data
     # InternationalAccent.query.delete()
-    # UserExample.query.delete()
-    # Word.query.delete()
+    UserExample.query.delete()
+    Word.query.delete()
+    BulkTranslate.query.delete()
+    User.query.delete()
+
+    # INITIALIZE DATABASE WITH STARTING DATA
+    test_user_email = 'test1000@gmail.com'
+    test_user_exists = User.query.filter_by(email=test_user_email).first()
 
     if not test_user_exists:
         user = User(email=test_user_email, 
-                    username='test1234',
+                    username='test1000',
                     password='12341234')
         db.session.add(user)
         db.session.commit()
@@ -146,11 +162,17 @@ def define(word):
     # Use helper function (found in helpers.py) to look up word in database dictionary    
     local_dictionary_result = lookup_db_dictionary(word)
     try:
+        user_is_logged_in = current_user.id
+    except:
+        user_is_logged_in = False
+
+    # Use Try Except to avoid "TypeError: 'NoneType' object is not subscriptable"
+    try:
         result_has_etymology = local_dictionary_result['etymology']
     except:
         result_has_etymology = False
 
-    if local_dictionary_result is not None and result_has_etymology:
+    if local_dictionary_result is not None and result_has_etymology and user_is_logged_in:
         word_id = local_dictionary_result['word_id']
         user_example = UserExample.query.filter_by(user_id=current_user.id, word=word).first()
 
@@ -208,10 +230,25 @@ def define(word):
 
             # Check that word hasn't been translated already
             bulk_translate_from_db = BulkTranslate.query.filter_by(english=word).first()
-            translation_dict = parse_translation_list(bulk_translate_from_db, word, current_user.id)
 
-            # first() returns the first result, or None if there are no results.
-            user_example = UserExample.query.filter_by(user_id=current_user.id, word=word).first()
+            try:
+                user_is_logged_in = current_user.id
+            except:
+                user_is_logged_in = False
+
+            if user_is_logged_in:
+                translation_dict = parse_translation_list(bulk_translate_from_db, word, current_user.id)
+                # first() returns the first result, or None if there are no results.
+                print('getting error with Instance <User at 0x7f239efcc1f0> is not bound to a Session')
+                print(current_user)
+                print(current_user.id)
+                user_example = UserExample.query.filter_by(user_id=current_user.id, word=word).first()
+            else:
+                # If user is not logged in
+                translation_dict = []
+                user_example = None
+
+            db.session.close
 
         return render_template('definition.html', word=api_return_value, translation_dict=translation_dict, user_example=user_example)
 
@@ -232,9 +269,6 @@ def translate():
 
         # Get the most recent translations from the user
         recent_translations = UserExample.query.filter_by(user_id=current_user.id).filter(UserExample.translation==True).order_by(UserExample.created.desc()).limit(10).all()
-
-        for one_translation in recent_translations:
-            bd567 = dict((col, getattr(one_translation, col)) for col in one_translation.__table__.columns.keys())
 
         mapped_languages = map_users_prefs_onto_langs(generate_language_codes(), current_user.id)
 
@@ -278,6 +312,7 @@ def translate():
 
             db.session.add(record)
             db.session.commit()
+            db.session.close()
 
             flash(f'You have have succesfully added {translation_output_add_db} to your dictionary!', 'flash-success')
             return redirect(url_for('main.translate'))
@@ -299,59 +334,72 @@ def list(lng):
     return render_template('list.html', words=words, english=is_english(lng), lng=create_language_dict(lng), endpoint='.list', pagination=pagination, language_codes=mapped_languages)
 
 
+@main.route('/update_word/<lng>/<id>', methods=['POST'])
+@login_required
+def update_word(lng, id):
+    metadata = UserExample.query.filter_by(user_id=current_user.id, id=id).first()
+
+    metadata.example = request.form.get('edited-example')
+    metadata.starred = int(request.form.get('star_boolean'))
+    metadata.ignored = int(request.form.get('eye_boolean'))
+    metadata.last_modified = datetime.utcnow()
+
+    db.session.commit()
+
+    return redirect(url_for('main.list', lng=lng))
+
+
 # 7: EDIT
-@main.route('/edit/<lng>/<id>', methods=['GET', 'POST'])
+@main.route('/edit/<lng>/<id>', methods=['GET'])
 @login_required
 def edit(lng, id):
-    if request.method == 'POST':
-        updated_example = request.form.get('edited-example')
-        star_bool = int(request.form.get('star_boolean'))
-        hide_bool = int(request.form.get('eye_boolean'))
-        last_modified = datetime.utcnow()
+    # Word contains etymology and pronunciation
+    user_example = UserExample.query.filter_by(id=id).first()
+    db.session.close()
 
-        metadata = UserExample.query.filter_by(user_id=current_user.id, id=id).first()
-        metadata.example = updated_example
-        metadata.starred = star_bool
-        metadata.ignored = hide_bool
-        metadata.last_modified = last_modified
-        db.session.commit()
+    if lng == 'en':
+        word_details = Word.query.filter_by(id=id).first()
+        db.session.close()
+        
+        try:
+            definition = Definition.query.filter_by(word=word_details.word).first()
+            db.session.close()
+        except:
+            definition = 'Temporarily using a try and except to prevent None Type error'
 
-        # Redirect to User List
-        return redirect(url_for('main.list', lng=lng))
+        return render_template('edit.html', word=word, word_details=word_details, definition=definition, lng=create_language_dict(lng), is_english=is_english(lng))
 
-    else: # GET
-        # Word contains etymology and pronunciation
-        word = UserExample.query.filter_by(id=id).first()
-        if lng == 'en':
-            word_details = Word.query.filter_by(id=id).first()
-            
-            try:
-                definition = Definition.query.filter_by(word=word_details.word).first()
-            except:
-                definition = 'temp using a try and except to prevent None Type error'
+        # This should just be a redirect to the define page
 
-            return render_template('edit.html', word=word, word_details=word_details, definition=definition, lng=create_language_dict(lng))
+    else:
+        # Declare list of keyboard accents for language
+        keyboard = InternationalAccent.query.filter_by(language=lng, in_use=1).all()
+        keyboard_split_into_rows = split_keyboard_into_rows(keyboard)
+
+        # Check if there already is a bulk translate
+        bulk_translate_from_db = BulkTranslate.query.filter_by(english=user_example.word).first()
+        db.session.close()
+
+        if bulk_translate_from_db:
+            # Use helper function to parse the returned value from the database
+            translation_dict = parse_translation_list(bulk_translate_from_db, user_example.word, current_user.id)
         else:
-            # Declare list of keyboard accents for language
-            keyboard = InternationalAccent.query.filter_by(language=lng, in_use=1).all()
-            keyboard_split_into_rows = split_keyboard_into_rows(keyboard)
+            # Use the API to bulk translate
+            translation_dict = bulk_translate(word.word, current_user.id)
+            # This returns a list when we actually want a dictionary
+            # Save the results to the database
+            record_bulk_translate = create_bulk_translate_dict(word.word, translation_dict)
+            db.session.add(record_bulk_translate)
+            db.session.commit()
+            db.session.close()
 
-            # Check if there already is a bulk translate
-            bulk_translate_from_db = BulkTranslate.query.filter_by(english=word.word).first()
-            translation_list = []
+        # Convert translation_dict
+        # Helper function takes the translation dictionary and converts the keys from
+        # long names (spanish) to the two letter equivalent
 
-            if bulk_translate_from_db:
-                # Use helper function to parse the returned value from the database
-                translation_list = parse_translation_list(bulk_translate_from_db, word, current_user.id)
-            else:
-                # Use the API to bulk translate
-                translation_list = bulk_translate_excluding(word.word, 'en')
-                # Save the results to the database
-                record_bulk_translate = create_bulk_translate_dict(word.word, translation_list)
-                db.session.add(record_bulk_translate)
-                db.session.commit()
+        translation_dict_two_letters = convert_translation_dict_to_two_letters(translation_dict)
 
-            return render_template('edit.html', word=word, keyboard=keyboard_split_into_rows, lng=create_language_dict(lng), translation_list=translation_list)
+        return render_template('edit.html', word=user_example, keyboard=keyboard_split_into_rows, lng=create_language_dict(lng), translation_dict=translation_dict_two_letters)
 
 
 # 8: CHALLENGE
@@ -473,39 +521,155 @@ def challenge(lng):
             return render_template('challenge.html', words=words, lng=create_language_dict(lng), english=is_english(lng), language_codes=mapped_languages, endpoint='.challenge')
 
 
-# ?: UPLOAD
-@main.route('/upload/', methods=['GET', 'POST'])
+# UPLOAD TRANSLATIONS
+# This route saves translations that have been "bulked uploaded" by the user
+@main.route('/upload_translations/', methods=['POST'])
 @login_required
-def upload():
-    if request.method == 'POST':
-        uploaded_text = request.form.get('upload_text_area').strip()
+def upload_translations():
+        list_of_eng_words_for_bulk_upload = request.form.get('upload_text_area').strip()
+        upload_target_word_area_12341 = request.form.get('upload_target_word_area_12321').strip()
         uploaded_language = request.form.get('select_language')
         user_id = current_user.id
 
-        # Count number of newlines
-        newlines = len(uploaded_text.split('\n'))
+        num_eng_words_to_upload = len(list_of_eng_words_for_bulk_upload.split('\n'))
+        list_of_english_words_split = list_of_eng_words_for_bulk_upload.split('\n')
+        word_limit = current_app.config['UPLOAD_MAXIMUM_CONSTANT']
+
+        if num_eng_words_to_upload > word_limit:
+            flash(f'You cannot upload more than {word_limit} words at a time')
+            return redirect(url_for('main.upload'))
+
+        # Check the number of target words is the same
+        num_foreign_words_to_upload = len(upload_target_word_area_12341.split('\n'))
+        list_of_foreign_words_split = upload_target_word_area_12341.split('\n')
+
+        # If target words is blank, skip
+        if num_foreign_words_to_upload == 0:
+            pass
+            # TODO, you will have to use Google Translate to bulk translate these
+            flash(f'Please upload the translations as well')
+            return redirect(url_for('main.upload'))
+        elif num_foreign_words_to_upload != num_eng_words_to_upload:
+            flash(f'The number of examples ({num_eng_words_to_upload}) must match the number of Target Words ({num_foreign_words_to_upload})')
+            return redirect(url_for('main.upload'))
+        
+        # Continue as you do not need to do the English check of seeing if the target word is in the target sentence as these are translations
+        # If we get therought the above if else statement, it means that the words have been uploaded successfully.
+        # We can then loop through them all and add them to the database
+        for i in range(num_eng_words_to_upload):
+            target_word_to_add_to_db_828 = list_of_foreign_words_split[i].strip()
+            foreign_word8137_to_add_to_db = list_of_english_words_split[i]
+
+            # TODO => Word ID is redundant? Or is it?? Check this!
+            # You will clobber any previously loaded User Examples so you should find a work around for that
+            record_user_example = UserExample(example=foreign_word8137_to_add_to_db, word=target_word_to_add_to_db_828, word_id=None, user_id=current_user.id, translation=True, src='en', dst=uploaded_language)
+            db.session.add(record_user_example)
+            
+        db.session.commit()
+        db.session.close()
+
+        # Redirect to the list page.
+        return redirect(url_for('main.list', lng=uploaded_language))
+
+
+# ?: UPLOAD
+@main.route('/upload_english/', methods=['POST'])
+@login_required
+def upload_english():
+    if request.method == 'POST':
+        uploaded_text = request.form.get('upload_text_area').strip()
+        upload_target_word_area_12321 = request.form.get('upload_target_word_area_12321').strip()
+        uploaded_language = request.form.get('select_language')
+
+        # Count number of newlines_92930
+        newlines_92930 = len(uploaded_text.split('\n'))
         split_list = uploaded_text.split('\n')
         word_limit = current_app.config['UPLOAD_MAXIMUM_CONSTANT']
 
-        if newlines > word_limit:
+        if newlines_92930 > word_limit:
             flash(f'You cannot upload more than {word_limit} words at a time')
-            return redirect(url_for('main.upload', lng=lng))            
+            return redirect(url_for('main.upload'))
 
-        # CHANGE THIS HARDCODING of 'EN'
+        # Check the number of target words is the same
+        length_target_words_8327 = len(upload_target_word_area_12321.split('\n'))
+        split_list_newlin3s_1092124 = upload_target_word_area_12321.split('\n')
+
+        print('below asdflhe 2814')
+        print(split_list_newlin3s_1092124)
+        print('--- ^^ ----- ')
+
+        # If target words is blank, skip
+        if length_target_words_8327 == 0 or split_list_newlin3s_1092124 == 'asdf':
+            pass
+        elif length_target_words_8327 != newlines_92930:
+            flash(f'The number of examples ({newlines_92930}) must match the numbasdf aer of Target Words ({length_target_words_8327})')
+            return redirect(url_for('main.upload'))
+        else:
+            # They are the same
+            # Run a loop to see that each word is present in each sentence
+            for i in range(length_target_words_8327):
+                target_word_to_search = split_list_newlin3s_1092124[i].strip().lower()
+                sentence_which_should_contain_target_word = split_list[i].lower()
+
+                # is this in that?
+                if target_word_to_search in sentence_which_should_contain_target_word:
+                    print(f'Success with {target_word_to_search}')
+                else:
+                    print(f'Fail with {target_word_to_search}')
+                    print(f'Not in {sentence_which_should_contain_target_word:}')
+                    # There's an error because the target word is not in the example string
+                    flash(f'The number of examples ({newlines_92930} == {length_target_words_8327}) is the same but you have ERROR with {split_list_newlin3s_1092124[i]}')
+                    return redirect(url_for('main.upload'))
+
+                # If we get therought the above if else statement, it means that the words have been uploaded successfully.
+                # We can then loop through them all and add them to the database
+                # It's a bit inefficient running two loops. Or is it?? The first loop is to sanity check the data before adding anything to the databse
+
+            for i in range(length_target_words_8327):
+                target_word_to_add_to_db_828 = split_list_newlin3s_1092124[i].strip()
+                sentence_which_should_contain_target_word_add_to_db_8317 = split_list[i]
+
+                # TODO => Word ID is redudent
+                # You will clobber any previously loaded User Examples so you should find a work around for that
+                record_user_example = UserExample(example=sentence_which_should_contain_target_word_add_to_db_8317, word=target_word_to_add_to_db_828, word_id=None, user_id=current_user.id, translation=False, src=None, dst=uploaded_language)
+                
+                db.session.add(record_user_example)
+
+            db.session.commit()
+            db.session.close()
+
+            # Redirect to the list page.
+            return redirect(url_for('main.list', lng=uploaded_language))
+
+        # If target words is different, return flash message
+        # If target words is the same, run a check to see that each target word exists in the corresponding setence
+
+    ##### stopped here ####
+    # TODO #
+        # This is when the user doesn't provide any target words
         for example in split_list:
-            record_user_example = UserExample(example=example, word=None, word_id=None, user_id=current_user.id, translation=False, src=None, dst=lng)
+            record_user_example = UserExample(example=example, word=None, word_id=None, user_id=current_user.id, translation=False, src=None, dst=uploaded_language)
             db.session.add(record_user_example)
 
         db.session.commit()
 
         return redirect(url_for('main.select_target_word'))
-    
-    else: # GET Request
-        mapped_languages = map_users_prefs_onto_langs(generate_language_codes(), current_user.id)
 
+
+# ?: UPLOAD
+@main.route('/upload/', methods=['GET'])
+@login_required
+def upload():
+    mapped_languages = map_users_prefs_onto_langs(generate_language_codes(), current_user.id)
+    lng_recent = User.query.filter_by(id=current_user.id).first().lng_recent
+
+    if lng_recent is None:
+        User.query.filter_by(id=current_user.id).update({'lng_recent': 'en'})
         lng_recent = User.query.filter_by(id=current_user.id).first().lng_recent
+        db.session.commit()
+        db.session.close()
 
-        return render_template('upload.html', lng_recent=lng_recent, language_codes=mapped_languages)
+    return render_template('upload.html', lng_recent=lng_recent, language_codes=mapped_languages, is_english=is_english(lng_recent))
 
 
 # ?: UPLOAD

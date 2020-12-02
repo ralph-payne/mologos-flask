@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from . import auth
 from .. import db
-from ..models import User
+from ..models import User, UserLanguagePreference
 from ..email import send_email
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm, PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
 
@@ -76,33 +76,46 @@ def register():
 
         if (email_check):
             flash(f'{form.email.data.lower()} is already in use', 'flash-danger')
+            return render_template('auth/register.html', form=form)
 
         username_check = User.query.filter_by(username=form.username.data.lower()).first()
 
         if (username_check):
             flash(f'{form.username.data.lower()} is already in use', 'flash-danger')
+            return render_template('auth/register.html', form=form)
 
         if (len(form.password1.data)) < 7:
             flash('Password should be longer than 6 characters', 'flash-danger')
+            return render_template('auth/register.html', form=form)
 
-        if form.validate_on_submit():
-            user = User(email=form.email.data.lower(),
-                        username=form.username.data,
-                        password=form.password1.data)
-            db.session.add(user)
-            db.session.commit()
+        user = User(email=form.email.data.lower(),
+                    username=form.username.data,
+                    password=form.password1.data)
+        db.session.add(user)
+        db.session.commit()
 
-            ## auto generated email - not in use ##
-            # token = user.generate_confirmation_token()
-            # send_email(user.email, 'Confirm Your Account',
-            #         'auth/email/confirm', user=user, token=token)
-            # flash(f'A confirmation email has been sent to {form.email.data.lower()}', 'flash-success')
-            ## end of auto generated email block ##
+        # Get ID of user that has just been added
+        user_just_created = User.query.filter_by(username=form.username.data.lower()).first()
 
-            flash(f'You have registered with {form.email.data.lower()}', 'flash-success')
-            return redirect(url_for('auth.login'))
+        print(f'this is the users ID: {user_just_created.id}')
 
-        return render_template('auth/register.html', form=form)
+        # Create a set of User Preferences for that User
+        record_default_language_preferences = UserLanguagePreference(user_id=user_just_created.id)
+        db.session.add(record_default_language_preferences)
+        db.session.commit()
+
+        db.session.close()
+
+        ## Auto Generated Email - not in use ##
+        # token = user.generate_confirmation_token()
+        # send_email(user.email, 'Confirm Your Account',
+        #         'auth/email/confirm', user=user, token=token)
+        # flash(f'A confirmation email has been sent to {form.email.data.lower()}', 'flash-success')
+        ## end of auto generated email block ##
+
+        flash(f'You have registered with {form.email.data.lower()}', 'flash-success')
+
+        return redirect(url_for('auth.login'))
 
 
 @auth.route('/confirm/<token>')

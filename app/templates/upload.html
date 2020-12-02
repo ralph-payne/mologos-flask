@@ -42,14 +42,20 @@ Each example should appear on a newline
     }
 </style>
 
-<form class="upload-form" action="/upload/en" method="POST">
+
+{% if is_english %}
+<form class="upload-form" action="/upload_english/" method="POST">
+{% else %}
+<form class="upload-form" action="/upload_translations/" method="POST">
+{% endif %}
+    <input type="hidden" id="most-recent-translation-lang" name="most_recent_translation_lang" value="{{ lng_recent }}">
     <div class="upload-form-grid">
         <div class="upload-1">
-            <div class="language-select flex-container">
+            <div id="language-select-container" class="language-select-container flex-container" style="display: none;">
                 <div class="inner-lang-select">
                     <input type="hidden" id="usr-recent-lang" value="{{ lng_recent}}">
                     <label for="select-language"><strong>Language</strong></label>
-                    <select name="select_language" id="select-language">
+                    <select name="select_language" id="select-language" onchange="changeHiddenInputToLanguageSelected(this)">
                     {% for language in language_codes %}
                         {% if language.active %}
                             <option value="{{ language.code }}">{{ language.lng_eng }}</option>
@@ -60,24 +66,67 @@ Each example should appear on a newline
             </div>
         </div>
         <div class="upload-2">
-            <textarea type="text" name="upload_text_area" id="upload-text-area" class="upload-text-area">
-
-            </textarea>
+            <textarea type="text" name="upload_text_area" id="upload-text-area" class="upload-text-area"></textarea>
             <div class="upload-examples-btn-wrapper">
                 <button class="btn btn-primary" type="submit">
                     Upload Examples
+                    {% if is_english %}
+                        engi
+                        {{ is_english }}
+                    {% else %}
+                        forish
+                        {{ is_english }}
+                    {% endif %}
                 </button>
             </div>
         </div>
         <div class="upload-3">
-            <textarea type="text" class="optional-target-words-text-area">
-
-
-            </textarea>
-
+            <textarea name="upload_target_word_area_12321" type="text" class="optional-target-words-text-area"></textarea>
         </div>
 
     </div>
 </form>
+
+
+<!-- Script which grabs most recent language and updates the select value -->
+<script>
+    // Get Most recent language from hidden input
+    const mostRecentLanguage = document.getElementById("most-recent-translation-lang").value;
+
+    // Declare function
+    const selectFromOptions = (selectId, optionValToSelect) => {
+        //Get the select element by it's unique ID.
+        const selectElement = document.getElementById(selectId);
+        //Get the options.
+        const selectOptions = selectElement.options;
+        //Loop through these options using a for loop.
+        for (let option, i = 0; option = selectOptions[i]; i++) {
+            //If the option of value is equal to the option we want to select.
+            if (option.value == optionValToSelect) {
+                //Select the option and break out of the for loop.
+                selectElement.selectedIndex = i;
+                break;
+            }
+        }
+    }
+
+    // Call function
+    selectFromOptions("select-language", mostRecentLanguage)
+
+    // Display the block which was previously hidden (This prevents stutterly loading)
+    document.getElementById("language-select-container").style.display = "block";
+</script>
+
+
+<!-- Script which listens for when the select element gets changed and then updates the hidden value -->
+<script>
+    const changeHiddenInputToLanguageSelected = (element) => {
+        let hiddenElementToSendToServer = document.getElementById("most-recent-translation-lang").value;
+
+        hiddenElementToSendToServer = element.value;
+
+    }
+</script>
+
 <!-- End of page_content -->
 {% endblock %}

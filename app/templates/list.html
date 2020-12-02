@@ -60,7 +60,7 @@
                         {% for word in words %}      
                             <tr>
                                 <td>{{ word.word }}</td>
-                                <td>{{ word.example }}</td>
+                                <td><a href="{{ url_for('main.edit', id=word.id, lng=lng.code) }}">{{ word.example }}</a></td>
                                 <td><a href="{{ url_for('main.edit', id=word.id, lng=lng.code) }}"><i class="fa fa-edit"></i></a></td>                             
                                 <td><a href="{{ url_for('main.delete', id=word.id, lng=lng.code ) }}"><i class="fa fa-trash"></i></a></td>
                             </tr>
@@ -68,8 +68,6 @@
                     </tbody>
                 </table>
             </div>
-
-            
         {% endif %}
 
         {{ macros.pagination_widget(pagination, endpoint=endpoint, lng=lng.code, username="test1234@gmail.com") }}

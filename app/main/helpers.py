@@ -1,29 +1,17 @@
 import os, requests, re
 
-# https://pypi.org/project/googletrans/
-from googletrans import Translator
+# from googletrans import Translator # Old - Stopped working on 30 Nov 2020
+from google_trans_new import google_translator 
 from time import sleep
 import copy # Used for Deep Copying lists
 
 from .. import db
 from ..models import BulkTranslate, Definition, DictionaryExample, UserExample, User, Word, UserLanguagePreference
 
-translator = Translator()
-
-# Declare constant list which holds the languages
-LANGUAGE_CODES = [
-    { 'code': 'en', 'lng_eng': 'English', 'lng_src': 'English', 'active': False },
-    { 'code': 'de', 'lng_eng': 'German', 'lng_src': 'Deutsch' ,'active': False },
-    { 'code': 'es', 'lng_eng': 'Spanish', 'lng_src': 'español' ,'active': False },
-    { 'code': 'it', 'lng_eng': 'Italian', 'lng_src': 'italiano' ,'active': False },
-    { 'code': 'pt', 'lng_eng': 'Portuguese', 'lng_src': 'português' ,'active': True },
-    { 'code': 'la', 'lng_eng': 'Latin', 'lng_src': 'Latine' ,'active': False },
-    { 'code': 'el', 'lng_eng': 'Greek', 'lng_src': 'Ελληνικά', 'active': False },
-    { 'code': 'fr', 'lng_eng': 'French', 'lng_src': 'Français', 'active': False },
-    { 'code': 'pl', 'lng_eng': 'Polish', 'lng_src': 'Polskie', 'active': False }
-]
+translator = google_translator()
 
 
+# Create constant list of languages
 def generate_language_codes():
     list_of_language_codes = [
         { 'code': 'en', 'lng_eng': 'English', 'lng_src': 'English', 'filename': 'img/flags/en.png', 'active': True },
@@ -38,6 +26,26 @@ def generate_language_codes():
     ]
 
     return list_of_language_codes
+
+
+def convert_translation_dict_to_two_letters(translation_dict):
+    """
+        Converts the language key from whole word to two letters
+        e.g. 'english' is converted to 'en'
+    """
+    converted_dict_with_two_letters = {}
+
+    language_codes_list = generate_language_codes()
+
+    for language_whole_word, translation in translation_dict.items():
+        for item_in_codes in language_codes_list:
+            if language_whole_word.lower() == item_in_codes['lng_eng'].lower():
+                key_value_with_two_letters = {
+                    item_in_codes['code'] : translation
+                }
+                converted_dict_with_two_letters.update(key_value_with_two_letters)
+
+    return converted_dict_with_two_letters
 
 
 def lookup_definition_api(word):
@@ -140,6 +148,7 @@ def lookup_definition_api(word):
 def lookup_db_dictionary(word):
     # Look up word in the local dictionary
     local_dictionary_result = Word.query.filter_by(word=word).first()
+    db.session.close()
 
     # If found, display template with data from the local dictionary
     if local_dictionary_result is not None:
@@ -157,9 +166,10 @@ def lookup_db_dictionary(word):
         for example in examples_base_query:
             examples_list.append(example.example)
 
-        print(f'Results from the local dict for {word}')
-        print(f'Number of definitions: {len(definitions_list)}')
-        print(f'Number of examples:    {len(examples_list)}')
+        print(f'Results from the local dict for     {word}')
+        print(f'Number of definitions:              {len(definitions_list)}')
+        print(f'Number of examples:                 {len(examples_list)}')
+        print(f'This is the etymology:              {local_dictionary_result.etymology}')
 
         # Create dictionary and merge results
         word_dict = {
@@ -174,13 +184,13 @@ def lookup_db_dictionary(word):
         return word_dict
     
     else:
-        db.session.close()
         return None
 
 
 # https://github.com/ssut/py-googletrans/issues/234
-def translate_api(src_text, dest_language):
-    translator = Translator()
+# This stopped working on 30 Nov 2020
+def translate_api_stopped_on_2020_11_30(src_text, dest_language):
+    translator = google_translator()
     result = None
 
     # Check that dest_language is a language code
@@ -191,46 +201,117 @@ def translate_api(src_text, dest_language):
         try:
             result = translator.translate(src_text, src='en', dest=dest_language)
         except Exception as error:
+            print(error)
             print(f'Error translating {src_text} into {dest_language}')
-            translator = Translator()
-            sleep(0.0001)
+            print(result)
+            translator = google_translator()
+            sleep(0.5)
             pass
 
     return result.text
 
+# New Translate API (1 Dec 2020)
+# https://github.com/lushan88a/google_trans_new
+def translate_api(src_text, dest_language):
+    translator = google_translator()
+    result = None
 
-def bulk_translate(src_text):
-    language_codes = select_active_languages(generate_language_codes())
+    # Check that dest_language is a language code
+    if len(dest_language) != 2:
+        return None
 
-    translations = []
+    while result == None:
+        try:
+            result = translator.translate(text=src_text, lang_tgt=dest_language)
+        except Exception as error:
+            print(error)
+            print(f'Error translating {src_text} into {dest_language}')
+            translator = google_translator()
+            sleep(2)
+            pass
+
+    return result
+     
+
+def bulk_translate(src_text, user_id):
+    all_language_codes = generate_language_codes()
+
+    print(f'user id is {user_id}')
+    print(f'type of all lang codes is: {type(all_language_codes)}') # LIST
+
+    language_codes = select_active_languages(all_language_codes, user_id)
+
+    print('inside of bulk translate')
+    print(type(language_codes))
+
+    translations = {}
 
     for dict in language_codes:
         key_language = dict['lng_eng'].lower()
+
+        print(f'Inside bulk translate. Translating {key_language}')
+
         value_translation = translate_api(src_text, dict['code'])
 
-        translation = {
-            key_language: value_translation,
-        }
+        translation = { key_language: value_translation }
 
-        translations.append(translation)
+        translations.update(translation)
 
     return translations
 
 
-def bulk_translate_excluding(src_text, language_to_exclude):
-    language_codes = filter_out_english(generate_language_codes())
-    translations = []
+def select_active_languages(CONSTANT_LANG_LIST, user_id):
+    # Filter through the user's preferences
+    user_language_preference = UserLanguagePreference.query.filter_by(user_id=user_id).first()
+    db.session.close()
+    user_language_prefs_dict = dict((col, getattr(user_language_preference, col)) for col in user_language_preference.__table__.columns.keys())
 
-    for dict in language_codes:
-        key_language = dict['lng_eng'].lower()
-        value_translation = translate_api(src_text, dict['code'])
+    list_users_active_languages = []
 
-        translation = {
-            key_language: value_translation,
-        }
-        translations.append(translation)
+    for language, boolean_value in user_language_prefs_dict.items():
+        if boolean_value == True and language != 'id' and language != 'user_id' and language != 'created' and language != 'english':
+            list_users_active_languages.append(language)
 
-    return translations
+    print(f'inside of select active languages helper | Below are the active languages (excl. English) for user {user_id} ')
+    for i in list_users_active_languages:
+        print(i)
+
+    lkasjd232sflkjasdf = filter_language_codes(CONSTANT_LANG_LIST, list_users_active_languages)
+
+    return lkasjd232sflkjasdf
+
+
+def filter_language_codes(CONSTANT_LANG_LIST, list_of_langauges):
+    # List of dictionaries
+    print('inside of select_active_languages')
+    list_filtered_language_codes = []
+
+    print(f'(type of constant lang list {type(CONSTANT_LANG_LIST)}')
+
+    print(f'(type of constant lang list {type(list_of_langauges)}')
+
+    for asiue in list_of_langauges:
+        print('lkjedhs')
+        print(asiue)
+
+    for laksdfj_dict in CONSTANT_LANG_LIST:
+        print('insdie lookp')
+        if laksdfj_dict['lng_eng'].lower() in list_of_langauges:
+            # Add to filter list
+            print(f'GOOD this is in the list: {laksdfj_dict} not in the list')
+            list_filtered_language_codes.append(laksdfj_dict)
+        else:
+            print(laksdfj_dict['lng_eng'].lower())
+            for j in list_of_langauges:
+                print(j)
+            print(f'BAD this is {laksdfj_dict} not in the list')
+
+    print(f'returning type {list_filtered_language_codes}')
+
+    # This is a list
+    print(f'returning type {type(list_filtered_language_codes)}')
+
+    return list_filtered_language_codes
 
 
 def create_language_dict(lng):
@@ -249,14 +330,9 @@ def convert_language_to_two_letter_code(language):
     return None
 
 
+# Delete?
 def filter_out_english(CONSTANT_LANG_LIST):
     filtered_list = list(filter(lambda x: x['code'] != 'en', CONSTANT_LANG_LIST))
-
-    return filtered_list
-
-
-def select_active_languages(CONSTANT_LANG_LIST):
-    filtered_list = list(filter(lambda x: x['active'] != False, CONSTANT_LANG_LIST))
 
     return filtered_list
 
@@ -274,15 +350,14 @@ def parse_translation_list(bulk_translate_model, word_to_translate, user_id):
     new_personalised_user_dict = {}
     language_codes = generate_language_codes()
 
+    # If there isn't a Bulk Translate entry, create one
     if bulk_translate_model is None:
-        print('nothing from the database 12341')
-        # Bulk Translate everything
-        # Create a new Bulk Translate thing in database
-        
+        print(f'Nothing from the Bulk Translate database table for the word: {word_to_translate}')
+        # Bulk Translate everything & Create a new Bulk Translate entry in the database
         new_entry_for_bulk_translate = BulkTranslate(english=word_to_translate)
         db.session.add(new_entry_for_bulk_translate)
         db.session.commit()
-
+        db.session.close()
     else:
         # https://stackoverflow.com/questions/16947276/flask-sqlalchemy-iterate-column-values-on-a-single-row
         bulk_translate_dict = dict((col, getattr(bulk_translate_model, col)) for col in bulk_translate_model.__table__.columns.keys())
@@ -290,17 +365,23 @@ def parse_translation_list(bulk_translate_model, word_to_translate, user_id):
         for language, translation in bulk_translate_dict.items():
             # Skip blank columns or the ID column
             if language == 'id' :
-                # Skip the ID column
-                pass
+                pass  # Skip the ID column
             if translation == None:
-                # Skip any languages which haven't been translated yet
+            # This code is sloppy!
+                pass # Skip any languages which haven't been translated yet
+            if translation == '':
                 pass
             else:
                 # It's already been translated
                 langs_already_translated.append(language)
 
-        print(f'The number of langs for {word_to_translate} already translated is: {len(langs_already_translated)}')
+        print(f'The number of langs for {word_to_translate} already translated is NOT TRUE!: {len(langs_already_translated)}')
+        for lang_already_done in langs_already_translated:
+            print(lang_already_done)
+        print('Above are the langs already translated')
+        print('There is a mistake here!')
 
+    # Retrieve the current user preferences
     # Compare this against what the user's current lanugage preferences are
     user_language_preference = UserLanguagePreference.query.filter_by(user_id=user_id).first()
     user_language_prefs_dict = dict((col, getattr(user_language_preference, col)) for col in user_language_preference.__table__.columns.keys())
@@ -316,20 +397,24 @@ def parse_translation_list(bulk_translate_model, word_to_translate, user_id):
         # Check if it's already been translated
         if language in langs_already_translated:
             new_personalised_user_dict[language] = bulk_translate_dict[language]
+        elif language == 'english':
+            pass
         else:
             # Look up the translation using the API
             two_letter_language_code = convert_language_to_two_letter_code(language)
             new_translation = translate_api(word_to_translate, two_letter_language_code)
-
+            # ERROR = sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: bulk_translate.english
+            # SQL: UPDATE bulk_translate SET english=? WHERE bulk_translate.english = ?]
+            print(f'looping through {language}: {new_translation}')
+            print(f'About to update the database: {language} {new_translation} 14673247685675')
             # Update database
             BulkTranslate.query.filter_by(english=word_to_translate).update({language: new_translation})
-            print(f'updated {language} with {new_translation} in Bulk Translate db')
+            print(f'Updated {language} with {new_translation} in Bulk Translate db')
+            db.session.commit()
+            db.session.close()
 
             # Add to new dictionary
             new_personalised_user_dict[language] = new_translation
-
-    # Close database connection
-    db.session.commit()
 
     # Return a dictionary with what the user wants
     return new_personalised_user_dict
@@ -347,39 +432,52 @@ def to_bool(string_value):
 
 def create_bulk_translate_dict(word, translation_list):
     # BAD CODE (18.11.2020). This should be cleaned up
-    dict = {
+    dict_for_db = {
         'english': word,
-        'german':       '',
-        'italian':      '',
-        'portuguese':   '',
-        'spanish':      '',
-        'latin':        '',
-        'greek':        ''
+        'german': '',
+        'italian': '',
+        'portuguese': '',
+        'spanish': '',
+        'latin': '',
+        'greek': '',
+        'french': '',
+        'polish': ''
     }
 
-    for translation_dict in translation_list:
-        for language, translated_word in translation_dict.items():
-            if language == 'german':
-                dict['german'] = translated_word
-            if language == 'spanish':
-                dict['spanish'] = translated_word
-            if language == 'italian':
-                dict['italian'] = translated_word
-            if language == 'portuguese':
-                dict['portuguese'] = translated_word
-            if language == 'latin':
-                dict['latin'] = translated_word
-            if language == 'greek':
-                dict['greek'] = translated_word
+    print('inside create bulk translate dict')
+    print(type(translation_list))
+
+    for key123, value830 in translation_list.items():
+        print('Iterating through dictionary in Create Bulk Translate')
+        print(f'{key123} : {value830}')
+
+        if key123 == 'german':
+            dict_for_db['german'] = value830
+        if key123 == 'spanish':
+            dict_for_db['spanish'] = value830
+        if key123 == 'italian':
+            dict_for_db['italian'] = value830
+        if key123 == 'portuguese':
+            dict_for_db['portuguese'] = value830
+        if key123 == 'latin':
+            dict_for_db['latin'] = value830
+        if key123 == 'greek':
+            dict_for_db['greek'] = value830
+        if key123 == 'french':
+            dict_for_db['french'] = value830
+        if key123 == 'polish':
+            dict_for_db['polish'] = value830            
 
     record_bulk_translate = BulkTranslate(
-        english = dict['english'],
-        german = dict['german'],
-        italian = dict['italian'],
-        portuguese = dict['portuguese'],
-        spanish = dict['spanish'],
-        latin = dict['latin'],
-        greek = dict['greek']
+        english = dict_for_db['english'],
+        german = dict_for_db['german'],
+        italian = dict_for_db['italian'],
+        portuguese = dict_for_db['portuguese'],
+        spanish = dict_for_db['spanish'],
+        latin = dict_for_db['latin'],
+        greek = dict_for_db['greek'],
+        french = dict_for_db['french'],
+        polish = dict_for_db['polish']
     )                                             
 
     return record_bulk_translate

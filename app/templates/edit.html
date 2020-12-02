@@ -1,10 +1,93 @@
+<style>
+.edit-page-add-button {
+    cursor: pointer;
+}
+
+.edit-page-translation-table-grid {
+    display: grid;
+    grid-gap: 0.1rem;
+    grid-template-columns: 150px 150px;
+}
+
+.edit-page-translation-table-grid-item {
+    padding: 0.1rem;
+    background: #f4f4f4;
+    border: #ccc 1px solid;
+    text-align: left;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+
+.placeholder-17 {
+    background: red;
+    padding: 10px;
+    width: 300px;
+    background: grey;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    box-sizing: border-box;
+    font-size: 16px;
+    line-height: 29px;
+    margin-right: 3px;
+}
+
+.placeholder-18 {
+    background: green;
+    border-radius: 0.75rem;
+    padding: 3px;
+    margin: 12px;
+    display: flex;
+    /* Horizonatally centered */
+    justify-content: center;
+    flex-wrap: wrap;
+    height: 150px;
+    width: 100%;
+}
+
+.placeholder-19 {
+    display: inline;
+    padding: 3px;
+}
+
+.placeholder-20 {
+    align-items: flex-start;
+    background-color: #FDEAA0;;
+    border-color: #0F222D;
+    border-radius: 0.55rem;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 16px;
+    height: 35px;
+    line-height: 35px;
+    margin-right: 3px;
+    padding: 1px 3px;
+    text-align: center;
+    text-rendering: auto;
+    vertical-align: middle;
+    width: 35px;
+
+    transition: transform .1s ease-in,box-shadow .1s ease-in;
+    -webkit-transition: transform .1s ease-in;
+}
+
+.placeholder-20:active:hover {
+    background-color: #3276B1;  
+}      
+</style>
+
 {% extends "base.html" %}
 {% block title %}: Edit {{ word.word }} {% endblock %}
 
 {% block page_content %}
 
 <div class="inner-container">
-    <form action="{{ url_for('main.edit', id=word.id, lng=lng.code) }}" method="POST">
+    <form action="{{ url_for('main.update_word', id=word.id, lng=lng.code) }}" method="POST">
     
     <div class="edit-grid">
         <div>
@@ -18,7 +101,10 @@
                 </h1>
                 <hr>
                 <hr>
-                {{ word.word }}
+                {% if is_english %}
+                {% else %}
+                    {{ lng.lng_src }}
+                {% endif %}
             </div>
 
             <!-- For English Words with Pronunciation, Definition and Etymology -->
@@ -56,94 +142,58 @@
                     <a href="{{ url_for('main.delete', id=word.id, lng=lng.code) }}"><i class="fa fa-trash fa-2x trash-extra-padding"></i></a>
                     <span class="tooltiptext">Delete</span>
                 </div>
+
+                <div class="tooltip-container">
+
+
+                    <style>
+                        .word-success {
+                            color: green;
+                        }
+                        .word-fail {
+                            color: red;
+                        }
+                        .table-cell-symbol-edit-page {
+                            width: 60px;
+                            height: 100%;
+                            display: flex;
+                            margin: auto;
+                        
+                            /* Vertically aligns */
+                            align-items: center;
+                            /* Horizontally aligns */
+                            justify-content: center; 
+                        
+                            background-color: yellow;
+                            border: 1px solid brown;
+                            border-radius: 10px;
+                        }
+                        </style>
+                        <div class="table-cell-symbol-edit-page">
+                            <span class="word-success">{{ word.success }}</span> v <span class="word-fail">{{ word.fail }}</span>
+                        </div>
+                        <span class="tooltiptext">Statistics</span>
+                        
+                </div>
             </div>
         </div>
 
         <div>
-            {% if translation_list %}
+            {% if translation_dict %}
             <div class="edit-page-translation-table-grid">
-                {% for translation_item in translation_list %}
-                    {% for language, translation in translation_item.items() %}
-                        <div class="edit-page-translation-table-grid-item">{{ language }}</div>
-                        <div class="edit-page-translation-table-grid-item">{{ translation }}</div>                    
-                    {% endfor %}
+                {% for language, translation in translation_dict.items() %}
+                    {{ macros.generate_flag(endpoint='main.list', country=language, filename=language.filename) }}
+                    <div class="edit-page-translation-table-grid-item">{{ translation }}</div>                    
                 {% endfor %}
             </div>
+            {% else %}
+                No Translation Dictionary becuase you are sending a list instead
             {% endif %}
         </div>
 
         <div>
             tbc
         </div>
-
-        <style>
-            .placeholder-17 {
-                background: red;
-                padding: 10px;
-                width: 300px;
-                background: grey;
-                height: 100%;
-                width: 100%;
-                display: flex;
-                flex-wrap: wrap;
-                margin-top: 10px;
-                box-sizing: border-box;
-                font-size: 16px;
-                line-height: 29px;
-                margin-right: 3px;
-            }
-
-            .placeholder-18 {
-                background: green;
-                border-radius: 0.75rem;
-                padding: 3px;
-                margin: 12px;
-                display: flex;
-                /* Horizonatally centered */
-                justify-content: center;
-                flex-wrap: wrap;
-                height: 150px;
-                width: 100%;
-            }
-
-            .placeholder-19 {
-                display: inline;
-                padding: 3px;
-            }
-
-            .placeholder-20 {
-                border-radius: 0.55rem;
-                background: gold;
-                cursor: pointer;
-                -webkit-transition: transform .1s ease-in;
-                transition: transform .1s ease-in,box-shadow .1s ease-in;
-                font-size: 16px;
-                line-height: 29px;
-                width: 35px;
-                height: 29px;
-                margin-right: 3px;
-                margin-bottom: 3px;
-                vertical-align: middle;
-                text-align: center;
-                font-size: 13px;
-                border-radius: 2px;
-                border-style: solid;
-                border-color: #999;
-                border-width: 1px;
-                text-rendering: auto;
-                display: inline-block;
-                text-align: center;
-                align-items: flex-start;
-                cursor: pointer;
-                padding: 1px 6px;
-                border-width: 2px;
-            }
-        
-            .placeholder-20:active:hover {
-                background-color: #3276B1;  
-            }
-
-        </style>        
 
         <div>
             {% if keyboard %}
@@ -162,40 +212,7 @@
         </div>        
 
         <div>
-            <div class="statistics-container">
-                <h3>Statistics</h3>
-                <ul>
-                    <li>Created: {{ moment(word.created).format('D MMM YYYY') }} </li>
-                    {% if word.last_modified %}
-                    <li>Last Modified: {{ moment(word.last_modified).format('D MMM YYYY') }} </li>
-                    {% endif %}
-                    <li>Attempts: {{ word.attempt }} </li>
-                    <li>Correct: {{ word.success }} </li>
-                    <li>Incorrect: {{ word.fail }} </li>
-                </ul>
-            </div>
         </div>
-
-        <style>
-            .edit-page-add-button {
-                cursor: pointer;
-            }
-
-            .edit-page-translation-table-grid {
-                display: grid;
-                grid-gap: 0.1rem;
-                grid-template-columns: 150px 150px;
-            }
-    
-            .edit-page-translation-table-grid-item {
-                padding: 0.1rem;
-                background: #f4f4f4;
-                border: #ccc 1px solid;
-                text-align: left;
-                font-weight: 500;
-                font-size: 1.1rem;
-            }            
-        </style>
 
         <div>
             {% if word.word %}
@@ -209,9 +226,10 @@
         </div>
 
         <div>
-            <div class="statistics-container">
-                <h3>Placeholder</h3>
-            </div>
+            Can this div be deleted?
+
+
+
         </div>        
 
     </div>
@@ -220,7 +238,6 @@
 
 <!-- Script for Changing Color of Star and Eye-->
 <script type="text/javascript">
-
     let starBoolean = document.getElementById('star-boolean')
     let hideBoolean = document.getElementById('eye-boolean')
 
@@ -247,11 +264,11 @@
     }
 </script>
 
+<!-- Script to add an accent to the example text area -->
 <script type="text/javascript">
     const addAccentToTextArea = event => {
         // Add accent to the text area
         document.getElementById("edited-example").value += event.value;
     }
 </script>
-
 {% endblock %}
