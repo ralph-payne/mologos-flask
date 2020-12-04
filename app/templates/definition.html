@@ -6,137 +6,215 @@
 
 {% block page_content %}
 <style>
-    #translation-table-grid {
+    .definition-page-container {
+        min-height: 500px;
+    }
+
+    .defined-word-content-header {
+        font-size: 2.5rem;
+        font-weight: 600;
+    }
+
+    .word-pronunication-ipa-span-content {
+        font-size: 1.25rem;
+    }
+
+    .definition-page-header-two-container {
+        padding-top: 1.25rem;
+        border-top: 1px solid #000;
+    }
+
+    .definition-page-header-two {
+        font-weight: 350;
+        font-size: 1.35rem;
+    }
+
+    .ordered-and-unordered-lists {
+        padding-left: 2rem;
+    }    
+
+    .left-indent-definition-page {
+        padding-left: 0.75rem;
+    }
+
+    .list-item-definition-page-bullets {
+        list-style-type: square;
+    }
+
+    .translation-table-grid-972 {
         display: grid;
         grid-gap: 0.1rem;
-        grid-template-columns: 150px 150px;
+        grid-template-columns: 55px 400px;
+        padding: 0.25rem 0.75rem;
     }
     
-    .translation-table-grid-item {
-        padding: 0.1rem;
-        background: #f4f4f4;
-        border: #ccc 1px solid;
+    .translation-table-grid-item-973 {
+        padding: 0.1rem 0.0rem;
         text-align: left;
         font-weight: 500;
         font-size: 1.1rem;
     }
+
+    .add-to-or-update-dict-btn-wrapper {
+        padding: 0.75rem;
+    }
 </style>
 
-<div class="inner-container">
+<style>
 
-    <form action={{ url_for('main.add', word=word.word) }} method="POST">
-    {% if word %}
+    .word-pron-and-symbols-container {
+        height: 100px;
+    }
+
+    .left-60-word-pron-symbols {
+        float: left;
+        height: 100%;
+        width: 60%;
+    }
+
+    .right-40-word-pron-symbols {
+        float: right;
+        height: 100%;
+        width: 40%;
+    }
+
+    /* Eye Bin Star ToolTips */
+    .eye-star-bin-container {
+        padding: 0rem;
+        height: 100%;
+        display: flex;
+        padding: 0.25rem;
+        justify-content: space-around;
+        flex-direction: row;
+        width: 300px;
+    }
+
+    a {
+        cursor: pointer;
+    }
+
+    .tooltip-container {
+        position: relative;
+        display: inline-block;
+        padding: 0.5rem;
+    }
+
+    .trash-extra-padding {
+        /* Extra padding as trash icon is slightly smaller */
+        padding: 0px 3px;
+    }
+
+    /* Show tooltip text when you mouse over the tooltip container */
+    .tooltip-container:hover .tooltiptext {
+        visibility: visible;
+    }
+
+    /* Tooltip text */
+    .tooltip-container .tooltiptext {
+        visibility: hidden;
+        background-color: #0F222D;
+        color: #fff;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 6px;
+        position: absolute;
+        z-index: 1;
+
+        width: 120px;
+        top: 70%;
+        left: 50%;
+        margin-left: -60px
+    }
+
+    .word-success {
+        color: green;
+    }
+
+    .word-fail {
+        color: red;
+    }            
+</style>
 
 
-    <style>
-        .definition-container{
-            min-height: 500px;
-        }
-    </style>
-      <div class="definition-container">
-        <div>
+
+<form action="{{ url_for('main.add', word=word.word) }}" method="POST">
+
+
+<div class="definition-page-container">
+    <div class="word-pron-and-symbols-container">
+        <div class="left-60-word-pron-symbols">
             <div class="defined-word-container">
-                <h1 name="defined-word" class="defined-word-content">{{ word.word }}</h1>
+                <p name="defined-word" class="defined-word-content-header">{{ word.word }}</p>
             </div>
             <div class="pron-ipa-container">
-                <span class="pron-ipa-content">/{{ word.pronunciation }}/<span>
+                <span class="word-pronunication-ipa-span-content">/{{ word.pronunciation }}/<span>
             </div>
         </div>
-
-        <hr>
-
-        <div>
-            <h2>Definitions</h2>            
-                <ol>              
-                {% for definition in word.definitions %}
-                    <li>{{ definition[0]|upper}}{{definition[1:]}}</li>
-                {% endfor %}
-                </ol>
-        <hr>   
-        </div>
-
-        <div>
-          {% if word.examples %}
-              <h2>Examples</h2>
-              <ul>
-                  {% for example in word.examples %}
-                      <li class="bullet-points">{{ example[0]|upper}}{{example[1:]}}</li>
-                  {% endfor %}
-              </ul>              
-          {% endif %}
-        </div>
-
-        <div>
-          {% if word.etymology %}
-              <hr>
-              <h2>Etymology</h2>
-              <p>{{ word.etymology[0]|upper}}{{word.etymology[1:] }}</p>
-          {% endif %}
-        </div>
-
-        <div>
-            {% if translation_dict %}
-                <div id="translation-table-grid">
-                    {% for translation_item, ab12 in translation_dict.items() %}
-                            <div class="translation-table-grid-item">{{ translation_item }}</div>
-                            <div class="translation-table-grid-item">{{ ab12 }}</div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                no tran dictionary becuase you are sending a list instead
-            {% endif %}
-
-        </div>
-
-        </hr>
-
-        <div>
-            <h4>My Example</h4>
-            <div class="definition-example">
-                <input type="hidden" name="word_id" value="{{ word.id }}">
-                <input type="hidden" name="example_already_exists" value="{{ user_example }}">
-                <textarea type="text" name="user_example" id="area-2" rows="2">{% if user_example %}{{ user_example.example }}{% endif %}</textarea>
-            </div>
-            
-            
-            <div class="add-dict-btn-wrapper">
-                <button class="btn btn-primary" type="submit">
-                    {% if user_example %}
-                        Update Entry
-
-
-
-                    {% else %}
-                        Add to my dictionary
-                    {% endif %}
-                </button>
-
+        <div class="right-40-word-pron-symbols">
+            <div class="eye-star-bin-container">
                 {% if user_example %}
-                <div class="icon-container">
-                    <div class="tooltip-container">
-                        <a><i class="fa fa-eye-slash fa-2x {% if word.ignored %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
-                        <input type="hidden" id="eye-boolean" name="eye_boolean" value="0">
-                        <span class="tooltiptext">Hide From Challenges</span>
-                    </div>
-    
-                    <div class="tooltip-container">
-                        <a><i class="fa fa-star fa-2x {% if word.starred %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
-                        <input type="hidden" id="star-boolean" name="star_boolean" value="{% if word.starred %}1{% else %}0{% endif %}">
-                        <span class="tooltiptext">Mark as Important</span>
-                    </div>
-    
-                    <div class="tooltip-container">
-                        <a href="#"><i class="fa fa-trash fa-2x trash-extra-padding"></i></a>
-                        <span class="tooltiptext">Delete</span>
-                    </div>
-                    {% endif %}
-                </div>
+                    {{ macros.eye_star_bin(user_example, 'en') }}
+                {% endif %}
             </div>
         </div>
+    </div>
+
+    <div>
+        <div class="definition-page-header-two-container"><h2 class="definition-page-header-two">Definitions</h2></div>
+        <ol class="ordered-and-unordered-lists">
+            {% for definition in word.definitions %}
+                <li class="left-indent-definition-page">{{ macros.sentence_case(definition) }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+
+    <div>
+        {% if word.examples %}
+        <div class="definition-page-header-two-container"><h2 class="definition-page-header-two">Examples</h2></div>
+        <ul class="ordered-and-unordered-lists">
+            {% for example in word.examples %}
+                <li class="left-indent-definition-page list-item-definition-page-bullets">{{ macros.sentence_case(example) }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+
+    <div>
+        {% if word.etymology %}
+            <div class="definition-page-header-two-container"><h2 class="definition-page-header-two">Etymology</h2></div>
+            <p class="left-indent-definition-page">{{ macros.sentence_case(word.etymology) }}</p>
+        {% endif %}
+    </div>
+
+    <div>
+        {% if translation_dict %}
+        <div class="definition-page-header-two-container"><h2 class="definition-page-header-two">Translations</h2></div>
+            <div class="translation-table-grid-972">
+                {% for language, translation in translation_dict.items() %}
+                    {{ macros.generate_flag(endpoint='main.list', country=language, filename=language.filename) }}
+                    <div class="translation-table-grid-item-973">{{ translation }}</div>
+                {% endfor %}
+            </div>
+        {% else %}
+            There are no translations to display
+        {% endif %}
+    </div>
+
+    <div>
+        <div class="definition-page-header-two-container">
+            <h2 class="definition-page-header-two">My Example</h2>
         </div>
-      </form>
 
-    {% endif %}
+        <div class="definition-example-text-box-container">
+            <input type="hidden" name="word_id" value="{{ word.id }}">
+            <input type="hidden" name="example_already_exists" value="{{ user_example }}">
+            <textarea type="text" name="user_example" id="area-2" rows="3">{% if user_example %}{{ user_example.example }}{% endif %}</textarea>
+        </div>
+
+        <div class="add-to-or-update-dict-btn-wrapper">
+            <button class="btn btn-primary" type="submit">{% if user_example %}Update Entry{% else %}Add to my dictionary{% endif %}</button>
+        </div>
+    </div>
 </div>
-
+</form>
 {% endblock %}

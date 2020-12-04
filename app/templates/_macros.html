@@ -71,21 +71,12 @@
 
 <!-- NO SAVED WORDS MACRO -->
 {% macro no_saved_words_message(endpoint, language, is_english) %}
-<style>
-    .no-words-message-div {
-        padding-top: 30px;
-    }
-</style>
-
-<div class="no-words-message-div">
+<div class="no-saved-words-message-div">
     <p>You don't have any saved words or expressions in {{ language.lng_eng }}</p>
-
-    {{endpoint}}, {{language}}, {{is_english}}
-
     {% if is_english %}
         <p>Use the Search Bar at the top of the page to add some!</p>
     {% else %}
-        <p>Go to the <a class="link-color" href="{{ url_for('main.translate', lng=language) }}">translation</a> page to add some!</p>
+        <p>Go to the <a class="link-color" href="{{ url_for('main.translate', lng=language.code) }}">translation</a> page to add some!</p>
     {% endif %}
 </div>
 {% endmacro %}
@@ -95,4 +86,36 @@
 <!-- Sentence case: the use of a capital letter at the beginning of a sentence -->
 {% macro sentence_case(text) %}
     {{ text[0]|upper}}{{text[1:] }}
+{% endmacro %}
+
+
+<!-- EYE STAR BIN MACRO -->
+{% macro eye_star_bin(word, lng_code) %}
+<div class="tooltip-container">
+    <a href="{{ url_for('main.olki_231', id=word.id, lng=lng_code, word=word.word, num849=0) }}"><i class="fa fa-eye-slash fa-2x {% if word.ignored %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
+    <input type="hidden" id="eye-boolean" name="eye_boolean" value="0">
+    <span class="tooltiptext">Hide From Challenges</span>
+</div>
+
+<div class="tooltip-container">
+    <a href="{{ url_for('main.olki_231', id=word.id, lng=lng_code, word=word.word, num849=1) }}"><i class="fa fa-star fa-2x {% if word.starred %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
+    <input type="hidden" id="star-boolean" name="star_boolean" value="{% if word.starred %}1{% else %}0{% endif %}">
+    <span class="tooltiptext">Mark as Important</span>
+</div>
+
+<div class="tooltip-container">
+    <a href="{{ url_for('main.delete', id=word.id, lng=lng_code) }}"><i class="fa fa-trash fa-2x trash-extra-padding"></i></a>
+    <span class="tooltiptext">Delete</span>
+</div>
+
+<div class="tooltip-container">
+    <div class="success-fail-stats-container">
+        <a href="{{ url_for('main.challenge', lng=lng_code) }}">
+            <span class="word-success">{{ word.success }}</span>
+            v
+            <span class="word-fail">{{ word.fail }}</span>
+        </a>
+    </div>
+    <span class="tooltiptext">Statistics</span>
+</div>
 {% endmacro %}

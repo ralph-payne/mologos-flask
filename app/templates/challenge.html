@@ -1,82 +1,82 @@
+<style>
+    .flag-container {
+        padding-top: 20px;
+    }
+    .word-success {
+        color: green;
+    }
+    .word-fail {
+        color: red;
+    }
+    .table-challenge-english {
+        background-color: pink;
+        width: 100%;
+    }
+    .table-row-english {
+        background-color: green;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 13fr 1fr 1fr 1fr;
+        border: 2px dotted blue;
+        height: 60px;
+    }
+    .table-row-foreign {
+        background-color: green;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 7fr 7fr 1fr 1fr 1fr;
+        border: 2px dotted blue;
+        height: 60px;
+    }
+    .table-cell-symbol {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        margin: auto;
+    
+        /* Vertically aligns */
+        align-items: center;
+        /* Horizontally aligns */
+        justify-content: center; 
+    
+        background-color: yellow;
+        border: 1px solid brown;
+        border-radius: 10px;
+    }
+    .table-cell-text {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        margin: auto;
+    
+        /* Vertically aligns */
+        align-items: center;
+    
+        background-color: orange;
+        border: 1px dotted blue;
+    }
+    .write-guess-text-input {
+        width: 200px;
+        height: 35px;
+        margin: 0 10px;
+        padding-left: 10px;
+        border-radius: 10px;
+        font-size: 1.05rem;
+    }
+    .submit-btn-challenge {
+        cursor: pointer;
+        background-color: #48954e;
+        color: #fff;
+        padding: 0.5rem 1.5rem;
+        border-radius: .25rem;             
+    }
+</style>
+
 {% extends "base.html" %}
 
 {% block title %}: Challenge{% endblock %}
 
 {% block page_content %}
-     
-<style>
-.flag-container {
-    padding-top: 20px;
-}
-.word-success {
-    color: green;
-}
-.word-fail {
-    color: red;
-}
-.table-challenge-english {
-    background-color: pink;
-    width: 100%;
-}
-.table-row-english {
-    background-color: green;
-    width: 100%;
-    display: grid;
-    grid-template-columns: 13fr 1fr 1fr 1fr;
-    border: 2px dotted blue;
-    height: 60px;
-}
-.table-row-foreign {
-    background-color: green;
-    width: 100%;
-    display: grid;
-    grid-template-columns: 7fr 7fr 1fr 1fr 1fr;
-    border: 2px dotted blue;
-    height: 60px;
-}
-.table-cell-symbol {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    margin: auto;
-
-    /* Vertically aligns */
-    align-items: center;
-    /* Horizontally aligns */
-    justify-content: center; 
-
-    background-color: yellow;
-    border: 1px solid brown;
-    border-radius: 10px;
-}
-.table-cell-text {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    margin: auto;
-
-    /* Vertically aligns */
-    align-items: center;
-
-    background-color: orange;
-    border: 1px dotted blue;
-}
-.write-guess-text-input {
-    width: 200px;
-    height: 35px;
-    margin: 0 10px;
-    padding-left: 10px;
-    border-radius: 10px;
-    font-size: 1.05rem;
-}
-.submit-btn-challenge {
-    cursor: pointer;
-    background-color: #48954e;
-    color: #fff;
-    padding: 0.5rem 1.5rem;
-    border-radius: .25rem;             
-}
-</style>
 
 <div class="inner-container">
     
@@ -91,48 +91,47 @@
     {% if words %}
         {% if english %}<div class="challenge-table-english">{% else %}<div class="challenge-table-foreign">{% endif %}
             <form class="challenge-form" action="/challenge/{{ lng.code }}" method="POST">
-
-                    <div class="table-challenge-english">
-                        {% for word in words %}
-                            {% if english %}
-                                <div class="table-row-english">
-                            {% else %}
-                                <div class="table-row-foreign">
-                                    <!-- Extra Cell -->
-                                    <div class="table-cell-text">
-                                        {{ word.word }} <!-- Word in English -->
-                                    </div>
-                            {% endif %}
+                <div class="table-challenge-english">
+                    {% for word in words %}
+                        {% if english %}
+                            <div class="table-row-english">
+                        {% else %}
+                            <div class="table-row-foreign">
+                                <!-- Extra Cell -->
                                 <div class="table-cell-text">
-                                    <input type="hidden" name="word_id" value="{{ word.id }}">
-                                    <input type="hidden" name="star_boolean" value="0">
-                                    <input type="hidden" name="eye_boolean" value="0">
-                                {% if english %}
-                                    <input type="hidden" name="target_word" value="{{ word.target_word }}">
-                                    {{ macros.sentence_case(word.first_half_sentence) }}
-                                    <input id="user-guess" class="write-guess-text-input" type="text" name="user_guess" placeholder="write guess...">
-                                    {{ word.second_half_sentence }}
-                                {% else %}
-                                    <input type="hidden" name="target_word" value="{{ word.example }}">
-                                    <input type="hidden" name="word-in-english" value="{{ word.word }}">                                
-                                    <input id="user-guess" class="write-guess-text-input" type="text" name="user_guess" placeholder="write guess...">
-                                {% endif %}
+                                    {{ word.word }} <!-- Word in English -->
                                 </div>
-
-                                <div class="table-cell-symbol">
-                                    <span class="word-success">{{ word.success }}</span> v <span class="word-fail">{{ word.fail }}</span>
-                                </div>
-                                <div class="table-cell-symbol">
-                                    <a id="{{ word.id }}-eye-icon" href="#"><i class="fa fa-eye-slash fa-2x"
-                                            onclick="toggleColor(this)"></i></a>
-                                </div>
-                                <div class="table-cell-symbol">
-                                    <a id="{{ word.id }}-star-icon" href="#" onclick="toggleColor(this)"><i
-                                            class="fa fa-star fa-2x"></i></a>
-                                </div>
+                        {% endif %}
+                            <div class="table-cell-text">
+                                <input type="hidden" name="word_id" value="{{ word.id }}">
+                                <input type="hidden" name="star_boolean" value="0">
+                                <input type="hidden" name="eye_boolean" value="0">
+                            {% if english %}
+                                <input type="hidden" name="target_word" value="{{ word.target_word }}">
+                                {{ macros.sentence_case(word.first_half_sentence) }}
+                                <input id="user-guess" class="write-guess-text-input" type="text" name="user_guess" placeholder="write guess...">
+                                {{ word.second_half_sentence }}
+                            {% else %}
+                                <input type="hidden" name="target_word" value="{{ word.example }}">
+                                <input type="hidden" name="word-in-english" value="{{ word.word }}">                                
+                                <input id="user-guess" class="write-guess-text-input" type="text" name="user_guess" placeholder="write guess...">
+                            {% endif %}
                             </div>
-                        {% endfor %}
-                    </div>
+
+                            <div class="table-cell-symbol">
+                                <span class="word-success">{{ word.success }}</span> v <span class="word-fail">{{ word.fail }}</span>
+                            </div>
+                            <div class="table-cell-symbol">
+                                <a id="{{ word.id }}-eye-icon" href="#"><i class="fa fa-eye-slash fa-2x"
+                                        onclick="toggleColor(this)"></i></a>
+                            </div>
+                            <div class="table-cell-symbol">
+                                <a id="{{ word.id }}-star-icon" href="#" onclick="toggleColor(this)"><i
+                                        class="fa fa-star fa-2x"></i></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
 
                 <div class="submit-btn-wrapper-challenge">
                     <button class="submit-btn-challenge" type="submit">Submit</button>
@@ -140,7 +139,7 @@
             </form>
         </div>
         {% else %}
-            {{ macros.no_saved_words_message(endpoint=endpoint, language=lng.code, is_english=english) }}
+            {{ macros.no_saved_words_message(endpoint=endpoint, language=lng, is_english=english) }}
         {% endif %}
     </div>
 

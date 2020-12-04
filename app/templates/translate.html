@@ -10,6 +10,33 @@
 .dropdown-select-942 {
     min-width: 120px;
 }
+.previous-translations-grid {
+    background-color: #f9a8e3;
+    width: 100%;
+}
+.table-row-recent-translation {
+    background-color: green;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 3fr 1fr 3fr;
+    border: 1px dotted blue;
+    height: 60px;
+}
+.table-cell-symbol {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin: auto;
+
+    /* Vertically aligns */
+    align-items: center;
+    /* Horizontally aligns */
+    justify-content: center; 
+
+    background-color: yellow;
+    border: 1px solid brown;
+    border-radius: 10px;
+}   
 </style>
 
 <!-- Translate Container -->
@@ -66,36 +93,6 @@
             {% if recent_translations %}
             <h3>Your Recent Translations</h3>
 
-            <style>
-                .previous-translations-grid {
-                    background-color: #f9a8e3;
-                    width: 100%;
-                }
-                .table-row-recent-translation {
-                    background-color: green;
-                    width: 100%;
-                    display: grid;
-                    grid-template-columns: 3fr 1fr 3fr;
-                    border: 1px dotted blue;
-                    height: 60px;
-                }
-                .table-cell-symbol {
-                    width: 100%;
-                    height: 100%;
-                    display: flex;
-                    margin: auto;
-
-                    /* Vertically aligns */
-                    align-items: center;
-                    /* Horizontally aligns */
-                    justify-content: center; 
-
-                    background-color: yellow;
-                    border: 1px solid brown;
-                    border-radius: 10px;
-                }                
-            </style>            
-
             <div class="previous-translations-grid">
                 {% for element in recent_translations %}
                     <div class="table-row-recent-translation">
@@ -103,7 +100,7 @@
                         <div class="table-cell-symbol">
                             {{ macros.generate_flag(endpoint='main.list', country=element.dst, filename='img/flags/pl.png') }}
                         </div>
-                        <div class="table-cell-symbol"><a href="{{ url_for('main.edit', id=element.id, lng=element.dst) }}">{{ element.example }} {{ element.id }} {{ element.dst }}</a></div>
+                        <div class="table-cell-symbol"><a href="{{ url_for('main.edit', id=element.id, lng=element.dst) }}">{{ element.example }}</a></div>
                     </div>
                 {% endfor %}
             </div>
@@ -145,10 +142,8 @@
 
 <!-- Script to change the hidden value of the destination language -->
 <script type="text/javascript">
-
     // Note 2: Find a way of fixing the Edge Case: A user translates to Latin and then chagnes their User Preferences so that Latin is no longer in their languages. Therefore, you won't be able to find it on the select
     // Note 4: http://localhost:5000/definition/wolf doesn't translate the words you want
-
 </script>
 
 

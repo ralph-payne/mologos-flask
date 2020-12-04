@@ -17,6 +17,41 @@ from .international_accent_list import international_accent_list
 from .starting_data import starting_data
 
 
+# @main.route('/delete/<lng>/<id>')
+# @login_required
+# def delete(lng, id):
+#     UserExample.query.filter_by(id=id).delete() # Hard delete data
+#     db.session.commit()
+#     db.session.close()
+
+#     return redirect(url_for('main.list', lng=lng))
+
+
+
+@main.route('/olki_231/<lng>/<id>/<word>/<num849>', methods=['GET'])
+def olki_231(lng, id, word, num849):
+    if int(num849) == 0:
+        is_ignored = UserExample.query.filter_by(id=id).first().ignored
+
+        if is_ignored:
+            UserExample.query.filter_by(id=id).update({'ignored': False})
+        else:
+            UserExample.query.filter_by(id=id).update({'ignored': True})
+
+    if int(num849) == 1:
+        is_starred = UserExample.query.filter_by(id=id).first().starred
+
+        if is_starred:
+            UserExample.query.filter_by(id=id).update({'starred': False})
+        else:
+           UserExample.query.filter_by(id=id).update({'starred': True})
+
+    db.session.commit()
+    db.session.close()
+
+    return redirect(url_for('main.define', word=word))
+
+
 @main.route('/hard_delete')
 def hard_delete():
 
@@ -33,12 +68,6 @@ def hard_delete():
 
 @main.route('/init')
 def init():
-    # Delete all test data
-    # InternationalAccent.query.delete()
-    UserExample.query.delete()
-    Word.query.delete()
-    BulkTranslate.query.delete()
-    User.query.delete()
 
     # INITIALIZE DATABASE WITH STARTING DATA
     test_user_email = 'test1000@gmail.com'
@@ -111,16 +140,6 @@ def init():
 # Homepage
 @main.route('/')
 def index():
-
-    # RESET CODE:
-    # try:
-    #     num_rows_deleted = db.session.query(UserExample).delete()
-    #     num_rows_deleted2 = db.session.query(Word).delete()
-    #     num_rows_deleted3 = db.session.query(BulkTranslate).delete()
-    #     db.session.commit()
-    # except:
-    #     db.session.rollback()
-
     return render_template('index.html')
 
 
@@ -161,41 +180,34 @@ def delete(lng, id):
 def define(word):
     # Use helper function (found in helpers.py) to look up word in database dictionary    
     local_dictionary_result = lookup_db_dictionary(word)
-    try:
-        user_is_logged_in = current_user.id
-    except:
-        user_is_logged_in = False
 
-    # Use Try Except to avoid "TypeError: 'NoneType' object is not subscriptable"
-    try:
-        result_has_etymology = local_dictionary_result['etymology']
-    except:
-        result_has_etymology = False
-
-    if local_dictionary_result is not None and result_has_etymology and user_is_logged_in:
+    if local_dictionary_result is not None and local_dictionary_result['etymology'] and current_user.is_authenticated:
         word_id = local_dictionary_result['word_id']
         user_example = UserExample.query.filter_by(user_id=current_user.id, word=word).first()
-
+        
         # Bulk translate
         bulk_translate_from_db = BulkTranslate.query.filter_by(english=word).first()
+        db.session.close()
 
         translation_dict = parse_translation_list(bulk_translate_from_db, word, current_user.id)
+        translation_dict_two_letters = convert_translation_dict_to_two_letters(translation_dict)
 
-        return render_template('definition.html', word=local_dictionary_result, user_example=user_example, source='local', translation_dict=translation_dict)
+        return render_template('definition.html', word=local_dictionary_result, user_example=user_example, source='local', translation_dict=translation_dict_two_letters)
 
-    # If not found in local dictionary, use the API this means it is a new word and will have to be added to the Word table
+    # If not found in local dictionary, use the API and add new word Word table in db
     else:
-        # Lookup the word in the API helper function, which returns a dict
+        print(f'{word} was not found in local dictionary so going to use API')
         api_return_value = lookup_definition_api(word)
 
         if api_return_value is None:
             flash(f'{word} was not found')
-            # TODO => change logic to render a "did you mean X" page (Nice to Have Version2 Feature)
-            # TODO => get rid of the word in the url parameters as well
+            return redirect(url_for('main.index'))
 
         else:
+            # Word was found by API
             word = api_return_value['word']
             pronunciation = api_return_value['pronunciation']
+            print(f'{pronunciation} is the pronunciation of {word}')
             etymology = api_return_value['etymology']
             definitions = api_return_value['definitions']
             examples = api_return_value['examples']
@@ -205,14 +217,13 @@ def define(word):
                 # Add to local dictionary database
                 new_word = Word(word, etymology, pronunciation)
                 db.session.add(new_word)
+                db.session.commit()
             else:
                 # It's not a new word if the user has already done a bulk upload with the word
                 # If this is the case, you need to update the existing entry. Update the database
                 Word.query.filter_by(word=word).update({'etymology': etymology})
                 Word.query.filter_by(word=word).update({'pronunciation': pronunciation})
-            
-            db.session.commit()
-            
+
             # There is a more efficient way with lastrowid but I can't get it to work right now
             word_query_inefficient = Word.query.filter_by(word=word).one()
             # Add the id to the returned dict (this is the primary key that we be used for all lookups)
@@ -228,29 +239,29 @@ def define(word):
                 record = DictionaryExample(word, example, 'oxford')
                 db.session.add(record)
 
+            db.session.commit()
+
             # Check that word hasn't been translated already
             bulk_translate_from_db = BulkTranslate.query.filter_by(english=word).first()
+            print(f'Checking that {word} has been translated already: {bulk_translate_from_db}')
 
-            try:
-                user_is_logged_in = current_user.id
-            except:
-                user_is_logged_in = False
+            translation_dict_two_letters = {}
+            db.session.close()
 
-            if user_is_logged_in:
-                translation_dict = parse_translation_list(bulk_translate_from_db, word, current_user.id)
-                # first() returns the first result, or None if there are no results.
-                print('getting error with Instance <User at 0x7f239efcc1f0> is not bound to a Session')
-                print(current_user)
-                print(current_user.id)
-                user_example = UserExample.query.filter_by(user_id=current_user.id, word=word).first()
+            if bulk_translate_from_db is None and current_user.is_authenticated:
+                print('inside of the bulk translation sideshow')
+                translation_dict = bulk_translate(word, current_user.id)
             else:
-                # If user is not logged in
-                translation_dict = []
+                translation_dict = parse_translation_list(bulk_translate_from_db, word, current_user.id)
+
+            if current_user.is_authenticated:
+                translation_dict_two_letters = convert_translation_dict_to_two_letters(translation_dict)
+                user_example = UserExample.query.filter_by(user_id=current_user.id, word=word).first()
+                db.session.close()
+            else:
                 user_example = None
 
-            db.session.close
-
-        return render_template('definition.html', word=api_return_value, translation_dict=translation_dict, user_example=user_example)
+        return render_template('definition.html', word=api_return_value, translation_dict=translation_dict_two_letters, user_example=user_example)
 
 
 @main.route('/definition', methods=['POST'])
@@ -264,11 +275,19 @@ def lookup():
 @main.route('/translate/', methods=['GET', 'POST'])
 def translate():
     if request.method == 'GET':
+        get_args_lng = request.args.get('lng')
+        print(get_args_lng)
+
+        if get_args_lng is not None:
+            User.query.filter_by(id=current_user.id).update({'lng_recent': get_args_lng})
+            db.session.commit()
+
         # Get the language that the user used most recently
         lng_recent = User.query.filter_by(id=current_user.id).first().lng_recent
 
         # Get the most recent translations from the user
         recent_translations = UserExample.query.filter_by(user_id=current_user.id).filter(UserExample.translation==True).order_by(UserExample.created.desc()).limit(10).all()
+        db.session.close()
 
         mapped_languages = map_users_prefs_onto_langs(generate_language_codes(), current_user.id)
 
@@ -331,7 +350,7 @@ def list(lng):
         page, per_page=current_app.config['WORDS_PER_PAGE'], error_out=False)
     words = pagination.items
 
-    return render_template('list.html', words=words, english=is_english(lng), lng=create_language_dict(lng), endpoint='.list', pagination=pagination, language_codes=mapped_languages)
+    return render_template('list.html', words=words, english=is_english(lng), lng=create_language_dict(lng), endpoint='.list', pagination=pagination, language_codes=mapped_languages, user_id=current_user.id)
 
 
 @main.route('/update_word/<lng>/<id>', methods=['POST'])
@@ -368,7 +387,6 @@ def edit(lng, id):
             definition = 'Temporarily using a try and except to prevent None Type error'
 
         return render_template('edit.html', word=word, word_details=word_details, definition=definition, lng=create_language_dict(lng), is_english=is_english(lng))
-
         # This should just be a redirect to the define page
 
     else:
@@ -385,10 +403,10 @@ def edit(lng, id):
             translation_dict = parse_translation_list(bulk_translate_from_db, user_example.word, current_user.id)
         else:
             # Use the API to bulk translate
-            translation_dict = bulk_translate(word.word, current_user.id)
+            translation_dict = bulk_translate(user_example.word, current_user.id)
             # This returns a list when we actually want a dictionary
             # Save the results to the database
-            record_bulk_translate = create_bulk_translate_dict(word.word, translation_dict)
+            record_bulk_translate = create_bulk_translate_dict(user_example.word, translation_dict)
             db.session.add(record_bulk_translate)
             db.session.commit()
             db.session.close()

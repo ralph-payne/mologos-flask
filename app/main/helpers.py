@@ -166,17 +166,22 @@ def lookup_db_dictionary(word):
         for example in examples_base_query:
             examples_list.append(example.example)
 
+        try:
+            etymology = local_dictionary_result.etymology
+        except:
+            etymology = False
+
         print(f'Results from the local dict for     {word}')
         print(f'Number of definitions:              {len(definitions_list)}')
         print(f'Number of examples:                 {len(examples_list)}')
-        print(f'This is the etymology:              {local_dictionary_result.etymology}')
+        print(f'This is the etymology:              {etymology}')
 
         # Create dictionary and merge results
         word_dict = {
             'word': local_dictionary_result.word,
             'word_id': word_id,
             'pronunciation': local_dictionary_result.pronunciation,
-            'etymology': local_dictionary_result.etymology,
+            'etymology': etymology,
             'definitions': definitions_list,
             'examples': examples_list,
         }
@@ -201,14 +206,16 @@ def translate_api_stopped_on_2020_11_30(src_text, dest_language):
         try:
             result = translator.translate(src_text, src='en', dest=dest_language)
         except Exception as error:
+            
             print(error)
             print(f'Error translating {src_text} into {dest_language}')
             print(result)
             translator = google_translator()
-            sleep(0.5)
+            sleep(0.01)
             pass
 
     return result.text
+
 
 # New Translate API (1 Dec 2020)
 # https://github.com/lushan88a/google_trans_new
@@ -220,15 +227,22 @@ def translate_api(src_text, dest_language):
     if len(dest_language) != 2:
         return None
 
-    while result == None:
+    attempts = 0
+    MAX_ATTEMPTS = 2
+
+    while result == None and attempts < MAX_ATTEMPTS:
         try:
             result = translator.translate(text=src_text, lang_tgt=dest_language)
         except Exception as error:
             print(error)
             print(f'Error translating {src_text} into {dest_language}')
             translator = google_translator()
-            sleep(2)
+            sleep(0.001)
+            attempts += 1
             pass
+
+    if attempts == MAX_ATTEMPTS:
+        result = 'API Error'
 
     return result
      
@@ -350,6 +364,9 @@ def parse_translation_list(bulk_translate_model, word_to_translate, user_id):
     new_personalised_user_dict = {}
     language_codes = generate_language_codes()
 
+    print('95846: Inside of parse_translation_list')
+    print(bulk_translate_model)
+
     # If there isn't a Bulk Translate entry, create one
     if bulk_translate_model is None:
         print(f'Nothing from the Bulk Translate database table for the word: {word_to_translate}')
@@ -406,11 +423,12 @@ def parse_translation_list(bulk_translate_model, word_to_translate, user_id):
             # ERROR = sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: bulk_translate.english
             # SQL: UPDATE bulk_translate SET english=? WHERE bulk_translate.english = ?]
             print(f'looping through {language}: {new_translation}')
-            print(f'About to update the database: {language} {new_translation} 14673247685675')
+            print(f'301: About to update the database: with the language: {language} and translation: {new_translation}')
             # Update database
             BulkTranslate.query.filter_by(english=word_to_translate).update({language: new_translation})
-            print(f'Updated {language} with {new_translation} in Bulk Translate db')
+            print(f'302: Updated {language} with {new_translation} in Bulk Translate db')
             db.session.commit()
+            db.session.expunge_all()
             db.session.close()
 
             # Add to new dictionary

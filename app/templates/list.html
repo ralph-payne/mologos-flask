@@ -4,12 +4,6 @@
 
 {% block page_content %}
 
-    <style>
-        .flag-container {
-            padding-top: 20px;
-        }
-    </style>
-        
     <div class="flag-container">
         {% for language in language_codes %}
             {% if language.active %}
@@ -32,12 +26,12 @@
                     </thead>
                 
                     <tbody>
-                        {% for word in words %}            
+                        {% for user_example in words %}  
                             <tr>
-                                <td><a href="{{ url_for('main.define', word=word.word) }}">{{ word.word }}</a></td>
-                                <td>{{ word.example[0]|upper}}{{word.example[1:] }}</td>
-                                <td><a href="{{ url_for('main.edit', id=word.id, lng=lng.code) }}"><i class="fa fa-edit"></i></a></td>
-                                <td><a href="{{ url_for('main.delete', id=word.id, lng=lng.code ) }}"><i class="fa fa-trash"></i></a></td>
+                                <td><a href="{{ url_for('main.define', word=user_example.word) }}">{{ user_example.word }}</a></td>
+                                <td>{{ user_example.example }}</td>
+                                <td><a href="{{ url_for('main.define', word=user_example.word ) }}"><i class="fa fa-edit"></i></a></td>
+                                <td><a href="{{ url_for('main.delete', id=user_example.id, lng=lng.code ) }}"><i class="fa fa-trash"></i></a></td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -70,10 +64,10 @@
             </div>
         {% endif %}
 
-        {{ macros.pagination_widget(pagination, endpoint=endpoint, lng=lng.code, username="test1234@gmail.com") }}
+        {{ macros.pagination_widget(pagination, endpoint=endpoint, lng=lng.code, user_id=user_id) }}
 
     {% else %}
-        {{ macros.no_saved_words_message(endpoint=endpoint, language=lng.code, is_english=english) }}
+        {{ macros.no_saved_words_message(endpoint=endpoint, language=lng, is_english=english) }}
     {% endif %}
 
 {% endblock %}

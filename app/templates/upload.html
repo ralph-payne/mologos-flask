@@ -6,10 +6,9 @@
 
 {% include 'partials/_flashes.html' %}
 
-Upload your own examples
+<p>Upload your own examples</p>
+<p>Each example should appear on a newline</p>
 <hr>
-Each example should appear on a newline
-
 
 <style>
     .upload-form-grid {
@@ -18,7 +17,7 @@ Each example should appear on a newline
         grid-template-rows: 1fr 6fr 2fr;
         grid-gap: 10px;
     }
-    .upload-1 {
+    .upload-1-language-drop-down{
         grid-column-start: 1;
 		grid-column-end: 4;
     }
@@ -27,6 +26,8 @@ Each example should appear on a newline
         height: 300px;
         width: 600px;
         display: block;
+        padding: 0.5rem;
+        font-size: 1.25rem;
     }
     .upload-examples-btn-wrapper {
         display: flex;
@@ -40,22 +41,37 @@ Each example should appear on a newline
         width: 200px;
         display: block;
     }
+    select {
+        font-size: 1.1rem;
+    }
+    .dropdown-select-942 {
+        min-width: 120px;
+    }
+    .upload-form-container {
+        padding: 20px;
+    }
+    .upload-examples-btn-wrapper {
+        background-color: red;
+    }
+    .upload-examples-btn {
+        color: green;
+    }
 </style>
 
-
+<div class="upload-form-container">
 {% if is_english %}
-<form class="upload-form" action="/upload_english/" method="POST">
+    <form class="upload-form" action="/upload_english/" method="POST">
 {% else %}
-<form class="upload-form" action="/upload_translations/" method="POST">
+    <form class="upload-form" action="/upload_translations/" method="POST">
 {% endif %}
     <input type="hidden" id="most-recent-translation-lang" name="most_recent_translation_lang" value="{{ lng_recent }}">
     <div class="upload-form-grid">
-        <div class="upload-1">
+        <div class="upload-1-language-drop-down">
             <div id="language-select-container" class="language-select-container flex-container" style="display: none;">
                 <div class="inner-lang-select">
                     <input type="hidden" id="usr-recent-lang" value="{{ lng_recent}}">
                     <label for="select-language"><strong>Language</strong></label>
-                    <select name="select_language" id="select-language" onchange="changeHiddenInputToLanguageSelected(this)">
+                    <select name="select_language" class="dropdown-select-942" id="select-language" onchange="changeHiddenInputToLanguageSelected(this)">
                     {% for language in language_codes %}
                         {% if language.active %}
                             <option value="{{ language.code }}">{{ language.lng_eng }}</option>
@@ -65,28 +81,23 @@ Each example should appear on a newline
                 </div>
             </div>
         </div>
-        <div class="upload-2">
+        <div class="upload-2-expressions">
+            <div><p id="upload-2-header">lkahsdf - Write script for load</p></div>
             <textarea type="text" name="upload_text_area" id="upload-text-area" class="upload-text-area"></textarea>
             <div class="upload-examples-btn-wrapper">
-                <button class="btn btn-primary" type="submit">
+                <button class="btn btn-primary upload-examples-btn" type="submit">
                     Upload Examples
-                    {% if is_english %}
-                        engi
-                        {{ is_english }}
-                    {% else %}
-                        forish
-                        {{ is_english }}
-                    {% endif %}
                 </button>
             </div>
         </div>
-        <div class="upload-3">
+        <div class="upload-3-words">
+            <div><p id="upload-3-header">lkahafsdfsadsdf</p></div>
             <textarea name="upload_target_word_area_12321" type="text" class="optional-target-words-text-area"></textarea>
         </div>
 
     </div>
 </form>
-
+</div>
 
 <!-- Script which grabs most recent language and updates the select value -->
 <script>
@@ -123,8 +134,20 @@ Each example should appear on a newline
     const changeHiddenInputToLanguageSelected = (element) => {
         let hiddenElementToSendToServer = document.getElementById("most-recent-translation-lang").value;
 
+        // Assign the hidden element the value of the most recently used language
         hiddenElementToSendToServer = element.value;
 
+        // Grab the value of the language selected
+        languageSelected = element.options[element.selectedIndex].text
+
+        // Update the headings
+        if (languageSelected === "English") {
+            document.getElementById("upload-2-header").innerHTML = "Example Sentences";
+            document.getElementById("upload-3-header").innerHTML = "Target Words";
+        } else {
+            document.getElementById("upload-2-header").innerHTML = "English";
+            document.getElementById("upload-3-header").innerHTML = languageSelected;
+        }
     }
 </script>
 

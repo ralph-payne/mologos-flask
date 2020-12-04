@@ -231,6 +231,9 @@ table {
   -webkit-box-sizing: border-box;
   box-sizing: border-box; }
 
+a {
+  cursor: pointer; }
+
 /* 1: NAVBAR */
 .navbar-grid-container .logo {
   width: 180px; }
@@ -322,54 +325,30 @@ table {
   grid-gap: 1rem; }
 
 /* 4: DEFINITION */
-.definition-container > div {
+.definition-page-container > div, .edit-page-container > div {
   padding: 0.5rem 0rem; }
 
-.definition-container .bullet-points {
-  list-style-type: square;
-  padding: 0px; }
-
-.definition-container .add-dict-btn-wrapper {
+.add-dict-btn-wrapper {
   padding: 1rem 0rem; }
 
-/* Used for definition.html and edit.html */
-.definition-example textarea {
-  text-rendering: auto;
-  letter-spacing: normal;
-  word-spacing: normal;
-  text-transform: none;
-  text-indent: 0px;
-  text-shadow: none;
-  display: inline-block;
-  text-align: start;
-  appearance: textarea;
-  resize: auto;
-  cursor: text;
-  margin: 0rem;
-  border-width: 2px;
-  border-style: solid;
-  padding: 2px;
-  width: 900px;
-  height: 100px; }
-
-.edit-page-example textarea {
-  text-rendering: auto;
-  letter-spacing: normal;
-  word-spacing: normal;
-  text-transform: none;
-  text-indent: 0px;
-  text-shadow: none;
-  display: inline-block;
-  text-align: start;
-  appearance: textarea;
-  resize: auto;
-  cursor: text;
-  margin: 0rem;
-  border-width: 2px;
-  border-style: solid;
-  padding: 2px;
-  width: 600px;
-  height: 100px; }
+/* Used for the Definition and Edit Pages */
+.definition-example-text-box-container {
+  padding-left: 0.75rem; }
+  .definition-example-text-box-container textarea {
+    border-style: solid;
+    border-width: 2px;
+    cursor: text;
+    display: inline-block;
+    font-size: 1.25rem;
+    height: 100px;
+    letter-spacing: normal;
+    margin: 0rem;
+    padding: 2px;
+    resize: auto;
+    text-align: start;
+    text-rendering: auto;
+    width: 900px;
+    word-spacing: normal; }
 
 /* 5: TRANSLATE */
 .translate-grid {
@@ -465,60 +444,7 @@ table {
     white-space: nowrap; }
 
 /* 7: EDIT */
-.edit-grid {
-  display: grid;
-  grid-template-columns: 3fr 4fr;
-  grid-template-rows: 1fr 4fr 2fr 3fr;
-  grid-gap: 0.25rem;
-  height: 700px;
-  /* Tooltip text */
-  /* Show tooltip text when you mouse over the tooltip container */ }
-  .edit-grid a {
-    cursor: pointer;
-    display: inline-block;
-    height: 100%; }
-  .edit-grid .tooltip-container {
-    position: relative;
-    display: inline-block;
-    padding: 0.5rem; }
-  .edit-grid .tooltip-container .tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    padding: 5px 0;
-    border-radius: 6px;
-    position: absolute;
-    z-index: 1; }
-  .edit-grid .tooltip-container:hover .tooltiptext {
-    visibility: visible; }
-  .edit-grid .icon-container {
-    height: 100%;
-    display: flex;
-    padding: 0.5rem;
-    justify-content: space-around;
-    flex-direction: column; }
-  .edit-grid .statistics-container {
-    height: 100%;
-    display: flex;
-    padding: 0.5rem;
-    justify-content: space-around;
-    flex-direction: column; }
-  .edit-grid .edit-page-example {
-    min-width: 500px;
-    border: 1px solid #888;
-    outline: none;
-    resize: none;
-    overflow: auto; }
-  .edit-grid .trash-extra-padding {
-    /* Extra padding as trash icon is slightly smaller */
-    padding: 0px 3px; }
-
-/* FOREIGN ACCENTS KEYBOARD */
-#keyboard-container {
-  /* temp inline */ }
-
+/* All of Edit CSS is inline at the moment */
 /* 8: CHALLENGE */
 .table-challenge-foreign {
   display: grid;
@@ -645,3 +571,125 @@ table {
 .navbar-link-active {
   background-color: #48954e;
   color: #fff; }
+
+.no-saved-words-message-div {
+  padding-top: 30px; }
+
+/* Added on 5 December 2020 */
+.definition-page-container {
+  min-height: 500px; }
+
+.defined-word-content-header {
+  font-size: 2.5rem;
+  font-weight: 600; }
+
+.word-pronunication-ipa-span-content {
+  font-size: 1.25rem; }
+
+.definition-page-header-two-container {
+  padding-top: 1.25rem;
+  border-top: 1px solid #000; }
+
+.definition-page-header-two {
+  font-weight: 350;
+  font-size: 1.35rem; }
+
+.ordered-and-unordered-lists {
+  padding-left: 2rem; }
+
+.left-indent-definition-page {
+  padding-left: 0.75rem; }
+
+.list-item-definition-page-bullets {
+  list-style-type: square; }
+
+.translation-table-grid-972 {
+  display: grid;
+  grid-gap: 0.1rem;
+  grid-template-columns: 55px 400px;
+  padding: 0.25rem 0.75rem; }
+
+.translation-table-grid-item {
+  padding: 0.1rem;
+  background: #f4f4f4;
+  border: 1px solid #ccc;
+  text-align: left;
+  font-weight: 500;
+  font-size: 1.1rem; }
+
+.add-to-or-update-dict-btn-wrapper {
+  padding: 0.75rem; }
+
+.trash-extra-padding {
+  padding: 0px 3px;
+  /* Extra padding as trash icon is slightly smaller */ }
+
+.tooltip-container:hover .tooltiptext {
+  visibility: visible;
+  /* Show tooltip text when you mouse over the tooltip container */ }
+
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  padding: 0.5rem; }
+
+.tooltip-container .tooltiptext {
+  visibility: hidden;
+  background-color: #0F222D;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  width: 120px;
+  /* Tooltip text */
+  top: 70%;
+  left: 50%;
+  margin-left: -60px; }
+
+.success-fail-stats-container {
+  width: 60px;
+  display: flex;
+  margin: auto;
+  align-items: center;
+  /* Vertically aligns */
+  justify-content: center;
+  /* Horizontally aligns */
+  background-color: yellow;
+  border: 1px solid brown;
+  border-radius: 10px; }
+
+.word-success {
+  color: green; }
+
+.word-fail {
+  color: red; }
+
+.defined-word-content-header {
+  font-size: 2.5rem;
+  font-weight: 600; }
+
+/* 7: EDIT */
+.edit-grid {
+  display: grid;
+  grid-template-columns: 3fr 4fr;
+  grid-template-rows: 2fr 8fr 2fr 3fr;
+  grid-gap: 0.25rem;
+  height: 700px;
+  grid-row-gap: 50px; }
+
+.edit-page-add-button {
+  cursor: pointer; }
+
+.edit-page-translation-table-grid-972 {
+  display: grid;
+  grid-gap: 0.1rem;
+  grid-template-columns: 60px 150px; }
+
+.translation-table-grid-item-973 {
+  padding: 0.1rem;
+  background: #f4f4f4;
+  text-align: left;
+  font-weight: 500;
+  font-size: 1.1rem; }
