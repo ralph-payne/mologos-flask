@@ -28,8 +28,8 @@ from .starting_data import starting_data
 
 
 
-@main.route('/olki_231/<lng>/<id>/<word>/<num849>', methods=['GET'])
-def olki_231(lng, id, word, num849):
+@main.route('/olki_231/<lng>/<id>/<endpoint_76>/<num849>/', methods=['GET'])
+def olki_231(lng, id, endpoint_76, num849):
     if int(num849) == 0:
         is_ignored = UserExample.query.filter_by(id=id).first().ignored
 
@@ -49,7 +49,16 @@ def olki_231(lng, id, word, num849):
     db.session.commit()
     db.session.close()
 
-    return redirect(url_for('main.define', word=word))
+    if endpoint_76 == 'main.challenge':
+        return redirect(url_for('main.challenge', lng=lng))
+
+    if endpoint_76 == 'main.edit':
+        return redirect(url_for('main.edit', lng=lng, id=id))
+
+    else:
+        word = UserExample.query.filter_by(id=id).word
+        db.session.close()
+        return redirect(url_for('main.define', word=word))
 
 
 @main.route('/hard_delete')
@@ -284,9 +293,10 @@ def translate():
 
         # Get the language that the user used most recently
         lng_recent = User.query.filter_by(id=current_user.id).first().lng_recent
+        max_size = current_app.config['RECENT_TRANSLATIONS_LIMIT']
 
         # Get the most recent translations from the user
-        recent_translations = UserExample.query.filter_by(user_id=current_user.id).filter(UserExample.translation==True).order_by(UserExample.created.desc()).limit(10).all()
+        recent_translations = UserExample.query.filter_by(user_id=current_user.id).filter(UserExample.translation==True).order_by(UserExample.created.desc()).limit(max_size).all()
         db.session.close()
 
         mapped_languages = map_users_prefs_onto_langs(generate_language_codes(), current_user.id)
@@ -465,6 +475,8 @@ def challenge(lng):
                 'user_guess': guesses[i],
                 'result': result_bool,
                 'example': metadata.example, # Either English Example or Foriegn Translation
+                'fail': metadata.fail,
+                'success': metadata.success,
                 'word_in_english': ''
             }
 
@@ -477,6 +489,7 @@ def challenge(lng):
 
     else: # GET (Show Challenge Page)
         mapped_languages = map_users_prefs_onto_langs(generate_language_codes(), current_user.id)
+        max_size_challenge = current_app.config['MAX_SIZE_CHALLENGE']
 
         # English view differs from foreign view
         if (is_english(lng)):
@@ -488,7 +501,7 @@ def challenge(lng):
             split_sentences = []
 
             # Start loop and add words until the list is at the maximum size
-            while len(words) <= current_app.config['MAX_SIZE_CHALLENGE'] and len(words_from_db) != 0:
+            while len(words) <= max_size_challenge and len(words_from_db) != 0:
                 word = random.choice(words_from_db)
 
                 # After choosing a random word, retrieve the example sentence
@@ -518,9 +531,6 @@ def challenge(lng):
                         'second_half_sentence': second_half_sentence
                     }
 
-                    # success
-                    # fail
-
                     split_sentences.append(split_sentence)
 
                     # Remove word from list 1 (bucket of words) to avoid duplicates
@@ -535,7 +545,7 @@ def challenge(lng):
             return render_template('challenge.html', words=words, lng=create_language_dict(lng), english=is_english(lng), language_codes=mapped_languages, endpoint='.challenge', split_sentences=split_sentences)
 
         else: # Foreign Language Challenge
-            words = UserExample.query.filter_by(user_id=current_user.id, dst=lng).all()
+            words = UserExample.query.filter_by(user_id=current_user.id, dst=lng).limit(max_size_challenge).all()
             return render_template('challenge.html', words=words, lng=create_language_dict(lng), english=is_english(lng), language_codes=mapped_languages, endpoint='.challenge')
 
 
@@ -544,8 +554,8 @@ def challenge(lng):
 @main.route('/upload_translations/', methods=['POST'])
 @login_required
 def upload_translations():
-        list_of_eng_words_for_bulk_upload = request.form.get('upload_text_area').strip()
-        upload_target_word_area_12341 = request.form.get('upload_target_word_area_12321').strip()
+        list_of_eng_words_for_bulk_upload = request.form.get('upload_text_area_left').strip()
+        upload_target_word_right_84 = request.form.get('upload_target_word_right').strip()
         uploaded_language = request.form.get('select_language')
         user_id = current_user.id
 
@@ -558,8 +568,8 @@ def upload_translations():
             return redirect(url_for('main.upload'))
 
         # Check the number of target words is the same
-        num_foreign_words_to_upload = len(upload_target_word_area_12341.split('\n'))
-        list_of_foreign_words_split = upload_target_word_area_12341.split('\n')
+        num_foreign_words_to_upload = len(upload_target_word_right_84.split('\n'))
+        list_of_foreign_words_split = upload_target_word_right_84.split('\n')
 
         # If target words is blank, skip
         if num_foreign_words_to_upload == 0:
@@ -576,11 +586,11 @@ def upload_translations():
         # We can then loop through them all and add them to the database
         for i in range(num_eng_words_to_upload):
             target_word_to_add_to_db_828 = list_of_foreign_words_split[i].strip()
-            foreign_word8137_to_add_to_db = list_of_english_words_split[i]
+            foreign_word8137_to_add_to_db = list_of_english_words_split[i].strip()
 
             # TODO => Word ID is redundant? Or is it?? Check this!
             # You will clobber any previously loaded User Examples so you should find a work around for that
-            record_user_example = UserExample(example=foreign_word8137_to_add_to_db, word=target_word_to_add_to_db_828, word_id=None, user_id=current_user.id, translation=True, src='en', dst=uploaded_language)
+            record_user_example = UserExample(example=target_word_to_add_to_db_828, word=foreign_word8137_to_add_to_db, word_id=None, user_id=current_user.id, translation=True, src='en', dst=uploaded_language)
             db.session.add(record_user_example)
             
         db.session.commit()
@@ -595,8 +605,8 @@ def upload_translations():
 @login_required
 def upload_english():
     if request.method == 'POST':
-        uploaded_text = request.form.get('upload_text_area').strip()
-        upload_target_word_area_12321 = request.form.get('upload_target_word_area_12321').strip()
+        uploaded_text = request.form.get('upload_text_area_left').strip()
+        upload_target_word_right = request.form.get('upload_target_word_right').strip()
         uploaded_language = request.form.get('select_language')
 
         # Count number of newlines_92930
@@ -609,8 +619,8 @@ def upload_english():
             return redirect(url_for('main.upload'))
 
         # Check the number of target words is the same
-        length_target_words_8327 = len(upload_target_word_area_12321.split('\n'))
-        split_list_newlin3s_1092124 = upload_target_word_area_12321.split('\n')
+        length_target_words_8327 = len(upload_target_word_right.split('\n'))
+        split_list_newlin3s_1092124 = upload_target_word_right.split('\n')
 
         print('below asdflhe 2814')
         print(split_list_newlin3s_1092124)

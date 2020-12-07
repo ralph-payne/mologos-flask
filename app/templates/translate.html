@@ -7,19 +7,14 @@
 {% include 'partials/_flashes.html' %}
 
 <style>
-.dropdown-select-942 {
-    min-width: 120px;
-}
 .previous-translations-grid {
-    background-color: #f9a8e3;
+    padding-top: 20px;
     width: 100%;
 }
 .table-row-recent-translation {
-    background-color: green;
     width: 100%;
     display: grid;
     grid-template-columns: 3fr 1fr 3fr;
-    border: 1px dotted blue;
     height: 60px;
 }
 .table-cell-symbol {
@@ -27,33 +22,17 @@
     height: 100%;
     display: flex;
     margin: auto;
-
-    /* Vertically aligns */
-    align-items: center;
-    /* Horizontally aligns */
-    justify-content: center; 
-
-    background-color: yellow;
-    border: 1px solid brown;
+    align-items: center; /* Vertically aligns */
+    justify-content: center; /* Horizontally aligns */
     border-radius: 10px;
 }   
 </style>
 
 <!-- Translate Container -->
     <div class="translate-grid">
-        <div id="language-select-container" class="language-select flex-container" style="display: none;">
-            <div class="inner-lang-select">
-                <input type="hidden" id="usr-recent-lang" value="{{ lng_recent }}">
-                <label for="select-language"><strong>Translate to:</strong></label>
-                <select name="select_language" class="dropdown-select-942" id="select-language">
-                    {% for language in language_codes %}
-                        {% if language.active %}
-                            <option value="{{ language.code }}">{{ language.lng_eng }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-            </div>
-        </div>     
+
+        {{ macros.select_language_dropdown(language_codes, lng_recent) }}
+
         <div class="box-1 flex-container">
             {% if input %}
             <textarea class="translate-box" id="text-to-translate">{{ input }}</textarea>
@@ -137,13 +116,6 @@
             document.getElementById("form-add-translation-to-db").submit();
         }
     }
-</script>
-
-
-<!-- Script to change the hidden value of the destination language -->
-<script type="text/javascript">
-    // Note 2: Find a way of fixing the Edge Case: A user translates to Latin and then chagnes their User Preferences so that Latin is no longer in their languages. Therefore, you won't be able to find it on the select
-    // Note 4: http://localhost:5000/definition/wolf doesn't translate the words you want
 </script>
 
 

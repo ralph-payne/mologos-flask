@@ -44,17 +44,11 @@
     select {
         font-size: 1.1rem;
     }
-    .dropdown-select-942 {
-        min-width: 120px;
-    }
     .upload-form-container {
         padding: 20px;
     }
     .upload-examples-btn-wrapper {
         background-color: red;
-    }
-    .upload-examples-btn {
-        color: green;
     }
 </style>
 
@@ -67,23 +61,11 @@
     <input type="hidden" id="most-recent-translation-lang" name="most_recent_translation_lang" value="{{ lng_recent }}">
     <div class="upload-form-grid">
         <div class="upload-1-language-drop-down">
-            <div id="language-select-container" class="language-select-container flex-container" style="display: none;">
-                <div class="inner-lang-select">
-                    <input type="hidden" id="usr-recent-lang" value="{{ lng_recent}}">
-                    <label for="select-language"><strong>Language</strong></label>
-                    <select name="select_language" class="dropdown-select-942" id="select-language" onchange="changeHiddenInputToLanguageSelected(this)">
-                    {% for language in language_codes %}
-                        {% if language.active %}
-                            <option value="{{ language.code }}">{{ language.lng_eng }}</option>
-                        {% endif %}
-                    {% endfor %}
-                    </select>
-                </div>
-            </div>
+            {{ macros.select_language_dropdown(language_codes, lng_recent) }}
         </div>
         <div class="upload-2-expressions">
-            <div><p id="upload-2-header">lkahsdf - Write script for load</p></div>
-            <textarea type="text" name="upload_text_area" id="upload-text-area" class="upload-text-area"></textarea>
+            <div><p id="upload-2-header">Placeholder Header</p></div>
+            <textarea name="upload_text_area_left" id="upload-text-area" class="upload-text-area" type="text"></textarea>
             <div class="upload-examples-btn-wrapper">
                 <button class="btn btn-primary upload-examples-btn" type="submit">
                     Upload Examples
@@ -92,14 +74,40 @@
         </div>
         <div class="upload-3-words">
             <div><p id="upload-3-header">lkahafsdfsadsdf</p></div>
-            <textarea name="upload_target_word_area_12321" type="text" class="optional-target-words-text-area"></textarea>
+            <textarea name="upload_target_word_right" class="optional-target-words-text-area" type="text"></textarea>
         </div>
 
     </div>
 </form>
 </div>
 
-<!-- Script which grabs most recent language and updates the select value -->
+
+<!-- Script which listens for when the select element gets changed and then updates the hidden value -->
+<script>
+    const changeHiddenInputToLanguageSelectedAndUpdateHeaders = () => {
+        let hiddenElementToSendToServer = document.getElementById("most-recent-translation-lang").value;
+
+        selectLanguage = document.getElementById("select-language");
+
+        // Assign the hidden element the value of the most recently used language
+        hiddenElementToSendToServer = selectLanguage.value;
+
+        // Grab the value of the language selected
+        languageSelected = selectLanguage.options[selectLanguage.selectedIndex].text
+
+        // Update the headings
+        if (languageSelected === "English") {
+            document.getElementById("upload-2-header").innerHTML = "Example Sentences";
+            document.getElementById("upload-3-header").innerHTML = "Target Words";
+        } else {
+            document.getElementById("upload-2-header").innerHTML = "English";
+            document.getElementById("upload-3-header").innerHTML = languageSelected;
+        }
+    }
+</script>
+
+
+<!-- Script which grabs the most recent language the user has used and updates the select value -->
 <script>
     // Get Most recent language from hidden input
     const mostRecentLanguage = document.getElementById("most-recent-translation-lang").value;
@@ -122,32 +130,22 @@
     }
 
     // Call function
-    selectFromOptions("select-language", mostRecentLanguage)
+    selectFromOptions("select-language", mostRecentLanguage);
 
     // Display the block which was previously hidden (This prevents stutterly loading)
     document.getElementById("language-select-container").style.display = "block";
+
+    changeHiddenInputToLanguageSelectedAndUpdateHeaders();
 </script>
 
 
-<!-- Script which listens for when the select element gets changed and then updates the hidden value -->
+<!-- Script which listens for changes to the select element and then updates the headings -->
 <script>
-    const changeHiddenInputToLanguageSelected = (element) => {
-        let hiddenElementToSendToServer = document.getElementById("most-recent-translation-lang").value;
+    selectLanguage = document.getElementById("select-language");
 
-        // Assign the hidden element the value of the most recently used language
-        hiddenElementToSendToServer = element.value;
-
-        // Grab the value of the language selected
-        languageSelected = element.options[element.selectedIndex].text
-
-        // Update the headings
-        if (languageSelected === "English") {
-            document.getElementById("upload-2-header").innerHTML = "Example Sentences";
-            document.getElementById("upload-3-header").innerHTML = "Target Words";
-        } else {
-            document.getElementById("upload-2-header").innerHTML = "English";
-            document.getElementById("upload-3-header").innerHTML = languageSelected;
-        }
+    selectLanguage.onchange = () => {
+        console.log('changed');
+        changeHiddenInputToLanguageSelectedAndUpdateHeaders();
     }
 </script>
 

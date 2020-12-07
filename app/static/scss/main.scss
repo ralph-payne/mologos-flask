@@ -288,10 +288,10 @@ a {
 
 
 /* 6: LIST */
-.my-words-table table {
+.my-words-table-list-page table {
     margin-bottom: 1rem;
 
-    grid-template-columns: 3fr 8fr 1fr 1fr;
+    grid-template-columns: 3fr 8fr 1fr 1fr 1fr;
 
     th,
     td {
@@ -337,13 +337,6 @@ a {
 
 .challenge-form {
     height: 100%;
-}
-
-.submit-btn-wrapper-challenge {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
 }
 
 
@@ -410,7 +403,11 @@ a {
 /* PAGINATION */
 .pagination-wrapper-inner {
     display: flex;
+    position: absolute;
     justify-content: center;
+    bottom: 100px; bottom: 100px;
+    margin: 0 calc(0.5 * 600px);
+    padding-bottom: 10px;
 }
 
 .list-style-none {
@@ -583,11 +580,11 @@ a {
     border-radius: 10px;
 }
 
-.word-success {
-    color: green;
+.word-success-green {
+    color: #48954e;
 }
 
-.word-fail {
+.word-fail-red {
     color: red;
 }
 
@@ -670,4 +667,40 @@ a {
 
 .flag-container {
     padding-top: 20px;
+}
+
+.word-success-green {
+    color: #48954e;
+}
+
+.word-fail-red {
+    color: #c41e3a;
+}
+
+/* Used for Submit Buttons and Pagination */
+.absolute-bottom-and-center-btn-outer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+}
+
+.dropdown-select-min-width-942 {
+    min-width: 120px;
+}
+
+.submit-btn-select-target-word {
+    cursor: pointer;
+    background-color: #48954e;
+    color: #fff;
+    padding: 0.5rem 1.5rem;
+    border-radius: .35rem;             
+}
+
+.upload-examples-btn {
+    cursor: pointer; /* Upload Page */
+    background-color: $primary-color;
+    color: #fff;
+    padding: 0.5rem 1.5rem;
+    border-radius: .35rem;
 }

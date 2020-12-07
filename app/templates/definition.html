@@ -119,26 +119,15 @@
         border-radius: 6px;
         position: absolute;
         z-index: 1;
-
         width: 120px;
         top: 70%;
         left: 50%;
         margin-left: -60px
-    }
-
-    .word-success {
-        color: green;
-    }
-
-    .word-fail {
-        color: red;
-    }            
+    }          
 </style>
 
 
-
 <form action="{{ url_for('main.add', word=word.word) }}" method="POST">
-
 
 <div class="definition-page-container">
     <div class="word-pron-and-symbols-container">
@@ -153,7 +142,7 @@
         <div class="right-40-word-pron-symbols">
             <div class="eye-star-bin-container">
                 {% if user_example %}
-                    {{ macros.eye_star_bin(user_example, 'en') }}
+                    {{ macros.eye_star_bin(user_example, 'en', 'main.define') }}
                 {% endif %}
             </div>
         </div>

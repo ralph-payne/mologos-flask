@@ -153,3 +153,6 @@ env.md
 
 # Coverage tests
 tmp/
+
+migrations/
+versions/

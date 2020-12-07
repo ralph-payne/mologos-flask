@@ -1,7 +1,4 @@
-{% extends "base.html" %}
-{% block title %}: Edit {{ word.word }} {% endblock %}
-
-{% block page_content %}
+{% extends "base.html" %}{% block title %}: Edit {{ word.word }} {% endblock %}{% block page_content %}
 
 <form action="{{ url_for('main.update_word', id=word.id, lng=lng.code) }}" method="POST">
     <div class="edit-page-container">
@@ -12,12 +9,13 @@
                 </p>
                     {{ lng.lng_src }}
             </div>
-
         </div>
 
         <div>
             <div class="icon-container">
-                {{ macros.eye_star_bin(word, lng.code) }}
+                {{ macros.delete_trash_icon(word, lng) }} 
+                {{ macros.eye_symbol_hide_word(word, lng, False, 'main.edit' ) }}
+                {{ macros.star_symbol(word, lng, False, 'main.edit' ) }}
             </div>
         </div>
 
@@ -64,34 +62,6 @@
 
     </div>
 </form>
-
-<!-- Script for Changing Color of Star and Eye-->
-<script type="text/javascript">
-    let starBoolean = document.getElementById('star-boolean')
-    let hideBoolean = document.getElementById('eye-boolean')
-
-    function toggleColor(e) {
-        // Remove style if it already has it
-        if (e.classList.contains("icon-selected")) {
-            e.classList.remove("icon-selected");
-            // Change the value of the hidden input to zero
-            if (e.classList.contains("fa-eye-slash")) {
-                hideBoolean.value = 0;
-            } else {
-                starBoolean.value = 0;
-            }
-            
-        } else {
-            e.classList.add("icon-selected");
-
-            if (e.classList.contains("fa-eye-slash")) {
-                hideBoolean.value = 1;
-            } else {
-                starBoolean.value = 1;
-            }
-        }
-    }
-</script>
 
 <script type="text/javascript" src="{{ url_for('static', filename='js/add-accent-to-text-area.js') }}"></script>
 

@@ -23,39 +23,41 @@
 
 <!-- PAGINATION MACRO -->
 {% macro pagination_widget(pagination, endpoint, lng, fragment='') %}
-<div class="pagination-wrapper-inner">
-    <ul class="list-style-none">
-        <li{% if not pagination.has_prev %} class="disabled" {% endif %}>
-            <a class="raquo-and-laquo"
-                href="{% if pagination.has_prev %}{{ url_for(endpoint, lng=lng, page=pagination.prev_num, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
-                &laquo;
-            </a>
-            </li>
-            {% for p in pagination.iter_pages() %}
-            {% if p %}
-            {% if p == pagination.page %}
-            <li>
-                <a class="pagination-page-link pagination-active"
-                    href="{{ url_for(endpoint, lng=lng, page = p, **kwargs) }}{{ fragment }}">{{ p }}</a>
-            </li>
-            {% else %}
-            <li>
-                <a class="pagination-page-link"
-                    href="{{ url_for(endpoint, lng=lng, page = p, **kwargs) }}{{ fragment }}">{{ p }}</a>
-            </li>
-            {% endif %}
-            {% else %}
-            <li class="pagination-disabled"><a href="#">&hellip;</a></li>
-            {% endif %}
-            {% endfor %}
-            <li{% if not pagination.has_next %} class="disabled" {% endif %}>
+<div class="absolute-bottom-and-center-btn-outer-container">
+    <div class="pagination-wrapper-inner">
+        <ul class="list-style-none">
+            <li{% if not pagination.has_prev %} class="disabled" {% endif %}>
                 <a class="raquo-and-laquo"
-                    href="{% if pagination.has_next %}{{ url_for(endpoint, lng=lng, page=pagination.next_num, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
-                    &raquo;
+                    href="{% if pagination.has_prev %}{{ url_for(endpoint, lng=lng, page=pagination.prev_num, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
+                    &laquo;
                 </a>
-            </li>
-    </ul>
-</div>
+                </li>
+                {% for p in pagination.iter_pages() %}
+                {% if p %}
+                {% if p == pagination.page %}
+                <li>
+                    <a class="pagination-page-link pagination-active"
+                        href="{{ url_for(endpoint, lng=lng, page = p, **kwargs) }}{{ fragment }}">{{ p }}</a>
+                </li>
+                {% else %}
+                <li>
+                    <a class="pagination-page-link"
+                        href="{{ url_for(endpoint, lng=lng, page = p, **kwargs) }}{{ fragment }}">{{ p }}</a>
+                </li>
+                {% endif %}
+                {% else %}
+                <li class="pagination-disabled"><a href="#">&hellip;</a></li>
+                {% endif %}
+                {% endfor %}
+                <li{% if not pagination.has_next %} class="disabled" {% endif %}>
+                    <a class="raquo-and-laquo"
+                        href="{% if pagination.has_next %}{{ url_for(endpoint, lng=lng, page=pagination.next_num, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
+                        &raquo;
+                    </a>
+                </li>
+        </ul>
+    </div>
+</div>    
 {% endmacro %}
 
 
@@ -90,15 +92,15 @@
 
 
 <!-- EYE STAR BIN MACRO -->
-{% macro eye_star_bin(word, lng_code) %}
+{% macro eye_star_bin(word, lng_code, endpoint_76) %}
 <div class="tooltip-container">
-    <a href="{{ url_for('main.olki_231', id=word.id, lng=lng_code, word=word.word, num849=0) }}"><i class="fa fa-eye-slash fa-2x {% if word.ignored %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
+    <a href="{{ url_for('main.olki_231', id=word.id, lng=lng_code, endpoint_76=endpoint_76,num849=0) }}"><i class="fa fa-eye-slash fa-2x {% if word.ignored %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
     <input type="hidden" id="eye-boolean" name="eye_boolean" value="0">
     <span class="tooltiptext">Hide From Challenges</span>
 </div>
 
 <div class="tooltip-container">
-    <a href="{{ url_for('main.olki_231', id=word.id, lng=lng_code, word=word.word, num849=1) }}"><i class="fa fa-star fa-2x {% if word.starred %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
+    <a href="{{ url_for('main.olki_231', id=word.id, lng=lng_code, endpoint_76=endpoint_76, num849=1) }}"><i class="fa fa-star fa-2x {% if word.starred %}icon-selected{% endif %}" onclick="toggleColor(this)"></i></a>
     <input type="hidden" id="star-boolean" name="star_boolean" value="{% if word.starred %}1{% else %}0{% endif %}">
     <span class="tooltiptext">Mark as Important</span>
 </div>
@@ -111,11 +113,62 @@
 <div class="tooltip-container">
     <div class="success-fail-stats-container">
         <a href="{{ url_for('main.challenge', lng=lng_code) }}">
-            <span class="word-success">{{ word.success }}</span>
+            <span class="word-success-green">{{ word.success }}</span>
             v
-            <span class="word-fail">{{ word.fail }}</span>
+            <span class="word-fail-red">{{ word.fail }}</span>
         </a>
     </div>
     <span class="tooltiptext">Statistics</span>
+</div>
+{% endmacro %}
+
+
+{% macro eye_symbol_hide_word(word, language, tooltip_boolean, endpoint_23) %}
+<div class="tooltip-container">
+    <a href="{{ url_for('main.olki_231', id=word.id, lng=language.code, num849=0, endpoint_76=endpoint_23) }}">
+        <i class="fa fa-eye-slash fa-2x {% if word.ignored %}icon-selected{% endif %}"></i></a>
+    <input type="hidden" id="eye-boolean" name="eye_boolean" value="0">
+    {% if tooltip_boolean %}<span class="tooltiptext">Hide From Challenges</span>{% endif %}
+</div>
+{% endmacro %}
+
+
+{% macro star_symbol(word, language, tooltip_boolean, endpoint_23) %}
+<div class="tooltip-container">
+    <a href="{{ url_for('main.olki_231', id=word.id, lng=language.code, num849=1, endpoint_76=endpoint_23) }}">
+        <i class="fa fa-star fa-2x {% if word.starred %}icon-selected{% endif %}"></i>
+    </a>
+    <input type="hidden" id="star-boolean" name="star_boolean" value="{% if word.starred %}1{% else %}0{% endif %}">
+    {% if tooltip_boolean %}<span class="tooltiptext">Mark as Important</span>{% endif %}
+</div>
+{% endmacro %}
+
+
+{% macro delete_trash_icon(word, language, tooltip_boolean, big) %}
+<div class="tooltip-container">
+    <a href="{{ url_for('main.delete', id=word.id, lng=language.code) }}"><i class="fa fa-trash {% if big %}fa-2x{% endif %}"></i></a>
+    {% if tooltip_boolean %}<span class="tooltiptext">Delete</span>{% endif %}
+</div>
+{% endmacro %}
+
+
+{% macro success_and_fail_statistics(word) %}
+<span class="word-success-green">{{ word.success }}</span> v <span class="word-fail-red">{{ word.fail }}</span>
+{% endmacro %}
+
+
+{% macro select_language_dropdown(language_codes, lng_recent) %}
+<div id="language-select-container" class="language-select flex-container" style="display: none;">
+    <div class="inner-lang-select">
+        <input type="hidden" id="usr-recent-lang" value="{{ lng_recent }}">
+        <label for="select-language"><strong>Translate to:</strong></label>
+        <select name="select_language" class="dropdown-select-min-width-942" id="select-language">
+            {% for language in language_codes %}
+                {% if language.active %}
+                    <option value="{{ language.code }}">{{ language.lng_eng }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
 </div>
 {% endmacro %}

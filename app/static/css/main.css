@@ -44,7 +44,7 @@ a {
   text-decoration: none; }
 
 .link-color {
-  color: green;
+  color: #48954e;
   background-color: transparent;
   text-decoration: none; }
   .link-color:hover {
@@ -324,7 +324,7 @@ a {
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 1rem; }
 
-/* 4: DEFINITION */
+/* ?? DEFINITION and EDIT */
 .definition-page-container > div, .edit-page-container > div {
   padding: 0.5rem 0rem; }
 
@@ -341,14 +341,12 @@ a {
     display: inline-block;
     font-size: 1.25rem;
     height: 100px;
-    letter-spacing: normal;
     margin: 0rem;
     padding: 2px;
     resize: auto;
     text-align: start;
     text-rendering: auto;
-    width: 900px;
-    word-spacing: normal; }
+    width: 900px; }
 
 /* 5: TRANSLATE */
 .translate-grid {
@@ -424,11 +422,11 @@ a {
   height: 2rem; }
 
 /* 6: LIST */
-.my-words-table table {
+.my-words-table-list-page table {
   margin-bottom: 1rem;
-  grid-template-columns: 3fr 8fr 1fr 1fr; }
-  .my-words-table table th,
-  .my-words-table table td {
+  grid-template-columns: 3fr 8fr 1fr 1fr 1fr; }
+  .my-words-table-list-page table th,
+  .my-words-table-list-page table td {
     padding: 15px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -458,12 +456,6 @@ a {
 
 .challenge-form {
   height: 100%; }
-
-.submit-btn-wrapper-challenge {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50px; }
 
 /* 9: RESULTS */
 .results-table-english table {
@@ -510,7 +502,12 @@ a {
 /* PAGINATION */
 .pagination-wrapper-inner {
   display: flex;
-  justify-content: center; }
+  position: absolute;
+  justify-content: center;
+  bottom: 100px;
+  bottom: 100px;
+  margin: 0 calc(0.5 * 600px);
+  padding-bottom: 10px; }
 
 .list-style-none {
   list-style: none;
@@ -618,7 +615,8 @@ a {
   font-size: 1.1rem; }
 
 .add-to-or-update-dict-btn-wrapper {
-  padding: 0.75rem; }
+  padding: 0.75rem;
+  /* Used for Definition and Edit Page */ }
 
 .trash-extra-padding {
   padding: 0px 3px;
@@ -660,10 +658,10 @@ a {
   border: 1px solid brown;
   border-radius: 10px; }
 
-.word-success {
-  color: green; }
+.word-success-green {
+  color: #48954e; }
 
-.word-fail {
+.word-fail-red {
   color: red; }
 
 .defined-word-content-header {
@@ -693,3 +691,78 @@ a {
   text-align: left;
   font-weight: 500;
   font-size: 1.1rem; }
+
+/* Keyboard with International Accents */
+.keyboard-container-inner-18 {
+  border-radius: 0.75rem;
+  border: 2px dotted #fff;
+  display: flex;
+  flex-wrap: wrap;
+  height: 150px;
+  justify-content: center;
+  /* Horizonatally centered */
+  margin: 12px;
+  padding: 3px;
+  width: 30%; }
+
+.keyboard-row-19 {
+  display: inline;
+  padding: 3px; }
+
+.accent-key-20 {
+  -webkit-transition: transform .1s ease-in;
+  align-items: flex-start;
+  background-color: #FDEAA0;
+  border-color: #0F222D;
+  border-radius: 0.55rem;
+  border-style: solid;
+  border-width: 1px;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 16px;
+  height: 35px;
+  line-height: 35px;
+  margin-right: 3px;
+  padding: 1px 3px;
+  text-align: center;
+  text-rendering: auto;
+  transition: transform .1s ease-in,box-shadow .1s ease-in;
+  vertical-align: middle;
+  width: 35px; }
+
+.accent-key-20:active:hover {
+  background-color: #3276B1; }
+
+.flag-container {
+  padding-top: 20px; }
+
+.word-success-green {
+  color: #48954e; }
+
+.word-fail-red {
+  color: #c41e3a; }
+
+/* Used for Submit Buttons and Pagination */
+.absolute-bottom-and-center-btn-outer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px; }
+
+.dropdown-select-min-width-942 {
+  min-width: 120px; }
+
+.submit-btn-select-target-word {
+  cursor: pointer;
+  background-color: #48954e;
+  color: #fff;
+  padding: 0.5rem 1.5rem;
+  border-radius: .25rem; }
+
+.upload-examples-btn {
+  cursor: pointer;
+  /* Upload Page */
+  background-color: #0F222D;
+  color: #fff;
+  padding: 0.5rem 1.5rem;
+  border-radius: .25rem; }
