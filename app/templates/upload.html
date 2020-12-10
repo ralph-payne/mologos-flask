@@ -1,153 +1,96 @@
-{% extends "base.html" %}
-
-{% block title %}: Upload{% endblock %}
-
-{% block page_content %}
+{% extends "base.html" %}{% block title %}: Upload{% endblock %}{% block page_content %}
 
 {% include 'partials/_flashes.html' %}
 
-<p>Upload your own examples</p>
-<p>Each example should appear on a newline</p>
-<hr>
-
-<style>
-    .upload-form-grid {
-        display: grid;
-        grid-template-columns: 3fr 4fr;
-        grid-template-rows: 1fr 6fr 2fr;
-        grid-gap: 10px;
-    }
-    .upload-1-language-drop-down{
-        grid-column-start: 1;
-		grid-column-end: 4;
-    }
-    .upload-text-area {
-        background-color: #f3f3f3;
-        height: 300px;
-        width: 600px;
-        display: block;
-        padding: 0.5rem;
-        font-size: 1.25rem;
-    }
-    .upload-examples-btn-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 50px;
-    }
-    .optional-target-words-text-area {
-        background-color: #f3f3f3;
-        height: 300px;
-        width: 200px;
-        display: block;
-    }
-    select {
-        font-size: 1.1rem;
-    }
-    .upload-form-container {
-        padding: 20px;
-    }
-    .upload-examples-btn-wrapper {
-        background-color: red;
-    }
-</style>
+<div>
+    <p class="instructions-for-user">Upload your own examples.</p>
+    <p class="instructions-for-user">Each example should appear on a newline.</p>
+</div>
 
 <div class="upload-form-container">
-{% if is_english %}
-    <form class="upload-form" action="/upload_english/" method="POST">
-{% else %}
-    <form class="upload-form" action="/upload_translations/" method="POST">
-{% endif %}
+    <!-- Make it so that this only goes to one route -->
+    <form id="bulk-upload-form" class="upload-form" action="{% if is_english %}/upload_english/{% else %}/upload_translations/{% endif %}" method="POST">
+    
     <input type="hidden" id="most-recent-translation-lang" name="most_recent_translation_lang" value="{{ lng_recent }}">
+    
     <div class="upload-form-grid">
+
         <div class="upload-1-language-drop-down">
             {{ macros.select_language_dropdown(language_codes, lng_recent) }}
         </div>
+
         <div class="upload-2-expressions">
-            <div><p id="upload-2-header">Placeholder Header</p></div>
-            <textarea name="upload_text_area_left" id="upload-text-area" class="upload-text-area" type="text"></textarea>
-            <div class="upload-examples-btn-wrapper">
-                <button class="btn btn-primary upload-examples-btn" type="submit">
-                    Upload Examples
-                </button>
-            </div>
+            <div><p id="upload-2-header" class="upload-header">English</p></div>
+            <textarea name="upload_text_area_left" id="upload-text-area" class="upload-text-area-left" type="text"></textarea>
+              
+                <div class="center-btn-container-flexbox-13">
+                    <button class="btn btn-primary btn-125-font-size" type="submit">
+                        Upload Examples
+                    </button>
+                </div>
         </div>
+
         <div class="upload-3-words">
-            <div><p id="upload-3-header">lkahafsdfsadsdf</p></div>
-            <textarea name="upload_target_word_right" class="optional-target-words-text-area" type="text"></textarea>
+            <div><p id="upload-3-header" class="upload-header">Portuguese</p></div>
+            <textarea name="upload_target_word_right" class="upload-text-area-right" type="text"></textarea>
         </div>
 
     </div>
-</form>
-</div>
+</form></div>
 
-
-<!-- Script which listens for when the select element gets changed and then updates the hidden value -->
 <script>
-    const changeHiddenInputToLanguageSelectedAndUpdateHeaders = () => {
-        let hiddenElementToSendToServer = document.getElementById("most-recent-translation-lang").value;
 
-        selectLanguage = document.getElementById("select-language");
+/* Script which changes the action of the form to reflect which language is being submitted */
 
-        // Assign the hidden element the value of the most recently used language
-        hiddenElementToSendToServer = selectLanguage.value;
+document.getElementById("bulk-upload-form").addEventListener("submit", function(event){
+    event.preventDefault()
 
-        // Grab the value of the language selected
-        languageSelected = selectLanguage.options[selectLanguage.selectedIndex].text
-
-        // Update the headings
-        if (languageSelected === "English") {
-            document.getElementById("upload-2-header").innerHTML = "Example Sentences";
-            document.getElementById("upload-3-header").innerHTML = "Target Words";
-        } else {
-            document.getElementById("upload-2-header").innerHTML = "English";
-            document.getElementById("upload-3-header").innerHTML = languageSelected;
-        }
-    }
-</script>
-
-
-<!-- Script which grabs the most recent language the user has used and updates the select value -->
-<script>
-    // Get Most recent language from hidden input
-    const mostRecentLanguage = document.getElementById("most-recent-translation-lang").value;
-
-    // Declare function
-    const selectFromOptions = (selectId, optionValToSelect) => {
-        //Get the select element by it's unique ID.
-        const selectElement = document.getElementById(selectId);
-        //Get the options.
-        const selectOptions = selectElement.options;
-        //Loop through these options using a for loop.
-        for (let option, i = 0; option = selectOptions[i]; i++) {
-            //If the option of value is equal to the option we want to select.
-            if (option.value == optionValToSelect) {
-                //Select the option and break out of the for loop.
-                selectElement.selectedIndex = i;
-                break;
-            }
-        }
-    }
-
-    // Call function
-    selectFromOptions("select-language", mostRecentLanguage);
-
-    // Display the block which was previously hidden (This prevents stutterly loading)
-    document.getElementById("language-select-container").style.display = "block";
-
-    changeHiddenInputToLanguageSelectedAndUpdateHeaders();
-</script>
-
-
-<!-- Script which listens for changes to the select element and then updates the headings -->
-<script>
     selectLanguage = document.getElementById("select-language");
 
-    selectLanguage.onchange = () => {
-        console.log('changed');
-        changeHiddenInputToLanguageSelectedAndUpdateHeaders();
+    // Assign the hidden element the value of the most recently used language
+    hiddenElementToSendToServer = selectLanguage.value;
+
+    // Grab the value of the language selected
+    languageSelected = selectLanguage.options[selectLanguage.selectedIndex].text;
+
+    console.log(languageSelected);
+    console.log(123123);
+
+    form1234 = document.getElementById("bulk-upload-form")
+
+    const hiddenElementWithLanguage = document.getElementById("most-recent-translation-lang").value;
+
+    console.log(form1234.action);
+
+    console.log(123098123);
+    console.log(hiddenElementWithLanguage);
+
+    if (languageSelected == 'English') {
+        action = "upload_english/";
+    } else {
+        action = "upload_translations/";
     }
+
+    let asdflkj = document.getElementById("bulk-upload-form");
+
+    console.log(asdflkj);
+
+    console.log(';asjdflkj');
+
+    form1234.action = action;
+
+    console.log(form1234.action);
+
+    document.getElementById("bulk-upload-form").submit();
+
+});
+
 </script>
 
-<!-- End of page_content -->
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/change-hidden-input-and-update-headers.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/grab-most-recent-language-and-update-select-value.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/event-listener-for-select-element-then-update-headers.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/display-language-select-container-on-window-load.js') }}"></script>
+
 {% endblock %}

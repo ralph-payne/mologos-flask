@@ -1,30 +1,6 @@
-{% extends "base.html" %}
-
-{% block title %}: Upload{% endblock %}
-
-{% block page_content %}
+{% extends "base.html" %}{% block title %}: Upload{% endblock %}{% block page_content %}
 
 {% include 'partials/_flashes.html' %}
-
-
-<style>
-    .target-word-selected {
-        background-color: #48954e;
-        color: #fff;
-        font-weight: 600;
-        
-    }
-
-    .select-target-word-button-container {
-        background-color: orange;
-    }
-
-    .select-target-word-button {
-        cursor: pointer;
-    }
-
-
-</style>
 
 <form action="/add-target-words/{{ lng.code }}" method="POST">
     <h2>Instructions</h2>

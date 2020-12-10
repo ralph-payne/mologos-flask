@@ -49,7 +49,11 @@ def convert_translation_dict_to_two_letters(translation_dict):
 
 
 def lookup_definition_api(word):
-    # Toggle for switching between APIs (Oxford API has a monthly limit of 1000)
+    """
+        Uses Oxford Dictionary API to look up definition of a word
+        Note: Oxford API has a monthly limit of 1000 requests
+    """
+    # Toggle for switching between APIs ()
     is_primary_api_oxford_dictionary = True
 
     # Contact API
@@ -250,25 +254,14 @@ def translate_api(src_text, dest_language):
 def bulk_translate(src_text, user_id):
     all_language_codes = generate_language_codes()
 
-    print(f'user id is {user_id}')
-    print(f'type of all lang codes is: {type(all_language_codes)}') # LIST
-
     language_codes = select_active_languages(all_language_codes, user_id)
-
-    print('inside of bulk translate')
-    print(type(language_codes))
 
     translations = {}
 
     for dict in language_codes:
         key_language = dict['lng_eng'].lower()
-
-        print(f'Inside bulk translate. Translating {key_language}')
-
         value_translation = translate_api(src_text, dict['code'])
-
         translation = { key_language: value_translation }
-
         translations.update(translation)
 
     return translations
@@ -300,30 +293,16 @@ def filter_language_codes(CONSTANT_LANG_LIST, list_of_langauges):
     print('inside of select_active_languages')
     list_filtered_language_codes = []
 
-    print(f'(type of constant lang list {type(CONSTANT_LANG_LIST)}')
-
-    print(f'(type of constant lang list {type(list_of_langauges)}')
-
-    for asiue in list_of_langauges:
-        print('lkjedhs')
-        print(asiue)
-
-    for laksdfj_dict in CONSTANT_LANG_LIST:
-        print('insdie lookp')
-        if laksdfj_dict['lng_eng'].lower() in list_of_langauges:
+    for lang_to_filter in CONSTANT_LANG_LIST:
+        if lang_to_filter['lng_eng'].lower() in list_of_langauges:
             # Add to filter list
-            print(f'GOOD this is in the list: {laksdfj_dict} not in the list')
-            list_filtered_language_codes.append(laksdfj_dict)
+            print(f'GOOD this is in the list: {lang_to_filter} not in the list')
+            list_filtered_language_codes.append(lang_to_filter)
         else:
-            print(laksdfj_dict['lng_eng'].lower())
+            print(lang_to_filter['lng_eng'].lower())
             for j in list_of_langauges:
                 print(j)
-            print(f'BAD this is {laksdfj_dict} not in the list')
-
-    print(f'returning type {list_filtered_language_codes}')
-
-    # This is a list
-    print(f'returning type {type(list_filtered_language_codes)}')
+            print(f'BAD this is {lang_to_filter} not in the list')
 
     return list_filtered_language_codes
 
@@ -342,13 +321,6 @@ def convert_language_to_two_letter_code(language):
             return code['code']
 
     return None
-
-
-# Delete?
-def filter_out_english(CONSTANT_LANG_LIST):
-    filtered_list = list(filter(lambda x: x['code'] != 'en', CONSTANT_LANG_LIST))
-
-    return filtered_list
 
 
 # IsEnglish Helper returns a boolean result, which in turn determines the relevant view for the templates
@@ -575,3 +547,30 @@ def map_users_prefs_onto_langs(language_codes, user_id):
                 language_code['active'] = active_boolean
 
     return deep_copy_of_lang_codes
+
+
+def split_user_sentence(word):
+    target_word = word.word
+    user_sentence = word.example
+
+    if target_word in user_sentence:
+        position_of_target_word = user_sentence.find(target_word)
+        word_length = word_length = len(target_word)
+        sentence_length = len(user_sentence)
+
+        first_half_sentence = user_sentence[0:position_of_target_word]
+        second_half_sentence = user_sentence[(position_of_target_word+word_length):sentence_length]
+
+        word_dict = {
+            'id': word.id,
+            'target_word': word.word,
+            'first_half_sentence': first_half_sentence,
+            'second_half_sentence': second_half_sentence,
+            'success': word.success,
+            'fail': word.fail
+        }
+
+        return word_dict
+
+    else:
+        return None

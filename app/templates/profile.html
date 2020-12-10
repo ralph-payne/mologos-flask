@@ -1,28 +1,24 @@
-{% extends "base.html" %}
-
-{% block title %}: Profile{% endblock %}
-
-{% block page_content %}
+{% extends "base.html" %}{% block title %}: Profile{% endblock %}{% block page_content %}
 
 {% include 'partials/_flashes.html' %}
 
 <div id="javascript-accordion">
-    <p>Choose the languages you want to appear</p>
+    <p class="instructions-for-user">Choose the languages you want to appear</p>
 
     <form action="{{ url_for('main.update_preferences') }}" method="POST">
 
     <div class="flags-preferences-wrapper">
         {% for language in language_codes %}
         <div>
-            <div class="pl82020">
+            <div class="pl82020-profile-page-placeholder">
                 {{ macros.generate_flag(endpoint='.list', country=language.code, filename=language.filename) }}
             </div>
 
-            <div class="pl82020">
+            <div class="pl82020-profile-page-placeholder">
                 <label class="switch">
                     <input type="hidden" name="language_name" value="{{ language.lng_eng.lower() }}">
                     <input type="hidden" name="hidden_input_value" value="{% if language.active %}1{% else %}0{% endif %}">
-                    <input onChange="myFunction(this)" type="checkbox" name="checkbox_input" {% if language.active %}checked{% endif %} value="{% if language.active %}1{% else %}0{% endif %}">
+                    <input onChange="toggleValOfSwitchElementOnChange(this)" type="checkbox" name="checkbox_input" {% if language.active %}checked{% endif %} value="{% if language.active %}1{% else %}0{% endif %}">
                     <span class="slider round"></span>
                 </label>
             </div>
@@ -30,135 +26,15 @@
         </div>
         {% endfor %}
     </div>
-        <style>
-            .pl82020 {
-                display: inline;
-                padding: 0 10px;
-            }
-            .flags-preferences-wrapper {
-                padding: 30px 0 ;
-            }
-            .update-preferences-btn-wrapper {
-                padding-top: 30px;
-            }
-        </style>
+
         <div class="update-preferences-btn-wrapper">
-            <button type="submit" class="btn btn-primary update-preferences-btn">Update Preferences</button>
+            <button type="submit" class="btn btn-primary btn-125-font-size">Update Preferences</button>
         </div>
+
     </form>
 </div>
 
-<!-- Script which toggles the value of the switch element on change -->
-<script>
-    const myFunction = (element) => {
-        // If the value is 1, switch
-        // All input values are strings. They can be converted to ints on the backend
-        if (element.previousElementSibling.value == "1")
-        {
-            console.log(element.previousElementSibling);
-            element.previousElementSibling.value = "0";
-        }
-        else
-        {
-            console.log(element.previousElementSibling);
-            element.previousElementSibling.value = "1";
-        }
-    }
-</script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/toggle-val-of-switch-element-on-change.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/display-block-on-window-load.js') }}"></script>
 
-<script>
-    const displayBlockOnWindowLoad = () => {
-        // get element
-        const javascriptAccordion = document.getElementById('javascript-accordion')
-        // alert(" Alert inside displayBlockOnWindowLoad function");
-
-        console.log(javascriptAccordion);
-
-        javascriptAccordion.style.display = 'block';
-    }
-
-    window.onload = displayBlockOnWindowLoad();
-</script>
-
-<style>
-#javascript-accordion {
-    display: none;
-}
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-
-.switch input { 
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #2196F3;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-</style>
-
-<!-- End of page_content -->
 {% endblock %}
-
-id = db.Column(db.Integer, primary_key=True)
-email = db.Column(db.String(64), unique=True, index=True)
-username = db.Column(db.String(64), unique=True, index=True)
-role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
-password_hash = db.Column(db.String(128))
-name = db.Column(db.String(64))
-location = db.Column(db.String(64))
-about_me = db.Column(db.Text())
-member_since = db.Column(db.DateTime(), default=datetime.utcnow)
-last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
-confirmed = db.Column(db.Boolean, default=False)
-is_admin = db.Column(db.Boolean, default=False)
-lng_preferred = db.Column(db.String(3))
-lng_recent = db.Column(db.String(3))

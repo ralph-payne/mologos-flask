@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% block title %}: Contact Us{% endblock %}{% block page_content %}
+
+<div class="contact-us-page-container">
+    <form action="#">
+  
+      <label for="fname">First Name</label>
+      <input class="contact-us-input" type="text" id="fname" name="firstname" placeholder="Your name..">
+  
+      <label for="lname">Last Name</label>
+      <input class="contact-us-input" type="text" id="lname" name="lastname" placeholder="Your last name..">
+  
+      <label for="country">Country</label>
+      <select class="contact-us-input" id="country" name="country">
+        <option value="australia">Australia</option>
+        <option value="canada">Canada</option>
+        <option value="usa">USA</option>
+      </select>
+  
+      <label for="subject">Subject</label>
+      <textarea class="contact-us-input" id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
+  
+      <input class="submit-btn-contact-us" type="submit" value="Submit">
+  
+    </form>
+</div>
+
+{% endblock %}

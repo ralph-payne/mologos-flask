@@ -1,119 +1,48 @@
-<style>
-    .challenge-page-container {
-        padding-top: 30px;
-        max-height: 500px;
-    }
-    .flag-container {
-        padding-top: 20px;
-    }
-    .table-challenge-english {
-        width: 100%;
-    }
-    .table-row-challenge-page {
-        width: 100%;
-        display: grid;
-        height: 100px;
-    }
-    .table-row-english {
-        grid-template-columns: 13fr 4fr 1fr 1fr 1fr;
-    }
-    .table-cell-symbol {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        margin: auto;
-        align-items: center; /* Vertically aligns */
-        justify-content: center; /* Horizontally aligns */
-        border-radius: 10px;
-    }
-    .table-cell-text {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        margin: auto;
-        line-height: 25px;
-        max-height: 100px;
-        align-items: center; /* Vertically aligns */
-    }
-    .write-guess-text-input {
-        width: 200px;
-        height: 35px;
-        margin: 0 10px;
-        padding-left: 10px;
-        border-radius: 15px;
-        border-color: #000;
-        font-size: 1.10rem;
-    }
-    .absolute-bottom-and-center-btn-outer-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 50px;
-    }
-    .absolute-bottom-and-center-btn-inner-container {
-        position: absolute;
-        bottom: 80px;
-        padding-bottom: 10px;
-    }
-    .submit-btn-challenge {
-        cursor: pointer;
-        background-color: #48954e;
-        color: #fff;
-        padding: 0.5rem 1.5rem;
-        font-size: 1.10rem;
-        border-radius: .40rem;             
-    }
-</style>
+{% extends "base.html" %}{% block title %}: Challenge{% endblock %}{% block page_content %}
 
-{% extends "base.html" %}{% block title %}: Challenge{% endblock %}
+<div class="flag-container-bar-at-top-14">
+    {% for language in language_codes %}
+        {% if language.active %}
+            {{ macros.generate_flag(endpoint=endpoint, country=language.code, filename=language.filename) }}
+        {% endif %}
+    {% endfor %}
+</div>
 
-{% block page_content %}
-<div class="challenge-page-container">
-    <div class="flag-container">
-        {% for language in language_codes %}
-            {% if language.active %}
-                {{ macros.generate_flag(endpoint=endpoint, country=language.code, filename=language.filename) }}
-            {% endif %}
+{% if words %}
+<form class="challenge-form" action="/challenge/{{ lng.code }}" method="POST">
+    <div class="table-challenge-english min-height-table-16">
+        {% for word in words %}
+                <div class="table-row-challenge-page table-row-english">
+                <div class="table-cell-text-73">
+                    <input type="hidden" name="word_id" value="{{ word.id }}">
+                    <input type="hidden" name="word-in-english" value="{{ word.word }}">
+                    <input type="hidden" name="star_boolean" value="0">
+                    <input type="hidden" name="eye_boolean" value="0">{% if english %}<input type="hidden" name="target_word" value="{{ word.target_word }}">{{ macros.sentence_case(word.first_half_sentence) }}_______________{{ word.second_half_sentence }}{% else %}{{ word.word }}
+                    <input type="hidden" name="target_word" value="{{ word.example }}">
+                {% endif %}
+                </div>
+
+                <div class="table-cell-symbol">
+                    <input id="user-guess" class="write-guess-text-input" type="text" name="user_guess" placeholder="write guess...">
+                </div>
+
+                <div class="table-cell-symbol">
+                    {{ macros.success_and_fail_statistics(word) }}
+                </div>
+                <div class="table-cell-symbol">
+                    {{ macros.eye_symbol_hide_word(word, lng, False, 'main.challenge' ) }}
+                </div>
+                <div class="table-cell-symbol">
+                    {{ macros.star_symbol(word, lng, False, 'main.challenge' ) }}
+                </div>
+            </div>
         {% endfor %}
     </div>
-{% if words %}
-    <form class="challenge-form" action="/challenge/{{ lng.code }}" method="POST">
-        <div class="table-challenge-english">
-            {% for word in words %}
-                    <div class="table-row-challenge-page table-row-english">
-                    <div class="table-cell-text">
-                        <input type="hidden" name="word_id" value="{{ word.id }}">
-                        <input type="hidden" name="word-in-english" value="{{ word.word }}">
-                        <input type="hidden" name="star_boolean" value="0">
-                        <input type="hidden" name="eye_boolean" value="0">{% if english %}<input type="hidden" name="target_word" value="{{ word.target_word }}">{{ macros.sentence_case(word.first_half_sentence) }}_______________{{ word.second_half_sentence }}{% else %}{{ word.word }}
-                        <input type="hidden" name="target_word" value="{{ word.example }}">
-                    {% endif %}
-                    </div>
 
-                    <div class="table-cell-symbol">
-                        <input id="user-guess" class="write-guess-text-input" type="text" name="user_guess" placeholder="write guess...">
-                    </div>
+    <div class="center-btn-container-flexbox-13">
+        <button class="submit-btn-challenge" type="submit">Submit</button>
+    </div>
 
-                    <div class="table-cell-symbol">
-                        {{ macros.success_and_fail_statistics(word) }}
-                    </div>
-                    <div class="table-cell-symbol">
-                        {{ macros.eye_symbol_hide_word(word, lng, False, 'main.challenge' ) }}
-                    </div>
-                    <div class="table-cell-symbol">
-                        {{ macros.star_symbol(word, lng, False, 'main.challenge' ) }}
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-
-        <div class="absolute-bottom-and-center-btn-outer-container">
-            <div class="absolute-bottom-and-center-btn-inner-container">
-                <button class="submit-btn-challenge" type="submit">Submit</button>
-            </div>
-        </div>
-
-    </form>
-</div>
+</form>
 {% else %}{{ macros.no_saved_words_message(endpoint=endpoint, language=lng, is_english=english) }}{% endif %}
 {% endblock %}

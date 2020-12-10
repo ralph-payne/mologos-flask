@@ -16,8 +16,6 @@ a {
 /* 1: NAVBAR */
 .navbar-grid-container {
 
-
-
     .logo {
         width: 180px;
     }
@@ -33,7 +31,7 @@ a {
 
     .navbar-links {
         .navbar-link-active {
-            background: $green-color;
+            background-color: $green-color;
             color: set-text-color($green-color);
         }
     }
@@ -51,22 +49,22 @@ a {
 
         a {
             &.current {
-                background: $primary-color;
+                background-color: $primary-color;
                 color: set-text-color($primary-color);
             }
 
             &.login-nav-icon {
-                background: $green-color;
+                background-color: $green-color;
                 color: set-text-color($green-color);
             }
 
             &.logout-nav-icon {
-                background: $primary-color;
+                background-color: $primary-color;
                 color: set-text-color($primary-color);
             }
 
             &:hover {
-                background: $light-color;
+                background-color: $light-color;
                 color: $dark-color;
             }
         }
@@ -74,48 +72,13 @@ a {
 }
 
 
-/* 2: FOOTER */
-.footer {
 
-    .footer-links {
-        padding: 15px 0 10px;
-        overflow: hidden;
-        display: inline-block;
-    }
-    
-    .footer-links li {
-        float: left;
-        padding: 0 10px;
-        border-left: 1px solid #797575;
-        font-weight: bold;
-    
-        a {
-            font-size: 11px;
-            color: set-text-color($dark-color);
-        }
-    }
-    
-    .footer-links li.first {
-        border-left-width: 0;
-    }
-    
-    p.copyright {
-        padding-bottom: 10px;
-        font-size: 9px;
-        color: set-text-color($dark-color);
-    
-        a {
-            font-size: 9px;
-            color: set-text-color($dark-color);
-        }
-    }
-}
 
 
 /* 3: HOMEPAGE */
 .showcase {
     color: #fff;
-    background: #333;
+    background-color: $primary-color;
     padding: 2rem;
     position: relative;
 
@@ -161,6 +124,120 @@ a {
     > div {
         padding: 0.5rem 0rem;
     }
+}
+
+.definition-page-container {
+    min-height: 500px;
+}
+
+.defined-word-content-header {
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+.word-pronunication-ipa-span-content {
+    font-size: 1.25rem;
+}
+
+.definition-page-header-two-container {
+    padding-top: 1.25rem;
+    border-top: 1px solid #000;
+}
+
+.definition-page-header-two {
+    font-weight: 350;
+    font-size: 1.35rem;
+}
+
+.ordered-and-unordered-lists {
+    padding-left: 2rem;
+}    
+
+.left-indent-definition-page {
+    padding-left: 0.75rem;
+}
+
+.list-item-definition-page-bullets {
+    list-style-type: square;
+}
+
+.translation-table-grid-972 {
+    display: grid;
+    grid-gap: 0.1rem;
+    grid-template-columns: 55px 400px;
+    padding: 0.25rem 0.75rem;
+}
+
+.translation-table-grid-item-973 {
+    padding: 0.1rem 0.0rem;
+    text-align: left;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.add-to-or-update-dict-btn-wrapper {
+    padding: 0.75rem;
+}
+
+.word-pron-and-symbols-container {
+    height: 100px;
+}
+
+.left-60-word-pron-symbols {
+    float: left;
+    height: 100%;
+    width: 60%;
+}
+
+.right-40-word-pron-symbols {
+    float: right;
+    height: 100%;
+    width: 40%;
+}
+
+/* Eye Bin Star ToolTips */
+.eye-star-bin-container {
+    padding: 0rem;
+    height: 100%;
+    display: flex;
+    padding: 0.25rem;
+    justify-content: space-around;
+    flex-direction: row;
+    width: 300px;
+}
+
+
+
+.trash-extra-padding {
+    /* Extra padding as trash icon is slightly smaller */
+    padding: 0px 3px;
+}
+
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+    padding: 0.5rem;
+}
+
+/* Show tooltip text when you mouse over the tooltip container */
+.tooltip-container:hover .tooltiptext {
+    visibility: visible;
+}
+
+/* Tooltip text */
+.tooltip-container .tooltiptext {
+    background-color: #0F222D;
+    border-radius: 6px;
+    color: #fff;
+    left: 50%;
+    margin-left: -60px;
+    padding: 5px 0;
+    position: absolute;
+    text-align: center;
+    top: 70%;
+    visibility: hidden;
+    width: 120px;
+    z-index: 1;
 }
 
 .add-dict-btn-wrapper {
@@ -286,31 +363,45 @@ a {
     height: 2rem;
 }
 
+.previous-translations-grid {
+    padding-top: 20px;
+    width: 100%;
+}
+.table-row-recent-translation {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 3fr 1fr 3fr 1fr 1fr;
+    min-height: 40px;
+    max-height: 60px;
+}
+.table-cell-symbol {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin: auto;
+    align-items: center; /* Vertically aligns */
+    justify-content: center; /* Horizontally aligns */
+    border-radius: 10px;
+}
+
 
 /* 6: LIST */
-.my-words-table-list-page table {
+.my-words-table-list-page-container table {
     margin-bottom: 1rem;
 
     grid-template-columns: 3fr 8fr 1fr 1fr 1fr;
 
     th,
     td {
-        padding: 15px;
+        padding-left: 10px;
+        
+        /* https://stackoverflow.com/questions/15909489/text-overflow-ellipsis-on-two-lines */
+        display: -webkit-box;
+        
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-}
-
-.my-words-foreign table {
-    grid-template-columns: 5fr 5fr 1fr 1fr;
-
-    th,
-    td {
-        padding: 15px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
 }
 
@@ -318,39 +409,150 @@ a {
 /* All of Edit CSS is inline at the moment */
 
 
-
 /* 8: CHALLENGE */
-
-
-.table-challenge-foreign {
+.flag-container-bar-at-top-14 {
+    padding-top: 20px;
+}
+.table-challenge-english {
+    width: 100%;
+}
+.table-row-challenge-page {
+    width: 100%;
     display: grid;
-    grid-template-columns: 7fr 7fr 1fr 1fr 1fr;
-
-    input[type='text'] {
-        width: 300px;
-        padding: 0.25rem;
-        border-radius: .20rem;
-        margin-bottom: .15rem;
-        font-size: 1.05rem;
-    }
+    height: 100px;
+}
+.table-row-english {
+    grid-template-columns: 13fr 4fr 1fr 1fr 1fr;
+}
+.table-cell-symbol {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin: auto;
+    align-items: center; /* Vertically aligns */
+    justify-content: center; /* Horizontally aligns */
+    border-radius: 10px;
+}
+.table-cell-text-73 {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin: auto;
+    line-height: 25px;
+    max-height: 100px;
+    align-items: center; /* Vertically aligns */
+}
+.write-guess-text-input {
+    width: 200px;
+    height: 35px;
+    margin: 0 10px;
+    padding-left: 10px;
+    border-radius: 15px;
+    border-color: #000;
+    font-size: 1.10rem;
+}
+.absolute-bottom-and-center-btn-outer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+}
+.absolute-bottom-and-center-btn-inner-container {
+    position: absolute;
+    bottom: 80px;
+    padding-bottom: 10px;
+}
+.absolute2-bottom-and-center-btn-outer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+}
+.center-btn-container-flexbox-13 {
+    width: 100%;
+    border: 1px dotted #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.submit-btn-challenge {
+    cursor: pointer;
+    background-color: #48954e;
+    color: #fff;
+    padding: 0.5rem 1.5rem;
+    font-size: 1.10rem;
+    border-radius: .40rem;             
 }
 
-.challenge-form {
-    height: 100%;
+.min-height-table-16 {
+    min-height: 600px;
 }
 
 
 /* 9: RESULTS */
-.results-table-english {
-    table {
-        grid-template-columns: 9fr 3fr 3fr 1fr 1fr 1fr 1fr;
-    }
+.results-table-container {
+    width: 100%;
 }
-
 .results-table-foreign {
-    table {
-        grid-template-columns: 5fr 5fr 5fr 1fr 1fr 1fr 1fr;
-    }
+    width: 100%;
+}
+.english-results-grid {
+    display: grid;
+    grid-template-columns: 9fr 3fr 1fr 1fr 1fr;
+}
+.foreign-results-grid {
+    display: grid;
+    grid-template-columns: 4fr 4fr 3fr 1fr 1fr 1fr;
+}
+.list-page-grid-english {
+    display: grid;
+    grid-template-columns: 2fr 8fr 1fr 1fr 1fr;
+}
+.list-page-grid-foreign {
+    display: grid;
+    grid-template-columns: 3fr 8fr 1fr 1fr 1fr;
+}
+.table-header-results-and-list-page {
+    background-color: $secondary-color;
+    color: set-text-color($secondary-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+    height: 50px;
+    padding-bottom: 0.50rem;
+    position: sticky;
+    text-align: left;
+}
+.table-cell-text-73 {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin: auto;
+    align-items: center; /* Vertically aligns */
+}
+.table-row-results-and-list-page {
+    border: 1px solid #dee2e6; /* Size, Type, Color */
+    width: 100%;
+    max-height: 100px;
+    min-height: 40px;
+}
+.results-box-1-of-2 {
+    min-height: 700px;
+}
+.results-box-2-of-2 {
+    height: 100px;
+}
+.next-btn-wrapper-results {
+    display: flex;
+    justify-content: center; /* Horizontally aligns */
+    padding-top: 30px;
+    height: 50%;
+}
+.next-btn-results {
+    cursor: pointer;
+    background-color: $primary-color;
+    color: #fff;
+    padding: 0.5rem 1.5rem;
+    border-radius: .25rem;                    
 }
 
 
@@ -361,7 +563,7 @@ a {
     line-height: 1.4;
     padding: 110px 40px;
     text-align: center;
-    background: #f6f6f6;
+    background-color: #f6f6f6;
 
     .error-page-404 {
         position: relative;
@@ -410,7 +612,7 @@ a {
     padding-bottom: 10px;
 }
 
-.list-style-none {
+.list-style-none-pagination {
     list-style: none;
     display: flex;
     padding-left: 0;
@@ -529,7 +731,7 @@ a {
 
 .translation-table-grid-item {
     padding: 0.1rem;
-    background: #f4f4f4;
+    background-color: #f4f4f4;
     border: 1px solid #ccc;
     text-align: left;
     font-weight: 500;
@@ -615,7 +817,7 @@ a {
 
 .translation-table-grid-item-973 {
     padding: 0.1rem;
-    background: #f4f4f4;
+    background-color: #f4f4f4;
     text-align: left;
     font-weight: 500;
     font-size: 1.1rem;
@@ -631,7 +833,7 @@ a {
     justify-content: center; /* Horizonatally centered */
     margin: 12px;
     padding: 3px;
-    width: 30%;
+    width: 80%;
 }
 
 .keyboard-row-19 {
@@ -665,8 +867,9 @@ a {
     background-color: #3276B1;  
 }
 
-.flag-container {
-    padding-top: 20px;
+.flag-container-bar-at-top-14 {
+    padding-top: 50px;
+    padding-bottom: 20px;
 }
 
 .word-success-green {
@@ -703,4 +906,338 @@ a {
     color: #fff;
     padding: 0.5rem 1.5rem;
     border-radius: .35rem;
+}
+
+/* Upload Page */
+.upload-form-grid {
+    display: grid;
+    grid-template-columns: 3fr 4fr;
+    grid-template-rows: 1fr 12fr 1fr;
+    grid-gap: 10px;
+    background-color: #f3f3f3;
+}
+.upload-1-language-drop-down{
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+.upload-header {
+    font-size: 1.5rem;
+}    
+.upload-text-area-left {
+    height: 500px;
+    width: 550px;
+    display: block;
+    padding: 10px;
+    font-size: 1.25rem;
+}
+.upload-text-area-right {
+    height: 500px;
+    width: 400px;
+    display: block;
+    padding: 10px;
+    font-size: 1.25rem;
+}
+select {
+    font-size: 1.1rem;
+}
+.upload-form-container {
+    padding: 20px;
+}
+.absolute-bottom-and-center-btn-outer-container {
+    display: flex;
+    justify-content: flex-start;
+    height: 50px;
+}
+.absolute-bottom-and-center-btn-inner-container {
+    position: absolute;
+    bottom: 90px;
+    padding-bottom: 0.75rem;
+    padding-left: 0.75rem;
+}
+.btn-125-font-size {
+    font-size: 1.25rem;
+}
+
+
+/* Profile */
+#javascript-accordion {
+    display: none;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px; /* Rounded sliders */
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.pl82020-profile-page-placeholder { /* What is this ?? */
+    display: inline;
+    padding: 0 10px;
+}
+
+.flags-preferences-wrapper {
+    padding: 30px 0 ;
+}
+
+.update-preferences-btn-wrapper {
+    padding-top: 30px;
+}
+
+.instructions-for-user {
+    font-size: 1.25rem;
+    padding-left: 0.75rem;
+    font-size: 1.10rem;
+}
+
+/* Footer */
+
+/* 2: FOOTER */
+.footer-container {
+    background-color: $primary-color;
+    color: set-text-color($dark-color);
+    overflow: hidden;
+    text-align: center;
+    height: 80px;
+    width: 100%;
+
+    .footer-links {
+        padding: 15px 0 10px;
+        overflow: hidden;
+        display: inline-block;
+    }
+    
+    .footer-links li {
+        float: left;
+        padding: 0 10px;
+        border-left: 1px solid #797575;
+        font-weight: bold;
+    
+        a {
+            font-size: 11px;
+            color: set-text-color($dark-color);
+        }
+    }
+    
+    .footer-links li.first-footer-link-no-left-border {
+        border-left-width: 0;
+    }
+    
+    p.copyright {
+        padding-bottom: 10px;
+        font-size: 9px;
+        color: set-text-color($dark-color);
+    
+        a {
+            font-size: 9px;
+            color: set-text-color($dark-color);
+        }
+    }
+}
+
+/* Base html */
+.page-content {
+    width: 100%;
+    min-height: calc(100vh - 160px);
+}
+
+
+/* NAVBAR */
+
+.navbar-grid-container {
+    padding-top: 10px;
+    height: 80px;
+    position: sticky;
+    display: grid;
+    grid-template-columns: 4fr 4fr 4fr;
+    align-items: center;
+    margin: 0 auto;
+    background-color: #f3f3f3;
+    width: 100%;
+    width: 1100px;
+}
+.plc800 {
+    padding: 5px 0px;
+    background-color: #f3f3f3;
+    height: 100%;
+    width: 350px;
+    margin: auto;
+}
+.plc801 {
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+.plc802 {
+    float: left;
+    height: 100%;
+    width: 250px;
+}
+.plc803 {
+    float: right;
+    height: 100%;
+    width: 100px;
+}
+.nav-search-bar-input-element {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    height: 100%;
+    font-family: 'Lato', sans-serif;
+    outline: none;
+    font-size: 1.1rem;
+    padding-left: 10px;
+    width: 100%;
+    border-right: none;
+    border-color: #000;                
+}
+.navbar-magnifying-glass-search {
+    height: 100%;
+    cursor: pointer;
+    width: 100%;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border-color: #000;                
+    border-left: none;
+    background: #f3f3f3;                
+}
+
+/* SELECT TARGET WORD */
+.target-word-selected {
+    background-color: #48954e;
+    color: #fff;
+    font-weight: 600;
+    
+}
+
+.select-target-word-button-container {
+    background-color: orange;
+}
+
+.select-target-word-button {
+    cursor: pointer;
+}
+
+
+/* CONTACT US PAGE */
+/* https://www.w3schools.com/howto/howto_css_contact_form.asp */
+.contact-us-input {
+    width: 100%; /* Full width */
+    padding: 12px; /* Some padding */ 
+    border: 1px solid #ccc; /* Gray border */
+    border-radius: 4px; /* Rounded borders */
+    box-sizing: border-box; /* Make sure that padding and width stays in place */
+    margin-top: 6px; /* Add a top margin */
+    margin-bottom: 16px; /* Bottom margin */
+    resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
+}
+
+/* Style the submit button with a specific background color etc */
+.submit-btn-contact-us {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* When moving the mouse over the submit button, add a darker green color */
+.submit-btn-contact-us:hover {
+    background-color: #45a049;
+}
+
+/* Add a background color and some padding around the form */
+.contact-us-page-container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+
+
+/* NAVBAR DROPDOWN */
+/* Dropdown Button */
+.nav-drop-btn-32 {
+    padding: 2px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.nav-dropdown-container-31 {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.nav-dropdown-content-33 {
+    display: none;
+    position: absolute;
+    right: 0;
+    min-width: 130px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.nav-dropdown-content-33 a {
+    padding: 12px 16px;
+    display: block;
+}
+
+/* Show the dropdown menu on hover */
+.nav-dropdown-container-31:hover .nav-dropdown-content-33 {
+    display: block;
 }

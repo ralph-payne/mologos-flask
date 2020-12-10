@@ -1,131 +1,4 @@
-{% extends "base.html" %}
-
-{% block title %}
-    : {{ word.word if word else 'Not Found' }}
-{% endblock %}
-
-{% block page_content %}
-<style>
-    .definition-page-container {
-        min-height: 500px;
-    }
-
-    .defined-word-content-header {
-        font-size: 2.5rem;
-        font-weight: 600;
-    }
-
-    .word-pronunication-ipa-span-content {
-        font-size: 1.25rem;
-    }
-
-    .definition-page-header-two-container {
-        padding-top: 1.25rem;
-        border-top: 1px solid #000;
-    }
-
-    .definition-page-header-two {
-        font-weight: 350;
-        font-size: 1.35rem;
-    }
-
-    .ordered-and-unordered-lists {
-        padding-left: 2rem;
-    }    
-
-    .left-indent-definition-page {
-        padding-left: 0.75rem;
-    }
-
-    .list-item-definition-page-bullets {
-        list-style-type: square;
-    }
-
-    .translation-table-grid-972 {
-        display: grid;
-        grid-gap: 0.1rem;
-        grid-template-columns: 55px 400px;
-        padding: 0.25rem 0.75rem;
-    }
-    
-    .translation-table-grid-item-973 {
-        padding: 0.1rem 0.0rem;
-        text-align: left;
-        font-weight: 500;
-        font-size: 1.1rem;
-    }
-
-    .add-to-or-update-dict-btn-wrapper {
-        padding: 0.75rem;
-    }
-</style>
-
-<style>
-
-    .word-pron-and-symbols-container {
-        height: 100px;
-    }
-
-    .left-60-word-pron-symbols {
-        float: left;
-        height: 100%;
-        width: 60%;
-    }
-
-    .right-40-word-pron-symbols {
-        float: right;
-        height: 100%;
-        width: 40%;
-    }
-
-    /* Eye Bin Star ToolTips */
-    .eye-star-bin-container {
-        padding: 0rem;
-        height: 100%;
-        display: flex;
-        padding: 0.25rem;
-        justify-content: space-around;
-        flex-direction: row;
-        width: 300px;
-    }
-
-    a {
-        cursor: pointer;
-    }
-
-    .tooltip-container {
-        position: relative;
-        display: inline-block;
-        padding: 0.5rem;
-    }
-
-    .trash-extra-padding {
-        /* Extra padding as trash icon is slightly smaller */
-        padding: 0px 3px;
-    }
-
-    /* Show tooltip text when you mouse over the tooltip container */
-    .tooltip-container:hover .tooltiptext {
-        visibility: visible;
-    }
-
-    /* Tooltip text */
-    .tooltip-container .tooltiptext {
-        visibility: hidden;
-        background-color: #0F222D;
-        color: #fff;
-        text-align: center;
-        padding: 5px 0;
-        border-radius: 6px;
-        position: absolute;
-        z-index: 1;
-        width: 120px;
-        top: 70%;
-        left: 50%;
-        margin-left: -60px
-    }          
-</style>
-
+{% extends "base.html" %}{% block title %}: {{ word.word if word else 'Not Found' }}{% endblock %}{% block page_content %}
 
 <form action="{{ url_for('main.add', word=word.word) }}" method="POST">
 
@@ -141,9 +14,12 @@
         </div>
         <div class="right-40-word-pron-symbols">
             <div class="eye-star-bin-container">
-                {% if user_example %}
-                    {{ macros.eye_star_bin(user_example, 'en', 'main.define') }}
-                {% endif %}
+            {% if user_example %}
+                {{ macros.eye_symbol_hide_word(user_example, 'en', False, 'main.define' ) }}
+                {{ macros.star_symbol(user_example, 'en', False, 'main.define' ) }}
+                {{ macros.success_and_fail_statistics(user_example) }}
+                {{ macros.delete_trash_icon(user_example, 'en', 'main.define', False, True) }}</div>
+            {% endif %}
             </div>
         </div>
     </div>

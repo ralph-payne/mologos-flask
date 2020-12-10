@@ -9,7 +9,7 @@ from ..models import BulkTranslate, Definition, DictionaryExample, UserExample, 
 from flask_login import current_user, login_required
 
 # Helper functions for parsing results from API and database dictionary
-from .helpers import lookup_definition_api, lookup_db_dictionary, translate_api, bulk_translate, create_language_dict, is_english, parse_translation_list, to_bool, create_bulk_translate_dict, split_keyboard_into_rows, parse_user_examples_with_split, generate_language_codes, map_users_prefs_onto_langs,  convert_translation_dict_to_two_letters
+from .helpers import lookup_definition_api, lookup_db_dictionary, translate_api, bulk_translate, create_language_dict, is_english, parse_translation_list, to_bool, create_bulk_translate_dict, split_keyboard_into_rows, parse_user_examples_with_split, generate_language_codes, map_users_prefs_onto_langs,  convert_translation_dict_to_two_letters, split_user_sentence
 
 # These imports are down here as they will get moved to a new file eventually
 from ..models import InternationalAccent
@@ -17,134 +17,8 @@ from .international_accent_list import international_accent_list
 from .starting_data import starting_data
 
 
-# @main.route('/delete/<lng>/<id>')
-# @login_required
-# def delete(lng, id):
-#     UserExample.query.filter_by(id=id).delete() # Hard delete data
-#     db.session.commit()
-#     db.session.close()
-
-#     return redirect(url_for('main.list', lng=lng))
 
 
-
-@main.route('/olki_231/<lng>/<id>/<endpoint_76>/<num849>/', methods=['GET'])
-def olki_231(lng, id, endpoint_76, num849):
-    if int(num849) == 0:
-        is_ignored = UserExample.query.filter_by(id=id).first().ignored
-
-        if is_ignored:
-            UserExample.query.filter_by(id=id).update({'ignored': False})
-        else:
-            UserExample.query.filter_by(id=id).update({'ignored': True})
-
-    if int(num849) == 1:
-        is_starred = UserExample.query.filter_by(id=id).first().starred
-
-        if is_starred:
-            UserExample.query.filter_by(id=id).update({'starred': False})
-        else:
-           UserExample.query.filter_by(id=id).update({'starred': True})
-
-    db.session.commit()
-    db.session.close()
-
-    if endpoint_76 == 'main.challenge':
-        return redirect(url_for('main.challenge', lng=lng))
-
-    if endpoint_76 == 'main.edit':
-        return redirect(url_for('main.edit', lng=lng, id=id))
-
-    else:
-        word = UserExample.query.filter_by(id=id).word
-        db.session.close()
-        return redirect(url_for('main.define', word=word))
-
-
-@main.route('/hard_delete')
-def hard_delete():
-
-    UserExample.query.delete()
-    Word.query.delete()
-    BulkTranslate.query.delete()
-    User.query.delete()
-    
-    db.session.commit()
-    db.session.close()
-
-    return redirect(url_for('main.index'))
-
-
-@main.route('/init')
-def init():
-
-    # INITIALIZE DATABASE WITH STARTING DATA
-    test_user_email = 'test1000@gmail.com'
-    test_user_exists = User.query.filter_by(email=test_user_email).first()
-
-    if not test_user_exists:
-        user = User(email=test_user_email, 
-                    username='test1000',
-                    password='12341234')
-        db.session.add(user)
-        db.session.commit()
-
-    accent_exists = InternationalAccent.query.filter_by(html_entity='Agrave;').first()
-
-    # Add all the International Accents into the database
-    if not accent_exists:
-        for item in international_accent_list:
-            id = int(item['id'])
-            character = item['character']
-            html_entity = item['entitycode']
-            alt_code = item['altcode']
-            language = item['language']
-            row_num = item['rownum']
-            in_use = item['inuse']
-
-            special_character = InternationalAccent(id=id, character=character, language=language, alt_code=alt_code, html_entity=html_entity, row_num=row_num, in_use=in_use)
-            db.session.add(special_character)
-                
-        db.session.commit()
-
-    test_user = User.query.filter_by(email=test_user_email).scalar()
-    # These is a more efficient way to do this with the load_only function https://code-examples.net/en/q/afefd4
-    test_user_id = test_user.id
-    has_data = UserExample.query.filter_by(user_id=test_user_id).first()
-    all_examples = UserExample.query.filter_by(user_id=test_user_id).all()
-
-    # If it's the same length, don't add any more
-    if len(starting_data) != len(all_examples):
-        # Reset the data by deleting whatever is already there
-        UserExample.query.filter_by(user_id=test_user_id).delete()
-        for item in starting_data:
-            language = item['language']
-            word = item['word']
-            example = item['example']
-
-            if language == 'english':
-                # Check word already exists
-                # use first() instead of one() https://stackoverflow.com/questions/24985989/check-if-one-is-empty-sqlalchemy
-                word_already_exists_in_db = Word.query.filter_by(word=word).first()
-                if not word_already_exists_in_db:
-                    record_word = Word(word=word, etymology='', pronunciation='')
-                    db.session.add(record_word)
-
-                    word_query_inefficient = Word.query.filter_by(word=word).one()
-                    last_row_id_inefficient = word_query_inefficient.id
-
-                    record_user_example = UserExample(example=example, word=word, word_id=last_row_id_inefficient, user_id=test_user_id, translation=False, src=None, dst='en')
-
-                    db.session.add(record_user_example)
-
-            else:
-                dst = item['dst']
-                record = UserExample(example=example, word=word, word_id=None, user_id=test_user_id, translation=True, src='en', dst=dst)
-                db.session.add(record)
-
-        db.session.commit()
-
-    return render_template('index.html')
 
 # Homepage
 @main.route('/')
@@ -175,17 +49,31 @@ def add():
 
         return redirect(url_for('main.list', lng='en'))
 
+# Use POST for destructive actions such as creation (I'm aware of the irony), editing, and deletion, because you can't hit a POST action in the address bar of your browser. Use GET when it's safe to allow a person to call an action. So a URL like: "http://myblog.org/admin/posts/delete/357" Should bring you to a conf
+# https://stackoverflow.com/questions/46585/when-do-you-use-post-and-when-do-you-use-get
+# POST is also more secure than GET, because you aren't sticking information into a URL. And so using GET as the method for an HTML form that collects a password or other sensitive information is not the best idea.
+# One final note: POST can transmit a larger amount of information than GET. 'POST' has no size restrictions for transmitted data, whilst 'GET' is limited to 2048 characters.
 
-@main.route('/delete/<lng>/<id>')
+
+@main.route('/delete/', methods=['POST'])
 @login_required
-def delete(lng, id):
-    UserExample.query.filter_by(id=id).delete() # Hard delete data
+def delete():
+    id = request.form.get('word_id')
+    lng = request.form.get('lng')
+    current_page = request.form.get('current_page')
+
+    UserExample.query.filter_by(id=id).delete()
     db.session.commit()
-    return redirect(url_for('main.list', lng=lng))
+    db.session.close()
+
+    if current_page == 'main.translate':
+        return redirect(url_for('main.translate'))
+    else:
+        return redirect(url_for('main.list', lng=lng))
 
 
 # 4: DEFINITION ROUTE
-@main.route('/definition/<word>')
+@main.route('/definition/<word>', methods=['GET'])
 def define(word):
     # Use helper function (found in helpers.py) to look up word in database dictionary    
     local_dictionary_result = lookup_db_dictionary(word)
@@ -374,6 +262,7 @@ def update_word(lng, id):
     metadata.last_modified = datetime.utcnow()
 
     db.session.commit()
+    db.session.close()
 
     return redirect(url_for('main.list', lng=lng))
 
@@ -430,6 +319,40 @@ def edit(lng, id):
         return render_template('edit.html', word=user_example, keyboard=keyboard_split_into_rows, lng=create_language_dict(lng), translation_dict=translation_dict_two_letters)
 
 
+# Can't use endpoint reserverd word (TypeError: url_for() got multiple values for argument 'endpoint')
+@main.route('/update_star_or_hide/<lng>/<id>/<endpoint_1>/<star_or_hide>/', methods=['GET'])
+def update_star_or_hide(lng, id, endpoint_1, star_or_hide):
+    if int(star_or_hide) == 0:
+        is_ignored = UserExample.query.filter_by(id=id).first().ignored
+
+        if is_ignored:
+            UserExample.query.filter_by(id=id).update({'ignored': False})
+        else:
+            UserExample.query.filter_by(id=id).update({'ignored': True})
+
+    if int(star_or_hide) == 1:
+        is_starred = UserExample.query.filter_by(id=id).first().starred
+
+        if is_starred:
+            UserExample.query.filter_by(id=id).update({'starred': False})
+        else:
+           UserExample.query.filter_by(id=id).update({'starred': True})
+
+    db.session.commit()
+    db.session.close()
+
+    if endpoint_1 == 'main.challenge':
+        return redirect(url_for('main.challenge', lng=lng))
+
+    if endpoint_1 == 'main.edit':
+        return redirect(url_for('main.edit', lng=lng, id=id))
+
+    else:
+        word = UserExample.query.filter_by(id=id).first().word
+        db.session.close()
+        return redirect(url_for('main.define', word=word))
+
+
 # 8: CHALLENGE
 @main.route('/challenge/<lng>', methods=['GET', 'POST'])
 @login_required
@@ -450,10 +373,13 @@ def challenge(lng):
         results = []
 
         for i in range(len(word_ids)):
-            result_bool = 0
-
             if target_words[i].lower() == guesses[i].lower():
                 result_bool = 1
+            else:
+                result_bool = 0
+
+            # Temp flush
+            db.session.close()
 
             metadata = UserExample.query.filter_by(user_id=current_user.id, id=word_ids[i]).first()
             metadata.attempt = UserExample.attempt + 1
@@ -461,11 +387,11 @@ def challenge(lng):
             metadata.starred = 1 if stars[i] else 0
 
             if (result_bool):
-                metadata.success = UserExample.success + 1
+                metadata.success = metadata.success + 1
             else:
-                metadata.fail = UserExample.fail + 1
+                metadata.fail = metadata.fail + 1
 
-            db.session.commit()
+            split_user_sentence_dict = split_user_sentence(metadata)
 
             result_dict = {
                 'id': word_ids[i],
@@ -477,8 +403,12 @@ def challenge(lng):
                 'example': metadata.example, # Either English Example or Foriegn Translation
                 'fail': metadata.fail,
                 'success': metadata.success,
-                'word_in_english': ''
+                'word_in_english': '',
+                'split_user_sentence': split_user_sentence_dict
             }
+
+            db.session.commit()
+            db.session.close()
 
             if not is_english(lng):
                 result_dict['word_in_english']  = words_in_english[i]
@@ -498,51 +428,25 @@ def challenge(lng):
 
             # Declare list which will hold dictionaries of each word
             words = []
-            split_sentences = []
 
             # Start loop and add words until the list is at the maximum size
             while len(words) <= max_size_challenge and len(words_from_db) != 0:
                 word = random.choice(words_from_db)
 
-                # After choosing a random word, retrieve the example sentence
-                target_word = word.word
-                user_sentence = word.example
+                split_user_sentence_dict = split_user_sentence(word)
 
                 # Check if the sentence contains the target word
-                if target_word in user_sentence:
-                    # Find position of target word in sentence
-                    pos = user_sentence.find(target_word)
-                    word_length = len(target_word)
-                    sentence_length = len(user_sentence)
-                    first_half_sentence = user_sentence[0:pos]
-                    second_half_sentence = user_sentence[(pos+word_length):sentence_length]
-
-                    word_dict = {
-                        'id': word.id,
-                        'target_word': word.word,
-                        'first_half_sentence': first_half_sentence,
-                        'second_half_sentence': second_half_sentence,
-                        'success': word.success,
-                        'fail': word.fail
-                    }
-
-                    split_sentence = {
-                        'first_half_sentence': first_half_sentence,
-                        'second_half_sentence': second_half_sentence
-                    }
-
-                    split_sentences.append(split_sentence)
-
+                if split_user_sentence_dict:
                     # Remove word from list 1 (bucket of words) to avoid duplicates
                     words_from_db.remove(word)
                     # Append to list 2 of words to be rendered
-                    words.append(word_dict)
+                    words.append(split_user_sentence_dict)
 
                 else:
                     # Skip if word does not appear in target sentence
                     words_from_db.remove(word)
 
-            return render_template('challenge.html', words=words, lng=create_language_dict(lng), english=is_english(lng), language_codes=mapped_languages, endpoint='.challenge', split_sentences=split_sentences)
+            return render_template('challenge.html', words=words, lng=create_language_dict(lng), english=is_english(lng), language_codes=mapped_languages, endpoint='.challenge')
 
         else: # Foreign Language Challenge
             words = UserExample.query.filter_by(user_id=current_user.id, dst=lng).limit(max_size_challenge).all()
@@ -551,7 +455,7 @@ def challenge(lng):
 
 # UPLOAD TRANSLATIONS
 # This route saves translations that have been "bulked uploaded" by the user
-@main.route('/upload_translations/', methods=['POST'])
+@main.route('/upload/upload_translations/', methods=['POST'])
 @login_required
 def upload_translations():
         list_of_eng_words_for_bulk_upload = request.form.get('upload_text_area_left').strip()
@@ -601,65 +505,63 @@ def upload_translations():
 
 
 # ?: UPLOAD
-@main.route('/upload_english/', methods=['POST'])
+@main.route('/upload/upload_english/', methods=['POST'])
 @login_required
 def upload_english():
     if request.method == 'POST':
-        uploaded_text = request.form.get('upload_text_area_left').strip()
+        uploaded_text_with_sentences = request.form.get('upload_text_area_left').strip()
         upload_target_word_right = request.form.get('upload_target_word_right').strip()
         uploaded_language = request.form.get('select_language')
 
-        # Count number of newlines_92930
-        newlines_92930 = len(uploaded_text.split('\n'))
-        split_list = uploaded_text.split('\n')
+        # Count number of newlines_example_sentences_70
+        newlines_example_sentences_70 = len(uploaded_text_with_sentences.split('\n'))
+        split_list = uploaded_text_with_sentences.split('\n')
         word_limit = current_app.config['UPLOAD_MAXIMUM_CONSTANT']
 
-        if newlines_92930 > word_limit:
+        if newlines_example_sentences_70 > word_limit:
             flash(f'You cannot upload more than {word_limit} words at a time')
             return redirect(url_for('main.upload'))
 
         # Check the number of target words is the same
-        length_target_words_8327 = len(upload_target_word_right.split('\n'))
-        split_list_newlin3s_1092124 = upload_target_word_right.split('\n')
-
-        print('below asdflhe 2814')
-        print(split_list_newlin3s_1092124)
-        print('--- ^^ ----- ')
+        length_target_words_71 = len(upload_target_word_right.split('\n'))
+        list_of_target_words_72 = upload_target_word_right.split('\n')
 
         # If target words is blank, skip
-        if length_target_words_8327 == 0 or split_list_newlin3s_1092124 == 'asdf':
+        if length_target_words_71 == 0:
             pass
-        elif length_target_words_8327 != newlines_92930:
-            flash(f'The number of examples ({newlines_92930}) must match the numbasdf aer of Target Words ({length_target_words_8327})')
+        elif length_target_words_71 != newlines_example_sentences_70:
+            flash(f'The number of examples ({newlines_example_sentences_70}) must match the numbasdf aer of Target Words ({length_target_words_71})')
             return redirect(url_for('main.upload'))
         else:
-            # They are the same
             # Run a loop to see that each word is present in each sentence
-            for i in range(length_target_words_8327):
-                target_word_to_search = split_list_newlin3s_1092124[i].strip().lower()
+            for i in range(length_target_words_71):
+                target_word_to_search = list_of_target_words_72[i].strip().lower()
                 sentence_which_should_contain_target_word = split_list[i].lower()
 
                 # is this in that?
                 if target_word_to_search in sentence_which_should_contain_target_word:
-                    print(f'Success with {target_word_to_search}')
+                    # print(f'Success with {target_word_to_search}')
+                    pass
                 else:
-                    print(f'Fail with {target_word_to_search}')
-                    print(f'Not in {sentence_which_should_contain_target_word:}')
+                    # print(f'Fail with {target_word_to_search}')
+                    # print(f'Not in {sentence_which_should_contain_target_word:}')
                     # There's an error because the target word is not in the example string
-                    flash(f'The number of examples ({newlines_92930} == {length_target_words_8327}) is the same but you have ERROR with {split_list_newlin3s_1092124[i]}')
+                    flash(f'The number of examples ({newlines_example_sentences_70} == {length_target_words_71}) is the same but you have ERROR with {list_of_target_words_72[i]}')
                     return redirect(url_for('main.upload'))
 
                 # If we get therought the above if else statement, it means that the words have been uploaded successfully.
                 # We can then loop through them all and add them to the database
                 # It's a bit inefficient running two loops. Or is it?? The first loop is to sanity check the data before adding anything to the databse
 
-            for i in range(length_target_words_8327):
-                target_word_to_add_to_db_828 = split_list_newlin3s_1092124[i].strip()
+            for i in range(length_target_words_71):
+                target_word_to_add_to_db_828 = list_of_target_words_72[i].strip()
                 sentence_which_should_contain_target_word_add_to_db_8317 = split_list[i]
 
-                # TODO => Word ID is redudent
+                print(i)
+                print(target_word_to_add_to_db_828)
+
                 # You will clobber any previously loaded User Examples so you should find a work around for that
-                record_user_example = UserExample(example=sentence_which_should_contain_target_word_add_to_db_8317, word=target_word_to_add_to_db_828, word_id=None, user_id=current_user.id, translation=False, src=None, dst=uploaded_language)
+                record_user_example = UserExample(word=target_word_to_add_to_db_828, example=sentence_which_should_contain_target_word_add_to_db_8317, word_id=None, user_id=current_user.id, translation=False, src=None, dst=uploaded_language)
                 
                 db.session.add(record_user_example)
 
@@ -727,6 +629,7 @@ def add_target_words(lng):
 
     # Update the database
     db.session.commit()
+    db.session.close()
 
     return redirect(url_for('main.list', lng='en'))
 
@@ -774,6 +677,37 @@ def update_preferences():
     
     db.session.commit()
 
-    # Redirect to Profile
     # Give alert saying that your preferences have been updated
     return redirect(url_for('main.profile', lng='en'))
+
+
+@main.route('/contact_us/', methods=['GET'])
+def contact_us():
+    user_details = None
+    
+    if current_user.is_authenticated:
+        user_details = current_user
+
+    return render_template('contact_us.html', user_details=user_details)
+
+
+@main.route('/faq/', methods=['GET'])
+def faq():
+    faq = []
+    
+    return render_template('faq.html', faq=faq)
+
+
+@main.route('/about_us/', methods=['GET'])
+def about_us():
+    return render_template('about_us.html')
+
+
+@main.route('/help_and_support/', methods=['GET'])
+def help_and_support():
+    user_details = None
+    
+    if current_user.is_authenticated:
+        user_details = current_user
+
+    return render_template('help_and_support.html', user_details=user_details)

@@ -1,32 +1,6 @@
-{% extends "base.html" %}
-
-{% block title %}: Translate{% endblock %}
-
-{% block page_content %}
+{% extends "base.html" %}{% block title %}: Translate{% endblock %}{% block page_content %}
 
 {% include 'partials/_flashes.html' %}
-
-<style>
-.previous-translations-grid {
-    padding-top: 20px;
-    width: 100%;
-}
-.table-row-recent-translation {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 3fr 1fr 3fr;
-    height: 60px;
-}
-.table-cell-symbol {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    margin: auto;
-    align-items: center; /* Vertically aligns */
-    justify-content: center; /* Horizontally aligns */
-    border-radius: 10px;
-}   
-</style>
 
 <!-- Translate Container -->
     <div class="translate-grid">
@@ -80,6 +54,7 @@
                             {{ macros.generate_flag(endpoint='main.list', country=element.dst, filename='img/flags/pl.png') }}
                         </div>
                         <div class="table-cell-symbol"><a href="{{ url_for('main.edit', id=element.id, lng=element.dst) }}">{{ element.example }}</a></div>
+                        <div>{{ macros.delete_trash_icon(element, element.dst, 'main.translate', False, True) }}</div>
                     </div>
                 {% endfor %}
             </div>
@@ -87,84 +62,11 @@
         </div>
     </div>
 
+<script type="text/javascript" src="{{ url_for('static', filename='js/update-hidden-values-for-translations.js') }}"></script>
 
-<!-- Script to update Hidden Values for Translations -->
-<script type="text/javascript">
-    function fetchInput(element) {
-        event.preventDefault(element)
+<script type="text/javascript" src="{{ url_for('static', filename='js/trigger-translate-with-enter-button.js') }}"></script>
 
-        // Fetch values
-        srcVal = document.getElementById("text-to-translate").value;
-        srcLng = document.getElementById("select-language").value;
-
-        if (element.id == "translate-btn") {
-            // Assign values to hidden input
-            document.getElementById("src-tra-1").value = srcVal;
-            document.getElementById("dst-lng-1").value = srcLng;
-
-            document.getElementById("form-translate-api").submit();
-        } else {
-            dstVal = document.getElementById("translation-result").value;
-
-            console.log(dstVal)
-            console.log(srcLng)
-
-            document.getElementById("src-tra-2").value = srcVal;
-            document.getElementById("dst-lng-2").value = srcLng;
-            document.getElementById("dst-tra-2").value = dstVal;
-
-            document.getElementById("form-add-translation-to-db").submit();
-        }
-    }
-</script>
-
-
-<!-- Script which grabs most recent language and updates the select value -->
-<script>
-    // Get Most recent language from hidden input
-    const mostRecentLanguage = document.getElementById("most-recent-translation-lang").value;
-
-    // Declare function
-    const selectFromOptions = (selectId, optionValToSelect) => {
-        //Get the select element by it's unique ID.
-        const selectElement = document.getElementById(selectId);
-        //Get the options.
-        const selectOptions = selectElement.options;
-        //Loop through these options using a for loop.
-        for (let option, i = 0; option = selectOptions[i]; i++) {
-            //If the option of value is equal to the option we want to select.
-            if (option.value == optionValToSelect) {
-                //Select the option and break out of the for loop.
-                selectElement.selectedIndex = i;
-                break;
-            }
-        }
-    }
-
-    // Call function
-    selectFromOptions("select-language", mostRecentLanguage)
-
-    // Display the block which was previously hidden (This prevents stutterly loading)
-    document.getElementById("language-select-container").style.display = "block";
-</script>
-
-
-<!-- Script to Trigger Translate on Pressing Enter Button -->
-<script type="text/javascript">    
-    // Get the input field
-    const textBoxInput = document.getElementById("text-to-translate");
-
-    // Execute a function when the user releases a key on the keyboard
-    textBoxInput.addEventListener("keydown", function(event) {
-      // Number 13 is the "Enter" key on the keyboard
-      if (event.keyCode === 13) {
-        // Cancel the default action, if needed
-        event.preventDefault();
-        // Trigger the button element with a click
-        document.getElementById("translate-btn").click();
-      }
-    });
-</script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/grab-most-recent-language-and-update-select-value.js') }}"></script>
 
 <!-- End of page_content -->
 {% endblock %}

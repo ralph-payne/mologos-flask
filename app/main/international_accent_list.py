@@ -7,6 +7,7 @@ international_accent_list = \
         "altcode": "0192",
         "language": "pt",
         "rownum": 1,
+        "langrow": "pt1",
         "inuse": 1
     },
     {
@@ -16,6 +17,7 @@ international_accent_list = \
         "altcode": "0193",
         "language": "pt",
         "rownum": 1,
+        "langrow": "pt1",
         "inuse": 1
     },
     {
@@ -25,6 +27,7 @@ international_accent_list = \
         "altcode": "0194",
         "language": "pt",
         "rownum": 1,
+        "langrow": "pt1",
         "inuse": 1
     },
     {
@@ -34,6 +37,7 @@ international_accent_list = \
         "altcode": "0195",
         "language": "pt",
         "rownum": 1,
+        "langrow": "pt1",
         "inuse": 1
     },
     {
@@ -43,6 +47,7 @@ international_accent_list = \
         "altcode": "0201",
         "language": "pt",
         "rownum": 1,
+        "langrow": "pt1",
         "inuse": 1
     },
     {
@@ -52,6 +57,7 @@ international_accent_list = \
         "altcode": "0202",
         "language": "pt",
         "rownum": 1,
+        "langrow": "pt1",
         "inuse": 1
     },
     {
@@ -61,6 +67,7 @@ international_accent_list = \
         "altcode": "0205",
         "language": "pt",
         "rownum": 1,
+        "langrow": "pt1",
         "inuse": 1
     },
     {
@@ -70,6 +77,7 @@ international_accent_list = \
         "altcode": "0211",
         "language": "pt",
         "rownum": 1,
+        "langrow": "pt1",
         "inuse": 1
     },
     {
@@ -79,6 +87,7 @@ international_accent_list = \
         "altcode": "0212",
         "language": "pt",
         "rownum": 1,
+        "langrow": "pt1",
         "inuse": 1
     },
     {
@@ -88,6 +97,7 @@ international_accent_list = \
         "altcode": "0213",
         "language": "pt",
         "rownum": 1,
+        "langrow": "pt1",
         "inuse": 1
     },
     {
@@ -97,6 +107,7 @@ international_accent_list = \
         "altcode": "0218",
         "language": "pt",
         "rownum": 1,
+        "langrow": "pt1",
         "inuse": 1
     },
     {
@@ -106,6 +117,7 @@ international_accent_list = \
         "altcode": "0220",
         "language": "pt",
         "rownum": 1,
+        "langrow": "pt1",
         "inuse": 1
     },
     {
@@ -115,6 +127,7 @@ international_accent_list = \
         "altcode": "0224",
         "language": "pt",
         "rownum": 2,
+        "langrow": "pt2",
         "inuse": 1
     },
     {
@@ -124,6 +137,7 @@ international_accent_list = \
         "altcode": "0225",
         "language": "pt",
         "rownum": 2,
+        "langrow": "pt2",
         "inuse": 1
     },
     {
@@ -133,6 +147,7 @@ international_accent_list = \
         "altcode": "0226",
         "language": "pt",
         "rownum": 2,
+        "langrow": "pt2",
         "inuse": 1
     },
     {
@@ -142,6 +157,7 @@ international_accent_list = \
         "altcode": "0227",
         "language": "pt",
         "rownum": 2,
+        "langrow": "pt2",
         "inuse": 1
     },
     {
@@ -151,6 +167,7 @@ international_accent_list = \
         "altcode": "0233",
         "language": "pt",
         "rownum": 2,
+        "langrow": "pt2",
         "inuse": 1
     },
     {
@@ -160,6 +177,7 @@ international_accent_list = \
         "altcode": "0234",
         "language": "pt",
         "rownum": 2,
+        "langrow": "pt2",
         "inuse": 1
     },
     {
@@ -169,6 +187,7 @@ international_accent_list = \
         "altcode": "0237",
         "language": "pt",
         "rownum": 2,
+        "langrow": "pt2",
         "inuse": 1
     },
     {
@@ -178,6 +197,7 @@ international_accent_list = \
         "altcode": "0243",
         "language": "pt",
         "rownum": 2,
+        "langrow": "pt2",
         "inuse": 1
     },
     {
@@ -187,6 +207,7 @@ international_accent_list = \
         "altcode": "0244",
         "language": "pt",
         "rownum": 2,
+        "langrow": "pt2",
         "inuse": 1
     },
     {
@@ -196,6 +217,7 @@ international_accent_list = \
         "altcode": "0245",
         "language": "pt",
         "rownum": 2,
+        "langrow": "pt2",
         "inuse": 1
     },
     {
@@ -205,6 +227,7 @@ international_accent_list = \
         "altcode": "0250",
         "language": "pt",
         "rownum": 2,
+        "langrow": "pt2",
         "inuse": 1
     },
     {
@@ -214,6 +237,7 @@ international_accent_list = \
         "altcode": "0252",
         "language": "pt",
         "rownum": 2,
+        "langrow": "pt2",
         "inuse": 1
     },
     {
@@ -223,6 +247,7 @@ international_accent_list = \
         "altcode": "0191",
         "language": "pt",
         "rownum": 3,
+        "langrow": "pt3",
         "inuse": 1
     },
     {
@@ -232,6 +257,7 @@ international_accent_list = \
         "altcode": "0161",
         "language": "pt",
         "rownum": 3,
+        "langrow": "pt3",
         "inuse": 1
     },
     {
@@ -241,6 +267,7 @@ international_accent_list = \
         "altcode": "n/a",
         "language": "pt",
         "rownum": 0,
+        "langrow": "pt0",
         "inuse": 0
     },
     {
@@ -250,6 +277,7 @@ international_accent_list = \
         "altcode": "n/a",
         "language": "pt",
         "rownum": 0,
+        "langrow": "pt0",
         "inuse": 0
     },
     {
@@ -259,6 +287,7 @@ international_accent_list = \
         "altcode": "0186",
         "language": "pt",
         "rownum": 3,
+        "langrow": "pt3",
         "inuse": 1
     },
     {
@@ -268,6 +297,7 @@ international_accent_list = \
         "altcode": "0170",
         "language": "pt",
         "rownum": 3,
+        "langrow": "pt3",
         "inuse": 1
     },
     {
@@ -277,6 +307,7 @@ international_accent_list = \
         "altcode": "0171",
         "language": "pt",
         "rownum": 0,
+        "langrow": "pt0",
         "inuse": 0
     },
     {
@@ -286,6 +317,7 @@ international_accent_list = \
         "altcode": "0187",
         "language": "pt",
         "rownum": 0,
+        "langrow": "pt0",
         "inuse": 0
     },
     {
@@ -295,6 +327,7 @@ international_accent_list = \
         "altcode": "0128",
         "language": "pt",
         "rownum": 0,
+        "langrow": "pt0",
         "inuse": 0
     },
     {
@@ -304,6 +337,7 @@ international_accent_list = \
         "altcode": "0192",
         "language": "it",
         "rownum": 1,
+        "langrow": "it1",
         "inuse": 1
     },
     {
@@ -313,6 +347,7 @@ international_accent_list = \
         "altcode": "0200",
         "language": "it",
         "rownum": 1,
+        "langrow": "it1",
         "inuse": 1
     },
     {
@@ -322,6 +357,7 @@ international_accent_list = \
         "altcode": "0201",
         "language": "it",
         "rownum": 1,
+        "langrow": "it1",
         "inuse": 1
     },
     {
@@ -331,6 +367,7 @@ international_accent_list = \
         "altcode": "0204",
         "language": "it",
         "rownum": 1,
+        "langrow": "it1",
         "inuse": 1
     },
     {
@@ -340,6 +377,7 @@ international_accent_list = \
         "altcode": "0210",
         "language": "it",
         "rownum": 1,
+        "langrow": "it1",
         "inuse": 1
     },
     {
@@ -349,6 +387,7 @@ international_accent_list = \
         "altcode": "0211",
         "language": "it",
         "rownum": 1,
+        "langrow": "it1",
         "inuse": 1
     },
     {
@@ -358,6 +397,7 @@ international_accent_list = \
         "altcode": "0217",
         "language": "it",
         "rownum": 1,
+        "langrow": "it1",
         "inuse": 1
     },
     {
@@ -367,6 +407,7 @@ international_accent_list = \
         "altcode": "0224",
         "language": "it",
         "rownum": 2,
+        "langrow": "it2",
         "inuse": 1
     },
     {
@@ -376,6 +417,7 @@ international_accent_list = \
         "altcode": "0232",
         "language": "it",
         "rownum": 2,
+        "langrow": "it2",
         "inuse": 1
     },
     {
@@ -385,6 +427,7 @@ international_accent_list = \
         "altcode": "0233",
         "language": "it",
         "rownum": 2,
+        "langrow": "it2",
         "inuse": 1
     },
     {
@@ -394,6 +437,7 @@ international_accent_list = \
         "altcode": "0236",
         "language": "it",
         "rownum": 2,
+        "langrow": "it2",
         "inuse": 1
     },
     {
@@ -403,6 +447,7 @@ international_accent_list = \
         "altcode": "0242",
         "language": "it",
         "rownum": 2,
+        "langrow": "it2",
         "inuse": 1
     },
     {
@@ -412,6 +457,7 @@ international_accent_list = \
         "altcode": "0243",
         "language": "it",
         "rownum": 2,
+        "langrow": "it2",
         "inuse": 1
     },
     {
@@ -421,6 +467,7 @@ international_accent_list = \
         "altcode": "0249",
         "language": "it",
         "rownum": 2,
+        "langrow": "it2",
         "inuse": 1
     },
     {
@@ -430,6 +477,7 @@ international_accent_list = \
         "altcode": "0186",
         "language": "it",
         "rownum": 3,
+        "langrow": "it3",
         "inuse": 1
     },
     {
@@ -439,6 +487,7 @@ international_accent_list = \
         "altcode": "0170",
         "language": "it",
         "rownum": 3,
+        "langrow": "it3",
         "inuse": 1
     },
     {
@@ -448,6 +497,7 @@ international_accent_list = \
         "altcode": "0171",
         "language": "it",
         "rownum": 0,
+        "langrow": "it0",
         "inuse": 0
     },
     {
@@ -457,6 +507,7 @@ international_accent_list = \
         "altcode": "0187",
         "language": "it",
         "rownum": 0,
+        "langrow": "it0",
         "inuse": 0
     },
     {
@@ -466,6 +517,7 @@ international_accent_list = \
         "altcode": "n/a",
         "language": "it",
         "rownum": 0,
+        "langrow": "it0",
         "inuse": 0
     },
     {
@@ -475,6 +527,7 @@ international_accent_list = \
         "altcode": "n/a",
         "language": "it",
         "rownum": 0,
+        "langrow": "it0",
         "inuse": 0
     },
     {
@@ -484,285 +537,2118 @@ international_accent_list = \
         "altcode": "0128",
         "language": "it",
         "rownum": 0,
+        "langrow": "it0",
         "inuse": 0
     },
     {
-        "id": 56,
+        "id": 55,
         "character": "Á",
         "entitycode": "Aacute;",
         "altcode": "0193",
         "language": "es",
         "rownum": 1,
+        "langrow": "es1",
         "inuse": 1
     },
     {
-        "id": 57,
+        "id": 56,
         "character": "É",
         "entitycode": "Eacute;",
         "altcode": "0201",
         "language": "es",
         "rownum": 1,
+        "langrow": "es1",
         "inuse": 1
     },
     {
-        "id": 58,
+        "id": 57,
         "character": "Í",
         "entitycode": "Iacute;",
         "altcode": "0205",
         "language": "es",
         "rownum": 1,
+        "langrow": "es1",
         "inuse": 1
     },
     {
-        "id": 59,
+        "id": 58,
         "character": "Ó",
         "entitycode": "Oacute;",
         "altcode": "0211",
         "language": "es",
         "rownum": 1,
+        "langrow": "es1",
         "inuse": 1
     },
     {
-        "id": 60,
+        "id": 59,
         "character": "Ú",
         "entitycode": "Uacute;",
         "altcode": "0218",
         "language": "es",
         "rownum": 1,
+        "langrow": "es1",
         "inuse": 1
     },
     {
-        "id": 61,
+        "id": 60,
         "character": "Ñ",
         "entitycode": "Ntilde;",
         "altcode": "0209",
         "language": "es",
         "rownum": 1,
+        "langrow": "es1",
         "inuse": 1
     },
     {
-        "id": 62,
+        "id": 61,
         "character": "Ü",
         "entitycode": "Uuml;",
         "altcode": "0220",
         "language": "es",
         "rownum": 1,
+        "langrow": "es1",
         "inuse": 1
     },
     {
-        "id": 63,
+        "id": 62,
         "character": "á",
         "entitycode": "aacute;",
         "altcode": "0225",
         "language": "es",
         "rownum": 2,
+        "langrow": "es2",
         "inuse": 1
     },
     {
-        "id": 64,
+        "id": 63,
         "character": "é",
         "entitycode": "eacute;",
         "altcode": "0233",
         "language": "es",
         "rownum": 2,
+        "langrow": "es2",
         "inuse": 1
     },
     {
-        "id": 65,
+        "id": 64,
         "character": "í",
         "entitycode": "iacute;",
         "altcode": "0237",
         "language": "es",
         "rownum": 2,
+        "langrow": "es2",
         "inuse": 1
     },
     {
-        "id": 66,
+        "id": 65,
         "character": "ó",
         "entitycode": "oacute;",
         "altcode": "0243",
         "language": "es",
         "rownum": 2,
+        "langrow": "es2",
         "inuse": 1
     },
     {
-        "id": 67,
+        "id": 66,
         "character": "ú",
         "entitycode": "uacute;",
         "altcode": "0250",
         "language": "es",
         "rownum": 2,
+        "langrow": "es2",
         "inuse": 1
     },
     {
-        "id": 68,
+        "id": 67,
         "character": "ñ",
         "entitycode": "ntilde;",
         "altcode": "0241",
         "language": "es",
         "rownum": 2,
+        "langrow": "es2",
         "inuse": 1
     },
     {
-        "id": 69,
+        "id": 68,
         "character": "ü",
         "entitycode": "uuml;",
         "altcode": "0252",
         "language": "es",
         "rownum": 2,
+        "langrow": "es2",
         "inuse": 1
     },
     {
-        "id": 70,
+        "id": 69,
         "character": "¿",
         "entitycode": "iquest;",
         "altcode": "0191",
         "language": "es",
         "rownum": 3,
+        "langrow": "es3",
         "inuse": 1
     },
     {
-        "id": 71,
+        "id": 70,
         "character": "¡",
         "entitycode": "iexcl;",
         "altcode": "0161",
         "language": "es",
         "rownum": 3,
+        "langrow": "es3",
         "inuse": 1
     },
     {
-        "id": 72,
+        "id": 71,
         "character": "º",
         "entitycode": "ordm;",
         "altcode": "0186",
         "language": "es",
         "rownum": 3,
+        "langrow": "es3",
         "inuse": 1
     },
     {
-        "id": 73,
+        "id": 72,
         "character": "ª",
         "entitycode": "ordf;",
         "altcode": "0170",
         "language": "es",
         "rownum": 3,
+        "langrow": "es3",
         "inuse": 1
     },
     {
-        "id": 74,
+        "id": 73,
         "character": "«",
         "entitycode": "laquo;",
         "altcode": "0171",
         "language": "es",
         "rownum": 0,
+        "langrow": "es0",
         "inuse": 0
     },
     {
-        "id": 75,
+        "id": 74,
         "character": "»",
         "entitycode": "raquo;",
         "altcode": "0187",
         "language": "es",
         "rownum": 0,
+        "langrow": "es0",
         "inuse": 0
     },
     {
-        "id": 76,
+        "id": 75,
         "character": "‹",
         "entitycode": "lsaquo;",
         "altcode": "n/a",
         "language": "es",
         "rownum": 0,
+        "langrow": "es0",
         "inuse": 0
     },
     {
-        "id": 77,
+        "id": 76,
         "character": "›",
         "entitycode": "rsaquo;",
         "altcode": "n/a",
         "language": "es",
         "rownum": 0,
+        "langrow": "es0",
         "inuse": 0
     },
     {
-        "id": 78,
+        "id": 77,
         "character": "€",
         "entitycode": "euro;",
         "altcode": "0128",
         "language": "es",
         "rownum": 0,
+        "langrow": "es0",
         "inuse": 0
     },
     {
-        "id": 79,
+        "id": 78,
         "character": "Ä",
         "entitycode": "Auml;",
         "altcode": "0196",
         "language": "de",
         "rownum": 1,
+        "langrow": "de1",
         "inuse": 1
     },
     {
-        "id": 80,
+        "id": 79,
         "character": "ä",
         "entitycode": "auml;",
         "altcode": "0228",
         "language": "de",
         "rownum": 2,
+        "langrow": "de2",
         "inuse": 1
     },
     {
-        "id": 81,
+        "id": 80,
         "character": "Ö",
         "entitycode": "Ouml;",
         "altcode": "0214",
         "language": "de",
         "rownum": 1,
+        "langrow": "de1",
         "inuse": 1
     },
     {
-        "id": 82,
+        "id": 81,
         "character": "ö",
         "entitycode": "ouml;",
         "altcode": "0246",
         "language": "de",
         "rownum": 2,
+        "langrow": "de2",
         "inuse": 1
     },
     {
-        "id": 83,
+        "id": 82,
         "character": "Ü",
         "entitycode": "Uuml;",
         "altcode": "0220",
         "language": "de",
         "rownum": 1,
+        "langrow": "de1",
         "inuse": 1
     },
     {
-        "id": 84,
+        "id": 83,
         "character": "ü",
         "entitycode": "uuml;",
         "altcode": "0252",
         "language": "de",
         "rownum": 2,
+        "langrow": "de2",
         "inuse": 1
     },
     {
-        "id": 85,
+        "id": 84,
         "character": "ß",
         "entitycode": "szlig;",
         "altcode": "0223",
         "language": "de",
         "rownum": 3,
+        "langrow": "de3",
         "inuse": 1
     },
     {
-        "id": 86,
+        "id": 85,
         "character": "€",
         "entitycode": "euro;",
         "altcode": "0128",
         "language": "de",
         "rownum": 0,
+        "langrow": "de0",
         "inuse": 0
+    },
+    {
+        "id": 86,
+        "character": "À",
+        "altcode": "0192",
+        "language": "fr",
+        "rownum": 0,
+        "langrow": "fr0",
+        "inuse": 1
+    },
+    {
+        "id": 87,
+        "character": "Â",
+        "altcode": "0194",
+        "language": "fr",
+        "rownum": 0,
+        "langrow": "fr0",
+        "inuse": 1
+    },
+    {
+        "id": 88,
+        "character": "Ä",
+        "altcode": "0196",
+        "language": "fr",
+        "rownum": 0,
+        "langrow": "fr0",
+        "inuse": 1
+    },
+    {
+        "id": 89,
+        "character": "È",
+        "altcode": "0200",
+        "language": "fr",
+        "rownum": 0,
+        "langrow": "fr0",
+        "inuse": 1
+    },
+    {
+        "id": 90,
+        "character": "É",
+        "altcode": "0201",
+        "language": "fr",
+        "rownum": 0,
+        "langrow": "fr0",
+        "inuse": 1
+    },
+    {
+        "id": 91,
+        "character": "Ê",
+        "altcode": "0202",
+        "language": "fr",
+        "rownum": 0,
+        "langrow": "fr0",
+        "inuse": 1
+    },
+    {
+        "id": 92,
+        "character": "Ë",
+        "altcode": "0203",
+        "language": "fr",
+        "rownum": 0,
+        "langrow": "fr0",
+        "inuse": 1
+    },
+    {
+        "id": 93,
+        "character": "Î",
+        "altcode": "0206",
+        "language": "fr",
+        "rownum": 0,
+        "langrow": "fr0",
+        "inuse": 1
+    },
+    {
+        "id": 94,
+        "character": "Ï",
+        "altcode": "0207",
+        "language": "fr",
+        "rownum": 0,
+        "langrow": "fr0",
+        "inuse": 1
+    },
+    {
+        "id": 95,
+        "character": "Ô",
+        "altcode": "0212",
+        "language": "fr",
+        "rownum": 0,
+        "langrow": "fr0",
+        "inuse": 1
+    },
+    {
+        "id": 96,
+        "character": "Œ",
+        "altcode": "0140",
+        "language": "fr",
+        "rownum": 0,
+        "langrow": "fr0",
+        "inuse": 1
+    },
+    {
+        "id": 97,
+        "character": "Ù",
+        "altcode": "0217",
+        "language": "fr",
+        "rownum": 0,
+        "langrow": "fr0",
+        "inuse": 1
+    },
+    {
+        "id": 98,
+        "character": "Û",
+        "altcode": "0219",
+        "language": "fr",
+        "rownum": 1,
+        "langrow": "fr1",
+        "inuse": 1
+    },
+    {
+        "id": 99,
+        "character": "Ü",
+        "altcode": "0220",
+        "language": "fr",
+        "rownum": 1,
+        "langrow": "fr1",
+        "inuse": 1
+    },
+    {
+        "id": 100,
+        "character": "Ÿ",
+        "altcode": "0159",
+        "language": "fr",
+        "rownum": 1,
+        "langrow": "fr1",
+        "inuse": 1
+    },
+    {
+        "id": 101,
+        "character": "à",
+        "altcode": "0224",
+        "language": "fr",
+        "rownum": 1,
+        "langrow": "fr1",
+        "inuse": 1
+    },
+    {
+        "id": 102,
+        "character": "â",
+        "altcode": "0226",
+        "language": "fr",
+        "rownum": 1,
+        "langrow": "fr1",
+        "inuse": 1
+    },
+    {
+        "id": 103,
+        "character": "ä",
+        "altcode": "0228",
+        "language": "fr",
+        "rownum": 1,
+        "langrow": "fr1",
+        "inuse": 1
+    },
+    {
+        "id": 104,
+        "character": "è",
+        "altcode": "0232",
+        "language": "fr",
+        "rownum": 1,
+        "langrow": "fr1",
+        "inuse": 1
+    },
+    {
+        "id": 105,
+        "character": "é",
+        "altcode": "0233",
+        "language": "fr",
+        "rownum": 1,
+        "langrow": "fr1",
+        "inuse": 1
+    },
+    {
+        "id": 106,
+        "character": "ê",
+        "altcode": "0234",
+        "language": "fr",
+        "rownum": 1,
+        "langrow": "fr1",
+        "inuse": 1
+    },
+    {
+        "id": 107,
+        "character": "ë",
+        "altcode": "0235",
+        "language": "fr",
+        "rownum": 2,
+        "langrow": "fr2",
+        "inuse": 1
+    },
+    {
+        "id": 108,
+        "character": "î",
+        "altcode": "0238",
+        "language": "fr",
+        "rownum": 2,
+        "langrow": "fr2",
+        "inuse": 1
+    },
+    {
+        "id": 109,
+        "character": "ï",
+        "altcode": "0239",
+        "language": "fr",
+        "rownum": 2,
+        "langrow": "fr2",
+        "inuse": 1
+    },
+    {
+        "id": 110,
+        "character": "ô",
+        "altcode": "0244",
+        "language": "fr",
+        "rownum": 2,
+        "langrow": "fr2",
+        "inuse": 1
+    },
+    {
+        "id": 111,
+        "character": "œ",
+        "altcode": "0156",
+        "language": "fr",
+        "rownum": 2,
+        "langrow": "fr2",
+        "inuse": 1
+    },
+    {
+        "id": 112,
+        "character": "ù",
+        "altcode": "0249",
+        "language": "fr",
+        "rownum": 2,
+        "langrow": "fr2",
+        "inuse": 1
+    },
+    {
+        "id": 113,
+        "character": "û",
+        "altcode": "0251",
+        "language": "fr",
+        "rownum": 2,
+        "langrow": "fr2",
+        "inuse": 1
+    },
+    {
+        "id": 114,
+        "character": "ü",
+        "altcode": "0252",
+        "language": "fr",
+        "rownum": 2,
+        "langrow": "fr2",
+        "inuse": 1
+    },
+    {
+        "id": 115,
+        "character": "ÿ",
+        "altcode": "0255",
+        "language": "fr",
+        "rownum": 2,
+        "langrow": "fr2",
+        "inuse": 1
+    },
+    {
+        "id": 116,
+        "character": "Ç",
+        "altcode": "0199",
+        "language": "fr",
+        "rownum": 2,
+        "langrow": "fr2",
+        "inuse": 1
+    },
+    {
+        "id": 117,
+        "character": "ç",
+        "altcode": "0231",
+        "language": "fr",
+        "rownum": 2,
+        "langrow": "fr2",
+        "inuse": 1
+    },
+    {
+        "id": 118,
+        "character": "Ā",
+        "entitycode": "#256;",
+        "altcode": "0256",
+        "description": "Cap long A",
+        "language": "la",
+        "rownum": 0,
+        "langrow": "la0",
+        "inuse": 1
+    },
+    {
+        "id": 119,
+        "character": "Ē",
+        "entitycode": "#274;",
+        "altcode": "0274",
+        "description": "Cap long E",
+        "language": "la",
+        "rownum": 0,
+        "langrow": "la0",
+        "inuse": 1
+    },
+    {
+        "id": 120,
+        "character": "Ī",
+        "entitycode": "#298;",
+        "altcode": "0298",
+        "description": "Cap long I",
+        "language": "la",
+        "rownum": 0,
+        "langrow": "la0",
+        "inuse": 1
+    },
+    {
+        "id": 121,
+        "character": "Ō",
+        "entitycode": "#332;",
+        "altcode": "0332",
+        "description": "Cap long O",
+        "language": "la",
+        "rownum": 0,
+        "langrow": "la0",
+        "inuse": 1
+    },
+    {
+        "id": 122,
+        "character": "Ū",
+        "entitycode": "#362;",
+        "altcode": "0362",
+        "description": "Cap long U",
+        "language": "la",
+        "rownum": 0,
+        "langrow": "la0",
+        "inuse": 1
+    },
+    {
+        "id": 123,
+        "character": "Ȳ",
+        "entitycode": "#562;",
+        "altcode": "0562",
+        "description": "Cap long Y",
+        "language": "la",
+        "rownum": 0,
+        "langrow": "la0",
+        "inuse": 1
+    },
+    {
+        "id": 124,
+        "character": "Æ",
+        "entitycode": "AElig;",
+        "altcode": "0198",
+        "description": "Cap AE lig",
+        "language": "la",
+        "rownum": 0,
+        "langrow": "la0",
+        "inuse": 1
+    },
+    {
+        "id": 125,
+        "character": "Œ",
+        "entitycode": "OElig;",
+        "altcode": "0140",
+        "description": "Cap OE lig",
+        "language": "la",
+        "rownum": 0,
+        "langrow": "la0",
+        "inuse": 1
+    },
+    {
+        "id": 126,
+        "character": "ā",
+        "entitycode": "#257;",
+        "altcode": "0257",
+        "description": "Lower long A",
+        "language": "la",
+        "rownum": 0,
+        "langrow": "la0",
+        "inuse": 1
+    },
+    {
+        "id": 127,
+        "character": "ē",
+        "entitycode": "#275;",
+        "altcode": "0275",
+        "description": "Lower long E",
+        "language": "la",
+        "rownum": 1,
+        "langrow": "la1",
+        "inuse": 1
+    },
+    {
+        "id": 128,
+        "character": "ī",
+        "entitycode": "#299;",
+        "altcode": "0299",
+        "description": "Lower long I",
+        "language": "la",
+        "rownum": 1,
+        "langrow": "la1",
+        "inuse": 1
+    },
+    {
+        "id": 129,
+        "character": "ō",
+        "entitycode": "#333;",
+        "altcode": "0333",
+        "description": "Lower long O",
+        "language": "la",
+        "rownum": 1,
+        "langrow": "la1",
+        "inuse": 1
+    },
+    {
+        "id": 130,
+        "character": "ū",
+        "entitycode": "#363;",
+        "altcode": "0363",
+        "description": "Lower long U",
+        "language": "la",
+        "rownum": 1,
+        "langrow": "la1",
+        "inuse": 1
+    },
+    {
+        "id": 131,
+        "character": "ȳ",
+        "entitycode": "#563;",
+        "altcode": "0563",
+        "description": "Lower long Y",
+        "language": "la",
+        "rownum": 1,
+        "langrow": "la1",
+        "inuse": 1
+    },
+    {
+        "id": 132,
+        "character": "æ",
+        "entitycode": "aelig;",
+        "altcode": "0230",
+        "description": "Lower AE lig",
+        "language": "la",
+        "rownum": 1,
+        "langrow": "la1",
+        "inuse": 1
+    },
+    {
+        "id": 133,
+        "character": "œ",
+        "entitycode": "oelig;",
+        "altcode": "0156",
+        "description": "Lower OE lig",
+        "language": "la",
+        "rownum": 1,
+        "langrow": "la1",
+        "inuse": 1
+    },
+    {
+        "id": 134,
+        "character": "Ą",
+        "entitycode": "#260;",
+        "description": "Capital A Ogonek (\"Polish cedilla\")",
+        "language": "pl",
+        "rownum": 0,
+        "langrow": "pl0",
+        "inuse": 1
+    },
+    {
+        "id": 135,
+        "character": "ą",
+        "entitycode": "#261;",
+        "description": "Lower A Ogonek",
+        "language": "pl",
+        "rownum": 0,
+        "langrow": "pl0",
+        "inuse": 1
+    },
+    {
+        "id": 136,
+        "character": "Ę",
+        "entitycode": "#280;",
+        "description": "Capital E Ogonek",
+        "language": "pl",
+        "rownum": 0,
+        "langrow": "pl0",
+        "inuse": 1
+    },
+    {
+        "id": 137,
+        "character": "ę",
+        "entitycode": "#281;",
+        "description": "Lower E Ogonek",
+        "language": "pl",
+        "rownum": 0,
+        "langrow": "pl0",
+        "inuse": 1
+    },
+    {
+        "id": 138,
+        "character": "Ó",
+        "entitycode": "Oacute;",
+        "description": "Capital O Acute",
+        "language": "pl",
+        "rownum": 0,
+        "langrow": "pl0",
+        "inuse": 1
+    },
+    {
+        "id": 139,
+        "character": "ó",
+        "entitycode": "oacute;",
+        "description": "Lower O Acute",
+        "language": "pl",
+        "rownum": 0,
+        "langrow": "pl0",
+        "inuse": 1
+    },
+    {
+        "id": 140,
+        "character": "Ć",
+        "entitycode": "#262;",
+        "description": "Capital C Acute",
+        "language": "pl",
+        "rownum": 0,
+        "langrow": "pl0",
+        "inuse": 1
+    },
+    {
+        "id": 141,
+        "character": "ć",
+        "entitycode": "#263;",
+        "description": "Lower C Acute",
+        "language": "pl",
+        "rownum": 0,
+        "langrow": "pl0",
+        "inuse": 1
+    },
+    {
+        "id": 142,
+        "character": "Ł",
+        "entitycode": "#321;",
+        "description": "Capital L-Barred",
+        "language": "pl",
+        "rownum": 1,
+        "langrow": "pl1",
+        "inuse": 1
+    },
+    {
+        "id": 143,
+        "character": "ł",
+        "entitycode": "#322;",
+        "description": "Lower L Barred",
+        "language": "pl",
+        "rownum": 1,
+        "langrow": "pl1",
+        "inuse": 1
+    },
+    {
+        "id": 144,
+        "character": "Ń",
+        "entitycode": "#323;",
+        "description": "Capital N Acute",
+        "language": "pl",
+        "rownum": 1,
+        "langrow": "pl1",
+        "inuse": 1
+    },
+    {
+        "id": 145,
+        "character": "ń",
+        "entitycode": "#324;",
+        "description": "Lower N Acute",
+        "language": "pl",
+        "rownum": 1,
+        "langrow": "pl1",
+        "inuse": 1
+    },
+    {
+        "id": 146,
+        "character": "Ś",
+        "entitycode": "#346;",
+        "description": "Capital S Acute",
+        "language": "pl",
+        "rownum": 1,
+        "langrow": "pl1",
+        "inuse": 1
+    },
+    {
+        "id": 147,
+        "character": "ś",
+        "entitycode": "#347;",
+        "description": "S Acute",
+        "language": "pl",
+        "rownum": 1,
+        "langrow": "pl1",
+        "inuse": 1
+    },
+    {
+        "id": 148,
+        "character": "Ź",
+        "entitycode": "#377;",
+        "description": "Capital Z Acute",
+        "language": "pl",
+        "rownum": 1,
+        "langrow": "pl1",
+        "inuse": 1
+    },
+    {
+        "id": 149,
+        "character": "ź",
+        "entitycode": "#378;",
+        "description": "Z Acute",
+        "language": "pl",
+        "rownum": 1,
+        "langrow": "pl1",
+        "inuse": 1
+    },
+    {
+        "id": 150,
+        "character": "Ż",
+        "entitycode": "#379;",
+        "description": "Capital Z Dot",
+        "language": "pl",
+        "rownum": 1,
+        "langrow": "pl1",
+        "inuse": 1
+    },
+    {
+        "id": 151,
+        "character": "ż",
+        "entitycode": "#380;",
+        "description": "Lower Z Dot",
+        "language": "pl",
+        "rownum": 1,
+        "langrow": "pl1",
+        "inuse": 1
+    },
+    {
+        "id": 152,
+        "character": "α",
+        "entitycode": "#945;",
+        "altcode": "224 (945)",
+        "description": "Greek small letter Alpha",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "htmlName": "α",
+        "unicode": "U+03B1",
+        "letter": "Alpha"
+    },
+    {
+        "id": 153,
+        "character": "ά",
+        "entitycode": "#940;",
+        "altcode": "940",
+        "description": "Greek small letter Alpha with Tonos",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "unicode": "U+03AC",
+        "letter": "Alpha"
+    },
+    {
+        "id": 154,
+        "character": "Α",
+        "entitycode": "#913;",
+        "altcode": "913",
+        "description": "Greek capital letter Alpha",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "htmlName": "Α",
+        "unicode": "U+0391",
+        "letter": "Alpha"
+    },
+    {
+        "id": 155,
+        "character": "Ά",
+        "entitycode": "#902;",
+        "altcode": "902",
+        "description": "Greek capital letter Alpha with Tonos",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "unicode": "U+0386",
+        "letter": "Alpha"
+    },
+    {
+        "id": 156,
+        "character": "β",
+        "entitycode": "#946;",
+        "altcode": "225 (946)",
+        "description": "Greek small letter Beta",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "htmlName": "β",
+        "unicode": "U+03B2",
+        "letter": "Beta"
+    },
+    {
+        "id": 157,
+        "character": "ϐ",
+        "entitycode": "#976;",
+        "altcode": "976",
+        "description": "Greek Beta symbol",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "unicode": "U+03D0",
+        "letter": "Beta"
+    },
+    {
+        "id": 158,
+        "character": "Β",
+        "entitycode": "#914;",
+        "altcode": "914",
+        "description": "Greek capital letter Beta",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "htmlName": "Β",
+        "unicode": "U+0392",
+        "letter": "Beta"
+    },
+    {
+        "id": 159,
+        "character": "γ",
+        "entitycode": "#947;",
+        "altcode": "947",
+        "description": "Greek small letter Gamma",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "htmlName": "γ",
+        "unicode": "U+03B3",
+        "letter": "Gamma"
+    },
+    {
+        "id": 160,
+        "character": "Γ",
+        "entitycode": "#915;",
+        "altcode": "(226) 915",
+        "description": "Greek capital letter Gamma",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "htmlName": "Γ",
+        "unicode": "U+0393",
+        "letter": "Gamma"
+    },
+    {
+        "id": 161,
+        "character": "δ",
+        "entitycode": "#948;",
+        "altcode": "235 (948)",
+        "description": "Greek small letter Delta",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "htmlName": "δ",
+        "unicode": "U+03B4",
+        "letter": "Delta"
+    },
+    {
+        "id": 162,
+        "character": "Δ",
+        "entitycode": "#916;",
+        "altcode": "916",
+        "description": "Greek capital letter Delta",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "htmlName": "Δ",
+        "unicode": "U+0394",
+        "letter": "Delta"
+    },
+    {
+        "id": 163,
+        "character": "ε",
+        "entitycode": "#949;",
+        "altcode": "238 (949)",
+        "description": "Greek small letter Epsilon",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "htmlName": "ε",
+        "unicode": "U+03B5",
+        "letter": "Epsilon"
+    },
+    {
+        "id": 164,
+        "character": "έ",
+        "entitycode": "#941;",
+        "altcode": "941",
+        "description": "Greek small letter Epsilon with Tonos",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "unicode": "U+03AD",
+        "letter": "Epsilon"
+    },
+    {
+        "id": 165,
+        "character": "ϵ",
+        "entitycode": "#1013;",
+        "altcode": "1013",
+        "description": "Greek lunate Epsilon symbol",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "unicode": "U+03F5",
+        "letter": "Epsilon"
+    },
+    {
+        "id": 166,
+        "character": "϶",
+        "entitycode": "#1014;",
+        "altcode": "1014",
+        "description": "Greek reversed lunate Epsilon symbol",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "unicode": "U+03F6",
+        "letter": "Epsilon"
+    },
+    {
+        "id": 167,
+        "character": "Ε",
+        "entitycode": "#917;",
+        "altcode": "917",
+        "description": "Greek capital letter Epsilon",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "htmlName": "Ε",
+        "unicode": "U+0395",
+        "letter": "Epsilon"
+    },
+    {
+        "id": 168,
+        "character": "Έ",
+        "entitycode": "#904;",
+        "altcode": "904",
+        "description": "Greek capital letter Epsilon with Tonos",
+        "language": "el",
+        "rownum": 0,
+        "langrow": "el0",
+        "inuse": 1,
+        "unicode": "U+0388",
+        "letter": "Epsilon"
+    },
+    {
+        "id": 169,
+        "character": "ζ",
+        "entitycode": "#950;",
+        "altcode": "950",
+        "description": "Greek small letter Zeta",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "htmlName": "ζ",
+        "unicode": "U+03B6",
+        "letter": "Zeta"
+    },
+    {
+        "id": 170,
+        "character": "Ζ",
+        "entitycode": "#918;",
+        "altcode": "918",
+        "description": "Greek capital letter Zeta",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "htmlName": "Ζ",
+        "unicode": "U+0396",
+        "letter": "Zeta"
+    },
+    {
+        "id": 171,
+        "character": "η",
+        "entitycode": "#951;",
+        "altcode": "951",
+        "description": "Greek small letter Eta",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "htmlName": "η",
+        "unicode": "U+03B7",
+        "letter": "Eta"
+    },
+    {
+        "id": 172,
+        "character": "ή",
+        "entitycode": "#942;",
+        "altcode": "942",
+        "description": "Greek small letter Eta with Tonos",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "unicode": "U+03AE",
+        "letter": "Eta"
+    },
+    {
+        "id": 173,
+        "character": "Η",
+        "entitycode": "#919;",
+        "altcode": "919",
+        "description": "Greek capital letter Eta",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "htmlName": "Η",
+        "unicode": "U+0397",
+        "letter": "Eta"
+    },
+    {
+        "id": 174,
+        "character": "Ή",
+        "entitycode": "#905;",
+        "altcode": "905",
+        "description": "Greek capital letter Eta with Tonos",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "unicode": "U+0397",
+        "letter": "Eta"
+    },
+    {
+        "id": 175,
+        "character": "θ",
+        "entitycode": "#952;",
+        "altcode": "952",
+        "description": "Greek small letter Theta",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "htmlName": "θ",
+        "unicode": "U+03B8",
+        "letter": "Theta"
+    },
+    {
+        "id": 176,
+        "character": "ϑ",
+        "entitycode": "#977;",
+        "altcode": "977",
+        "description": "Greek Theta symbol",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "htmlName": "ϑ",
+        "unicode": "U+03D1",
+        "letter": "Theta"
+    },
+    {
+        "id": 177,
+        "character": "Θ",
+        "entitycode": "#920;",
+        "altcode": "233 (920)",
+        "description": "Greek capital letter Theta",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "htmlName": "Θ",
+        "unicode": "U+0398",
+        "letter": "Theta"
+    },
+    {
+        "id": 178,
+        "character": "ϴ",
+        "entitycode": "#1012;",
+        "altcode": "1012",
+        "description": "Greek capital Theta symbol",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "unicode": "U+03F4",
+        "letter": "Theta"
+    },
+    {
+        "id": 179,
+        "character": "ι",
+        "entitycode": "#953;",
+        "altcode": "953",
+        "description": "Greek small letter Iota",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "htmlName": "ι",
+        "unicode": "U+03B9",
+        "letter": "Iota"
+    },
+    {
+        "id": 180,
+        "character": "ί",
+        "entitycode": "#943;",
+        "altcode": "943",
+        "description": "Greek small letter Iota with Tonos",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "unicode": "U+03AF",
+        "letter": "Iota"
+    },
+    {
+        "id": 181,
+        "character": "ϊ",
+        "entitycode": "#970;",
+        "altcode": "970",
+        "description": "Greek small letter Iota with Dialytika",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "unicode": "U+03CA",
+        "letter": "Iota"
+    },
+    {
+        "id": 182,
+        "character": "ΐ",
+        "entitycode": "#912;",
+        "altcode": "912",
+        "description": "Greek small letter Iota with Dialitika and Tonos",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "unicode": "U+0390",
+        "letter": "Iota"
+    },
+    {
+        "id": 183,
+        "character": "Ι",
+        "entitycode": "#921;",
+        "altcode": "921",
+        "description": "Greek capital letter Iota",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "htmlName": "Ι",
+        "unicode": "U+0399",
+        "letter": "Iota"
+    },
+    {
+        "id": 184,
+        "character": "Ϊ",
+        "entitycode": "#938;",
+        "altcode": "938",
+        "description": "Greek capital letter Iota with Dialitika",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "unicode": "U+03AA",
+        "letter": "Iota"
+    },
+    {
+        "id": 185,
+        "character": "Ί",
+        "entitycode": "#906;",
+        "altcode": "906",
+        "description": "Greek capital letter Iota with Tonos",
+        "language": "el",
+        "rownum": 1,
+        "langrow": "el1",
+        "inuse": 1,
+        "unicode": "U+038A",
+        "letter": "Iota"
+    },
+    {
+        "id": 186,
+        "character": "κ",
+        "entitycode": "#954;",
+        "altcode": "954",
+        "description": "Greek small letter Kappa",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "κ",
+        "unicode": "U+03BA",
+        "letter": "Kappa"
+    },
+    {
+        "id": 187,
+        "character": "Κ",
+        "entitycode": "#922;",
+        "altcode": "922",
+        "description": "Greek capital letter Kappa",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "Κ",
+        "unicode": "U+039A",
+        "letter": "Kappa"
+    },
+    {
+        "id": 188,
+        "character": "λ",
+        "entitycode": "#955;",
+        "altcode": "955",
+        "description": "Greek small letter Lambda",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "λ",
+        "unicode": "U+03BB",
+        "letter": "Lambda"
+    },
+    {
+        "id": 189,
+        "character": "Λ",
+        "entitycode": "#923;",
+        "altcode": "923",
+        "description": "Greek capital letter Lambda",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "Λ",
+        "unicode": "U+039B",
+        "letter": "Lambda"
+    },
+    {
+        "id": 190,
+        "character": "μ",
+        "entitycode": "#956;",
+        "altcode": "230 (956)",
+        "description": "Greek small letter Mu",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "μ",
+        "unicode": "U+03BC",
+        "letter": "Mu"
+    },
+    {
+        "id": 191,
+        "character": "Μ",
+        "entitycode": "#924;",
+        "altcode": "924",
+        "description": "Greek capital letter Mu",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "Μ",
+        "unicode": "U+039C",
+        "letter": "Mu"
+    },
+    {
+        "id": 192,
+        "character": "ν",
+        "entitycode": "#957;",
+        "altcode": "957",
+        "description": "Greek small letter Nu",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "ν",
+        "unicode": "U+03BD",
+        "letter": "Nu"
+    },
+    {
+        "id": 193,
+        "character": "Ν",
+        "entitycode": "#925;",
+        "altcode": "925",
+        "description": "Greek capital letter Nu",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "Ν",
+        "unicode": "U+039D",
+        "letter": "Nu"
+    },
+    {
+        "id": 194,
+        "character": "ξ",
+        "entitycode": "#958;",
+        "altcode": "958",
+        "description": "Greek small letter Xi",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "ξ",
+        "unicode": "U+03BE",
+        "letter": "Xi"
+    },
+    {
+        "id": 195,
+        "character": "Ξ",
+        "entitycode": "#926;",
+        "altcode": "926",
+        "description": "Greek capital letter Xi",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "Ξ",
+        "unicode": "U+039E",
+        "letter": "Xi"
+    },
+    {
+        "id": 196,
+        "character": "ο",
+        "entitycode": "#959;",
+        "altcode": "959",
+        "description": "Greek small letter Omicron",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "ο",
+        "unicode": "U+03BF",
+        "letter": "Omicron"
+    },
+    {
+        "id": 197,
+        "character": "ό",
+        "entitycode": "#972;",
+        "altcode": "972",
+        "description": "Greek small letter Omicron with Tonos",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "unicode": "U+03CC",
+        "letter": "Omicron"
+    },
+    {
+        "id": 198,
+        "character": "Ο",
+        "entitycode": "#927;",
+        "altcode": "927",
+        "description": "Greek capital letter Omicron",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "Ο",
+        "unicode": "U+039F",
+        "letter": "Omicron"
+    },
+    {
+        "id": 199,
+        "character": "Ό",
+        "entitycode": "#908;",
+        "altcode": "908",
+        "description": "Greek capital letter Omicron with Tonos",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "unicode": "U+038C",
+        "letter": "Omicron"
+    },
+    {
+        "id": 200,
+        "character": "π",
+        "entitycode": "#960;",
+        "altcode": "227 (960)",
+        "description": "Greek small letter Pi",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "π",
+        "unicode": "U+03C0",
+        "letter": "Pi"
+    },
+    {
+        "id": 201,
+        "character": "ϖ",
+        "entitycode": "#982;",
+        "altcode": "982",
+        "description": "Greek Pi symbol",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "ϖ",
+        "unicode": "U+03D6",
+        "letter": "Pi"
+    },
+    {
+        "id": 202,
+        "character": "Π",
+        "entitycode": "#928;",
+        "altcode": "928",
+        "description": "Greek capital letter Pi",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "Π",
+        "unicode": "U+03A0",
+        "letter": "Pi"
+    },
+    {
+        "id": 203,
+        "character": "ρ",
+        "entitycode": "#961;",
+        "altcode": "961",
+        "description": "Greek small letter Rho",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "ρ",
+        "unicode": "U+03C1",
+        "letter": "Rho"
+    },
+    {
+        "id": 204,
+        "character": "Ρ",
+        "entitycode": "#929;",
+        "altcode": "929",
+        "description": "Greek capital letter Rho",
+        "language": "el",
+        "rownum": 2,
+        "langrow": "el2",
+        "inuse": 1,
+        "htmlName": "Ρ",
+        "unicode": "U+03A1",
+        "letter": "Rho"
+    },
+    {
+        "id": 205,
+        "character": "σ",
+        "entitycode": "#963;",
+        "altcode": "229 (963)",
+        "description": "Greek small letter Sigma",
+        "language": "el",
+        "rownum": 3,
+        "langrow": "el3",
+        "inuse": 1,
+        "htmlName": "σ",
+        "unicode": "U+03C3",
+        "letter": "Sigma"
+    },
+    {
+        "id": 206,
+        "character": "ς",
+        "entitycode": "#962;",
+        "altcode": "962",
+        "description": "Greek small letter final Sigma",
+        "language": "el",
+        "rownum": 3,
+        "langrow": "el3",
+        "inuse": 1,
+        "htmlName": "ς",
+        "unicode": "U+03C2",
+        "letter": "Sigma"
+    },
+    {
+        "id": 207,
+        "character": "ϲ",
+        "entitycode": "#1010;",
+        "altcode": "1010",
+        "description": "Greek lunate Sigma symbol",
+        "language": "el",
+        "rownum": 3,
+        "langrow": "el3",
+        "inuse": 1,
+        "unicode": "U+03F2",
+        "letter": "Sigma"
+    },
+    {
+        "id": 208,
+        "character": "ͻ",
+        "entitycode": "#891;",
+        "altcode": "891",
+        "description": "Greek small reversed lunate Sigma symbol",
+        "language": "el",
+        "rownum": 3,
+        "langrow": "el3",
+        "inuse": 1,
+        "unicode": "U+037B",
+        "letter": "Sigma"
+    },
+    {
+        "id": 209,
+        "character": "ͼ",
+        "entitycode": "#892;",
+        "altcode": "892",
+        "description": "Greek small dotted lunate Sigma symbol",
+        "language": "el",
+        "rownum": 3,
+        "langrow": "el3",
+        "inuse": 1,
+        "unicode": "U+037C",
+        "letter": "Sigma"
+    },
+    {
+        "id": 210,
+        "character": "ͽ",
+        "entitycode": "#893;",
+        "altcode": "893",
+        "description": "Greek small reversed dotted lunate Sigma symbol",
+        "language": "el",
+        "rownum": 3,
+        "langrow": "el3",
+        "inuse": 1,
+        "unicode": "U+037D",
+        "letter": "Sigma"
+    },
+    {
+        "id": 211,
+        "character": "Σ",
+        "entitycode": "#931;",
+        "altcode": "228 (931)",
+        "description": "Greek capital letter Sigma",
+        "language": "el",
+        "rownum": 3,
+        "langrow": "el3",
+        "inuse": 1,
+        "htmlName": "Σ",
+        "unicode": "U+03A3",
+        "letter": "Sigma"
+    },
+    {
+        "id": 212,
+        "character": "Ϲ",
+        "entitycode": "#1017;",
+        "altcode": "1017",
+        "description": "Greek capital lunate Sigma symbol",
+        "language": "el",
+        "rownum": 3,
+        "langrow": "el3",
+        "inuse": 1,
+        "unicode": "U+03F9",
+        "letter": "Sigma"
+    },
+    {
+        "id": 213,
+        "character": "Ͻ",
+        "entitycode": "#1021;",
+        "altcode": "1021",
+        "description": "Greek capital reversed lunate Sigma symbol",
+        "language": "el",
+        "rownum": 3,
+        "langrow": "el3",
+        "inuse": 1,
+        "unicode": "U+03FD",
+        "letter": "Sigma"
+    },
+    {
+        "id": 214,
+        "character": "Ͼ",
+        "entitycode": "#1022;",
+        "altcode": "1022",
+        "description": "Greek capital dotted lunate Sigma symbol",
+        "language": "el",
+        "rownum": 3,
+        "langrow": "el3",
+        "inuse": 1,
+        "unicode": "U+03FE",
+        "letter": "Sigma"
+    },
+    {
+        "id": 215,
+        "character": "Ͽ",
+        "entitycode": "#1023;",
+        "altcode": "1023",
+        "description": "Greek capital reversed dotted lunate Sigma symbol",
+        "language": "el",
+        "rownum": 3,
+        "langrow": "el3",
+        "inuse": 1,
+        "unicode": "U+03FF",
+        "letter": "Sigma"
+    },
+    {
+        "id": 216,
+        "character": "τ",
+        "entitycode": "#964;",
+        "altcode": "231 (964)",
+        "description": "Greek small letter Tau",
+        "language": "el",
+        "rownum": 3,
+        "langrow": "el3",
+        "inuse": 1,
+        "htmlName": "τ",
+        "unicode": "U+03C4",
+        "letter": "Tau"
+    },
+    {
+        "id": 217,
+        "character": "Τ",
+        "entitycode": "#932;",
+        "altcode": "932",
+        "description": "Greek capital letter Tau",
+        "language": "el",
+        "rownum": 3,
+        "langrow": "el3",
+        "inuse": 1,
+        "htmlName": "Τ",
+        "unicode": "U+03A4",
+        "letter": "Tau"
+    },
+    {
+        "id": 218,
+        "character": "υ",
+        "entitycode": "#965;",
+        "altcode": "965",
+        "description": "Greek small letter Upsilon",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "htmlName": "υ",
+        "unicode": "U+03C5",
+        "letter": "Upsilon"
+    },
+    {
+        "id": 219,
+        "character": "ϋ",
+        "entitycode": "#971;",
+        "altcode": "971",
+        "description": "Greek small letter Upsilon with Dialytika",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "unicode": "U+03CB",
+        "letter": "Upsilon"
+    },
+    {
+        "id": 220,
+        "character": "ύ",
+        "entitycode": "#973;",
+        "altcode": "973",
+        "description": "Greek small letter Upsilon with Tonos",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "unicode": "U+03CD",
+        "letter": "Upsilon"
+    },
+    {
+        "id": 221,
+        "character": "ΰ",
+        "entitycode": "#944;",
+        "altcode": "944",
+        "description": "Greek small letter Upsilon with Dialitika and Tonos",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "unicode": "U+03B0",
+        "letter": "Upsilon"
+    },
+    {
+        "id": 222,
+        "character": "ϒ",
+        "entitycode": "#978;",
+        "altcode": "978",
+        "description": "Greek Upsilon with hook symbol",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "htmlName": "ϒ",
+        "unicode": "U+03D2",
+        "letter": "Upsilon"
+    },
+    {
+        "id": 223,
+        "character": "Υ",
+        "entitycode": "#933;",
+        "altcode": "933",
+        "description": "Greek capital letter Upsilon",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "htmlName": "Υ",
+        "unicode": "U+03A5",
+        "letter": "Upsilon"
+    },
+    {
+        "id": 224,
+        "character": "Ϋ",
+        "entitycode": "#939;",
+        "altcode": "939",
+        "description": "Greek capital letter Upsilon with Dialitika",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "unicode": "U+03AB",
+        "letter": "Upsilon"
+    },
+    {
+        "id": 225,
+        "character": "Ύ",
+        "entitycode": "#910;",
+        "altcode": "910",
+        "description": "Greek capital letter Upsilon with Tonos",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "unicode": "U+038E",
+        "letter": "Upsilon"
+    },
+    {
+        "id": 226,
+        "character": "φ",
+        "entitycode": "#968;",
+        "altcode": "237 (966)",
+        "description": "Greek small letter Phi",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "htmlName": "φ",
+        "unicode": "U+03C6",
+        "letter": "Phi"
+    },
+    {
+        "id": 227,
+        "character": "ϕ",
+        "entitycode": "#981;",
+        "altcode": "232 (981)",
+        "description": "Greek Phi symbol",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "unicode": "U+03D5",
+        "letter": "Phi"
+    },
+    {
+        "id": 228,
+        "character": "Φ",
+        "entitycode": "#934;",
+        "altcode": "232 (934)",
+        "description": "Greek capital letter Phi",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "htmlName": "Φ",
+        "unicode": "U+03A6",
+        "letter": "Phi"
+    },
+    {
+        "id": 229,
+        "character": "χ",
+        "entitycode": "#967;",
+        "altcode": "967",
+        "description": "Greek small letter Chi",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "htmlName": "χ",
+        "unicode": "U+03C7",
+        "letter": "Chi"
+    },
+    {
+        "id": 230,
+        "character": "Χ",
+        "entitycode": "#935;",
+        "altcode": "935",
+        "description": "Greek capital letter Chi",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "htmlName": "Χ",
+        "unicode": "U+03A7",
+        "letter": "Chi"
+    },
+    {
+        "id": 231,
+        "character": "ψ",
+        "entitycode": "#968;",
+        "altcode": "968",
+        "description": "Greek small letter Psi",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "htmlName": "ψ",
+        "unicode": "U+03C8",
+        "letter": "Psi"
+    },
+    {
+        "id": 232,
+        "character": "Ψ",
+        "entitycode": "#936;",
+        "altcode": "936",
+        "description": "Greek capital letter Psi",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "htmlName": "Ψ",
+        "unicode": "U+03A8",
+        "letter": "Psi"
+    },
+    {
+        "id": 233,
+        "character": "ω",
+        "entitycode": "#969;",
+        "altcode": "969",
+        "description": "Greek small letter Omega",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "htmlName": "ω",
+        "unicode": "U+03C9",
+        "letter": "Omega"
+    },
+    {
+        "id": 234,
+        "character": "ώ",
+        "entitycode": "#974;",
+        "altcode": "974",
+        "description": "Greek small letter Omega with Tonos",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "unicode": "U+03CE",
+        "letter": "Omega"
+    },
+    {
+        "id": 235,
+        "character": "Ω",
+        "entitycode": "#937;",
+        "altcode": "234 (937)",
+        "description": "Greek capital letter Omega",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "htmlName": "Ω",
+        "unicode": "U+03A9",
+        "letter": "Omega"
+    },
+    {
+        "id": 236,
+        "character": "Ώ",
+        "entitycode": "#911;",
+        "altcode": "911",
+        "description": "Greek capital letter Omega with Tonos",
+        "language": "el",
+        "rownum": 4,
+        "langrow": "el4",
+        "inuse": 1,
+        "unicode": "U+038F",
+        "letter": "Omega"
     }
 ]

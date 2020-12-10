@@ -1,6 +1,6 @@
 {% extends "base.html" %}{% block title %}: My Words{% endblock %}{% block page_content %}
 
-<div class="flag-container">
+<div class="flag-container-bar-at-top-14">
     {% for language in language_codes %}
         {% if language.active %}
             {{ macros.generate_flag(endpoint=endpoint, country=language.code, filename=language.filename) }}
@@ -9,37 +9,33 @@
 </div>
 
 {% if words %}
-<div class="my-words-table-list-page">
-<table>
-    <thead>
-        <tr>
-            <th>{% if english %}Word{% else %}English{% endif %}</th>
-            <th>{% if english %}Example{% else %}{{ lng.lng_eng }} / {{ lng.lng_src }}{% endif %}</th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
 
-    <tbody>{% for user_example in words %}  
-            <tr>
-                {% if english %}
-                    <td><a href="{{ url_for('main.define', word=user_example.word) }}">{{ user_example.word }}</a></td>
-                    <td>{{ user_example.example }}</td>
-                    <td>{{ macros.success_and_fail_statistics(user_example) }}</td>
-                    <td><a href="{{ url_for('main.define', word=user_example.word ) }}"><i class="fa fa-edit"></i></a></td>
-                    <td><a href="{{ url_for('main.delete', id=user_example.id, lng=lng.code) }}"><i class="fa fa-trash"></i></a></td>
-                {% else %}
-                    <td>{{ user_example.word }}</td>
-                    <td><a href="{{ url_for('main.edit', id=user_example.id, lng=lng.code) }}">{{ user_example.example }}</a></td>
-                    <td>{{ macros.success_and_fail_statistics(user_example) }}</td>
-                    <td><a href="{{ url_for('main.edit', id=user_example.id, lng=lng.code) }}"><i class="fa fa-edit"></i></a></td>
-                    <td><a href="{{ url_for('main.delete', id=user_example.id, lng=lng.code) }}"><i class="fa fa-trash"></i></a></td>
-                {% endif %}
-            </tr>
-    {% endfor %}</tbody>
-</table>
+<div class="results-table-container">
+    <div class="table-header-results-and-list-page {% if english %} list-page-grid-english{% else %}list-page-grid-foreign{% endif %}">
+        <div class="table-cell-text-73">{% if english %}Word{% else %}English{% endif %}</div>
+        <div class="table-cell-text-73">{% if english %}Example{% else %}{{ lng.lng_eng }} / {{ lng.lng_src }}{% endif %}</div>
+        <div class="table-cell-text-73"></div>
+        <div class="table-cell-text-73"></div>
+        <div class="table-cell-text-73"></div>
+    </div>
 
+    {% for user_example in words %}  
+        <div class="table-row-results-and-list-page {% if english %}list-page-grid-english{% else %}list-page-grid-foreign{% endif %}">
+        {% if english %}
+            <div class="table-cell-text-73"><a href="{{ url_for('main.define', word=user_example.word) }}">{{ user_example.word }}</a></div>
+            <div class="table-cell-text-73">{{ user_example.example }}</div>
+            <div class="table-cell-text-73">{{ macros.success_and_fail_statistics(user_example) }}</div>
+            <div class="table-cell-text-73"><a href="{{ url_for('main.define', word=user_example.word ) }}"><i class="fa fa-edit"></i></a></div>
+            <div class="table-cell-text-73">{{ macros.delete_trash_icon(user_example, lng.code, 'main.list', False, True) }}</div>
+        {% else %}
+            <div class="table-cell-text-73">{{ user_example.word }}</div>
+            <div class="table-cell-text-73"><a href="{{ url_for('main.edit', id=user_example.id, lng=lng.code) }}">{{ user_example.example }}</a></div>
+            <div class="table-cell-text-73">{{ macros.success_and_fail_statistics(user_example) }}</div>
+            <div class="table-cell-text-73"><a href="{{ url_for('main.edit', id=user_example.id, lng=lng.code) }}"><i class="fa fa-edit"></i></a></div>
+            <div class="table-cell-text-73">{{ macros.delete_trash_icon(user_example, lng.code, 'main.list', False, True) }}</div>
+        {% endif %}
+        </div>
+    {% endfor %}
 {{ macros.pagination_widget(pagination, endpoint=endpoint, lng=lng.code, user_id=user_id) }}
 
 {% else %}{{ macros.no_saved_words_message(endpoint=endpoint, language=lng, is_english=english) }}{% endif %}
