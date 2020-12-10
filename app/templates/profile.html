@@ -9,12 +9,14 @@
 
     <div class="flags-preferences-wrapper">
         {% for language in language_codes %}
-        <div>
-            <div class="pl82020-profile-page-placeholder">
+
+        <div class="float-container-profile-45">
+
+            <div class="float-child-profile-46">
                 {{ macros.generate_flag(endpoint='.list', country=language.code, filename=language.filename) }}
             </div>
-
-            <div class="pl82020-profile-page-placeholder">
+            
+            <div class="float-child-profile-46">
                 <label class="switch">
                     <input type="hidden" name="language_name" value="{{ language.lng_eng.lower() }}">
                     <input type="hidden" name="hidden_input_value" value="{% if language.active %}1{% else %}0{% endif %}">
@@ -23,13 +25,14 @@
                 </label>
             </div>
             
-        </div>
+          </div>
+
         {% endfor %}
     </div>
 
-        <div class="update-preferences-btn-wrapper">
-            <button type="submit" class="btn btn-primary btn-125-font-size">Update Preferences</button>
-        </div>
+    <div class="center-btn-container-flexbox-13">
+        <button type="submit" class="btn btn-primary btn-125-font-size">Update Preferences</button>
+    </div>
 
     </form>
 </div>

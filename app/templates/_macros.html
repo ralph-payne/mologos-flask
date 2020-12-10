@@ -117,7 +117,7 @@
     
     <form action="{{ url_for('main.delete') }}" method="POST">
            
-        <button type="submit"><i class="fa fa-trash {% if big %}fa-2x{% endif %}"></i></button>
+        <button class="no-border-btn" type="submit"><i class="fa fa-trash {% if big %}fa-2x{% endif %}"></i></button>
 
         <input name="word_id" type="hidden" value="{{ word.id }}">
         <input name="lng" type="hidden" value="{{ language }}">
@@ -132,7 +132,7 @@
 
 <!-- SUCCESS AND FAIL STATISTICS MACRO -->
 {% macro success_and_fail_statistics(word) %}
-<span class="word-success-green">{{ word.success }}</span> v <span class="word-fail-red">{{ word.fail }}</span>
+<span class="statistics-box-text-91 word-success-green">{{ word.success }}</span> v <span class="statistics-box-text-91  word-fail-red">{{ word.fail }}</span>
 {% endmacro %}
 
 
@@ -151,4 +151,16 @@
         </select>
     </div>
 </div>
+{% endmacro %}
+
+
+<!-- EDIT ICON ENGLISH -->
+{% macro edit_icon_english(endpoint_edit, word, big) %}
+<a href="{{ url_for(endpoint_edit, word=word ) }}"><i class="fa fa-edit {% if big %}fa-2x{% endif %}"></i></a>
+{% endmacro %}
+
+
+<!-- EDIT ICON FOREIGN-->
+{% macro edit_icon_foreign(endpoint_edit, id, lng_code, big) %}
+<a href="{{ url_for(endpoint_edit, id=id, lng=lng_code ) }}"><i class="fa fa-edit {% if big %}fa-2x{% endif %}"></i></a>
 {% endmacro %}

@@ -72,25 +72,21 @@ a {
 }
 
 
-
-
-
 /* 3: HOMEPAGE */
-.showcase {
+.showcase-header {
     color: #fff;
-    background-color: $primary-color;
     padding: 2rem;
     position: relative;
 
     &:before {
         content: '';
-        background: url('../img/photo_01.jpeg') no-repeat center center/cover;
+        background: url('/static/img/background_homepage_01.jpeg') no-repeat center center/cover;
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        opacity: 0.4;
+        opacity: 0.7;
     }
 
     .showcase-container {
@@ -405,6 +401,10 @@ a {
     }
 }
 
+.padding-top-table-29 {
+    padding-top: 50px;
+}
+
 /* 7: EDIT */
 /* All of Edit CSS is inline at the moment */
 
@@ -421,8 +421,11 @@ a {
     display: grid;
     height: 100px;
 }
-.table-row-english {
-    grid-template-columns: 13fr 4fr 1fr 1fr 1fr;
+.table-row-challenge-english {
+    grid-template-columns: 12fr 4fr 1fr 1fr 1fr;
+}
+.table-row-challenge-foreign {
+    grid-template-columns: 6fr 6fr 1fr 1fr 1fr;
 }
 .table-cell-symbol {
     width: 100%;
@@ -442,14 +445,17 @@ a {
     max-height: 100px;
     align-items: center; /* Vertically aligns */
 }
-.write-guess-text-input {
+.challenge-text-size-74 {
+    font-size: 1.05rem;
+}
+.write-guess-text-input-949 {
     width: 200px;
-    height: 35px;
+    height: 30px;
     margin: 0 10px;
     padding-left: 10px;
     border-radius: 15px;
-    border-color: #000;
-    font-size: 1.10rem;
+    border: 1px solid #333;
+    font-size: 1.05rem;
 }
 .absolute-bottom-and-center-btn-outer-container {
     display: flex;
@@ -470,7 +476,6 @@ a {
 }
 .center-btn-container-flexbox-13 {
     width: 100%;
-    border: 1px dotted #333;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -488,6 +493,9 @@ a {
     min-height: 600px;
 }
 
+.first-col-padding-left-74 {
+    padding-left: 10px;
+}
 
 /* 9: RESULTS */
 .results-table-container {
@@ -771,25 +779,6 @@ a {
     margin-left: -60px
 }
 
-.success-fail-stats-container {
-    width: 60px;
-    display: flex;
-    margin: auto;
-    align-items: center; /* Vertically aligns */
-    justify-content: center; /* Horizontally aligns */
-    background-color: yellow;
-    border: 1px solid brown;
-    border-radius: 10px;
-}
-
-.word-success-green {
-    color: #48954e;
-}
-
-.word-fail-red {
-    color: red;
-}
-
 .defined-word-content-header {
     font-size: 2.5rem;
     font-weight: 600;
@@ -872,12 +861,30 @@ a {
     padding-bottom: 20px;
 }
 
+.success-fail-stats-container {
+    width: 60px;
+    display: flex;
+    margin: auto;
+    align-items: center; /* Vertically aligns */
+    justify-content: center; /* Horizontally aligns */
+    background-color: yellow;
+    border: 1px solid brown;
+    border-radius: 10px;
+}
+
+/* Macros */
 .word-success-green {
     color: #48954e;
 }
 
 .word-fail-red {
     color: #c41e3a;
+}
+
+.statistics-box-text-91 {
+    font-size: 1.20rem;
+    font-weight: 550;
+    padding: 2px;
 }
 
 /* Used for Submit Buttons and Pagination */
@@ -977,6 +984,32 @@ select {
     height: 0;
 }
 
+.float-container-profile-45 {
+    border: 3px solid #fff;
+    padding: 20px;
+    width: 40%;
+}
+
+.float-child-profile-46 {
+    width: 50%;
+    height: 70px;
+    float: left;
+    padding: 15px;
+}
+
+.asfd21 {
+    background-color: orange;
+    width: 50%;
+    padding-bottom: 4px;
+}
+
+.asfd22 {
+    background-color: green;
+    padding-top: 4px;
+    width: 50%;
+    float: right;
+}
+
 .slider {
     position: absolute;
     cursor: pointer;
@@ -1023,9 +1056,27 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
+.woohdi-60 {
+    border: 1px dotted blue;
+    width: 20%;
+}
+
 .pl82020-profile-page-placeholder { /* What is this ?? */
     display: inline;
-    padding: 0 10px;
+    height: 100%;
+    padding-top: 10px;
+    padding-left: 10px;
+    border: 1px solid #333;
+}
+
+flag-container-profile-page-71 {
+    height: 100%;
+    border: 1px solid green;
+}
+
+switch-container-profile-page-72 {
+    height: 100%;
+    border: 1px solid red;
 }
 
 .flags-preferences-wrapper {
@@ -1240,4 +1291,10 @@ input:checked + .slider:before {
 /* Show the dropdown menu on hover */
 .nav-dropdown-container-31:hover .nav-dropdown-content-33 {
     display: block;
+}
+
+/* Util */
+.no-border-btn {
+    border: none;
+    cursor: pointer;
 }

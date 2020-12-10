@@ -11,8 +11,8 @@
 {% if words %}
 
 <div class="results-table-container">
-    <div class="table-header-results-and-list-page {% if english %} list-page-grid-english{% else %}list-page-grid-foreign{% endif %}">
-        <div class="table-cell-text-73">{% if english %}Word{% else %}English{% endif %}</div>
+    <div class="table-header-results-and-list-page list-page-grid-{% if english %}english{% else %}foreign{% endif %}">
+        <div class="table-cell-text-73 first-col-padding-left-74">{% if english %}Word{% else %}English{% endif %}</div>
         <div class="table-cell-text-73">{% if english %}Example{% else %}{{ lng.lng_eng }} / {{ lng.lng_src }}{% endif %}</div>
         <div class="table-cell-text-73"></div>
         <div class="table-cell-text-73"></div>
@@ -22,16 +22,16 @@
     {% for user_example in words %}  
         <div class="table-row-results-and-list-page {% if english %}list-page-grid-english{% else %}list-page-grid-foreign{% endif %}">
         {% if english %}
-            <div class="table-cell-text-73"><a href="{{ url_for('main.define', word=user_example.word) }}">{{ user_example.word }}</a></div>
+            <div class="table-cell-text-73 first-col-padding-left-74"><a href="{{ url_for('main.define', word=user_example.word) }}">{{ user_example.word }}</a></div>
             <div class="table-cell-text-73">{{ user_example.example }}</div>
             <div class="table-cell-text-73">{{ macros.success_and_fail_statistics(user_example) }}</div>
-            <div class="table-cell-text-73"><a href="{{ url_for('main.define', word=user_example.word ) }}"><i class="fa fa-edit"></i></a></div>
+            <div class="table-cell-text-73">{{ macros.edit_icon_english('main.define', user_example.word, True) }}</div>
             <div class="table-cell-text-73">{{ macros.delete_trash_icon(user_example, lng.code, 'main.list', False, True) }}</div>
         {% else %}
-            <div class="table-cell-text-73">{{ user_example.word }}</div>
+            <div class="table-cell-text-73 first-col-padding-left-74">{{ user_example.word }}</div>
             <div class="table-cell-text-73"><a href="{{ url_for('main.edit', id=user_example.id, lng=lng.code) }}">{{ user_example.example }}</a></div>
             <div class="table-cell-text-73">{{ macros.success_and_fail_statistics(user_example) }}</div>
-            <div class="table-cell-text-73"><a href="{{ url_for('main.edit', id=user_example.id, lng=lng.code) }}"><i class="fa fa-edit"></i></a></div>
+            <div class="table-cell-text-73">{{ macros.edit_icon_foreign('main.edit', user_example.id, lng.code, True) }}</div>
             <div class="table-cell-text-73">{{ macros.delete_trash_icon(user_example, lng.code, 'main.list', False, True) }}</div>
         {% endif %}
         </div>
