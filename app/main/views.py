@@ -26,6 +26,7 @@ def index():
     return render_template('index.html')
 
 
+# ADD
 @main.route('/add', methods=['POST'])
 @login_required
 def add():
@@ -35,7 +36,12 @@ def add():
 
         # Get posted form input
         user_example = request.form.get('user_example')
-        word_id = request.form.get('word_id')
+        try:
+            word_id = int(request.form.get('word_id'))
+        except:
+            word_id = 0
+        print(f'word ID is {word_id}')
+        print(f'word ID type is {type(word_id)}')
         example_already_exists = to_bool(request.form.get('example_already_exists'))
 
         if example_already_exists:
