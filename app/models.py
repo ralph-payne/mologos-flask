@@ -93,8 +93,7 @@ class UserExample(db.Model):
     # Example contains either (1) a sentence in English with the target word in or (2) the translated sentence in the destination language (dst)
     example = db.Column(db.String(256))
     user_id = db.Column(db.Integer, db.ForeignKey('app_user.id'))
-    word = db.Column(db.String(64), db.ForeignKey('word.word'), index=True)
-    word_id = db.Column(db.Integer, db.ForeignKey('word.id'))
+    word = db.Column(db.String(64), index=True)
     # Translation boolean: 0 indicates that it is an English expression | 1 indicates that it is a foreign translation
     translation = db.Column(db.Boolean)
     src = db.Column(db.String(2))
@@ -112,10 +111,9 @@ class UserExample(db.Model):
     ignored = db.Column(db.Boolean, default=0)
     starred = db.Column(db.Boolean, default=0)
 
-    def __init__(self, example, word, word_id, user_id, translation, src, dst):
+    def __init__(self, example, word, user_id, translation, src, dst):
         self.example = example
         self.word = word
-        self.word_id = word_id
         self.user_id = user_id
         self.translation = translation
         self.src = src

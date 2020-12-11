@@ -33,19 +33,13 @@ def add():
 
         # Get posted form input
         user_example = request.form.get('user_example')
-        try:
-            word_id = int(request.form.get('word_id'))
-        except:
-            word_id = 0
-        print(f'word ID is {word_id}')
-        print(f'word ID type is {type(word_id)}')
         example_already_exists = to_bool(request.form.get('example_already_exists'))
 
         if example_already_exists:
             # Insert User's Example sentence into database
             UserExample.query.filter_by(user_id=current_user.id).filter_by(word=word).update({'example': user_example})
         else:
-            record = UserExample(example=user_example, word=word, word_id=word_id, user_id=current_user.id, translation=False, src=None, dst='en')
+            record = UserExample(example=user_example, word=word, user_id=current_user.id, translation=False, src=None, dst='en')
             db.session.add(record)
         
         db.session.commit()
@@ -228,7 +222,7 @@ def translate():
             text_in_english = request.form.get('text_in_english_add_db')
             translation_output_add_db = request.form.get('translation_output_add_db')
 
-            record = UserExample(example=translation_output_add_db, word=text_in_english, word_id=None, user_id=current_user.id, translation=True, src='en', dst=most_recent_translation_lang)
+            record = UserExample(example=translation_output_add_db, word=text_in_english, user_id=current_user.id, translation=True, src='en', dst=most_recent_translation_lang)
 
             db.session.add(record)
             db.session.commit()
@@ -497,7 +491,7 @@ def upload_translations():
 
             # TODO => Word ID is redundant? Or is it?? Check this!
             # You will clobber any previously loaded User Examples so you should find a work around for that
-            record_user_example = UserExample(example=target_word_to_add_to_db_828, word=foreign_word8137_to_add_to_db, word_id=None, user_id=current_user.id, translation=True, src='en', dst=uploaded_language)
+            record_user_example = UserExample(example=target_word_to_add_to_db_828, word=foreign_word8137_to_add_to_db, user_id=current_user.id, translation=True, src='en', dst=uploaded_language)
             db.session.add(record_user_example)
             
         db.session.commit()
@@ -560,11 +554,8 @@ def upload_english():
                 target_word_to_add_to_db_828 = list_of_target_words_72[i].strip()
                 sentence_which_should_contain_target_word_add_to_db_8317 = split_list[i]
 
-                print(i)
-                print(target_word_to_add_to_db_828)
-
                 # You will clobber any previously loaded User Examples so you should find a work around for that
-                record_user_example = UserExample(word=target_word_to_add_to_db_828, example=sentence_which_should_contain_target_word_add_to_db_8317, word_id=None, user_id=current_user.id, translation=False, src=None, dst=uploaded_language)
+                record_user_example = UserExample(word=target_word_to_add_to_db_828, example=sentence_which_should_contain_target_word_add_to_db_8317, user_id=current_user.id, translation=False, src=None, dst=uploaded_language)
                 
                 db.session.add(record_user_example)
 
@@ -581,7 +572,7 @@ def upload_english():
     # TODO #
         # This is when the user doesn't provide any target words
         for example in split_list:
-            record_user_example = UserExample(example=example, word=None, word_id=None, user_id=current_user.id, translation=False, src=None, dst=uploaded_language)
+            record_user_example = UserExample(example=example, word=None, user_id=current_user.id, translation=False, src=None, dst=uploaded_language)
             db.session.add(record_user_example)
 
         db.session.commit()
