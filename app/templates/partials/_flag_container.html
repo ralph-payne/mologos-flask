@@ -1,0 +1,9 @@
+{% import "_macros.html" as macros %}
+
+<div class="flag-container-bar-at-top-14">
+    {% for language in language_codes %}
+        {% if language.active %}
+            {{ macros.generate_flag(endpoint=endpoint, country=language.code, filename=language.filename) }}
+        {% endif %}
+    {% endfor %}
+</div>

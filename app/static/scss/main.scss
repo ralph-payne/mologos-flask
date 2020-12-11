@@ -3,8 +3,11 @@
 @import 'media_queries';
 @import 'auth';
 
-/* 0: WHAT IS THIS CALLED */
+/* 0: WHOLE SITE */
 * {
+    /* border-box tells the browser to account for any border and padding in the values you specify for an element's width and height. If you set an element's width to 100 pixels, that 100 pixels will include any border or padding you added, and the content box will shrink to absorb that extra width. This typically makes it much easier to size elements.
+    https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing?v=control
+    */
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
 }
@@ -114,65 +117,20 @@ a {
     grid-gap: 1rem;
 }
 
-
-/* ?? DEFINITION and EDIT */
-.definition-page-container, .edit-page-container {
-    > div {
-        padding: 0.5rem 0rem;
-    }
-}
-
-.definition-page-container {
-    min-height: 500px;
-}
-
-.defined-word-content-header {
-    font-size: 2.5rem;
-    font-weight: 600;
-}
-
-.word-pronunication-ipa-span-content {
-    font-size: 1.25rem;
-}
-
-.definition-page-header-two-container {
-    padding-top: 1.25rem;
-    border-top: 1px solid #000;
-}
-
-.definition-page-header-two {
-    font-weight: 350;
-    font-size: 1.35rem;
-}
-
-.ordered-and-unordered-lists {
-    padding-left: 2rem;
-}    
-
-.left-indent-definition-page {
-    padding-left: 0.75rem;
-}
-
-.list-item-definition-page-bullets {
-    list-style-type: square;
-}
-
 .translation-table-grid-972 {
     display: grid;
-    grid-gap: 0.1rem;
+    grid-gap: 0.50rem;
     grid-template-columns: 55px 400px;
     padding: 0.25rem 0.75rem;
+    align-items: center;
 }
+
 
 .translation-table-grid-item-973 {
     padding: 0.1rem 0.0rem;
     text-align: left;
     font-weight: 500;
     font-size: 1.1rem;
-}
-
-.add-to-or-update-dict-btn-wrapper {
-    padding: 0.75rem;
 }
 
 .word-pron-and-symbols-container {
@@ -202,13 +160,6 @@ a {
     width: 300px;
 }
 
-
-
-.trash-extra-padding {
-    /* Extra padding as trash icon is slightly smaller */
-    padding: 0px 3px;
-}
-
 .tooltip-container {
     position: relative;
     display: inline-block;
@@ -236,9 +187,7 @@ a {
     z-index: 1;
 }
 
-.add-dict-btn-wrapper {
-    padding: 1rem 0rem;
-}
+
   
 /* Used for the Definition and Edit Pages */
 .definition-example-text-box-container {
@@ -329,11 +278,6 @@ a {
     grid-area: box-5;
 }
 
-/* Vertical and Horizontal centering for button within a div*/
-.btn-wrapper {
-    display: flex;
-    justify-content: center;
-}
 
 .header,
 .content,
@@ -353,32 +297,18 @@ a {
     text-align: center
 }
 
-.flag {
-    border: 1px solid black;
-    width: 3rem;
-    height: 2rem;
+.a-tag-wrapper-flag-36-54 {
+    height: 36px;
+    width: 54px;
 }
 
-.previous-translations-grid {
-    padding-top: 20px;
-    width: 100%;
+.flag-36-54 {
+    border: 1px solid black;
+    height: 36px;
+    width: 54px;
 }
-.table-row-recent-translation {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 3fr 1fr 3fr 1fr 1fr;
-    min-height: 40px;
-    max-height: 60px;
-}
-.table-cell-symbol {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    margin: auto;
-    align-items: center; /* Vertically aligns */
-    justify-content: center; /* Horizontally aligns */
-    border-radius: 10px;
-}
+
+
 
 
 /* 6: LIST */
@@ -405,45 +335,63 @@ a {
     padding-top: 50px;
 }
 
-/* 7: EDIT */
-/* All of Edit CSS is inline at the moment */
 
-
-/* 8: CHALLENGE */
-.flag-container-bar-at-top-14 {
-    padding-top: 20px;
-}
+/* 8: CHALLENGE PAGE */
 .table-challenge-english {
     width: 100%;
 }
+.table-header-background-color {
+    background-color: $secondary-color;
+    color: set-text-color($secondary-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+    height: 50px;
+    position: sticky;
+    padding-top: 0.5rem;
+}
+
+.inner-wrapper-1820 { 
+    padding: 15px 0px;
+}
+
+.min-height-max-height-table-row {
+    min-height: 60px;
+    max-height: 120px;
+}
+
+.vertical-center-in-row-213 {
+    align-items: center; /* Vertically aligns */
+}
+
 .table-row-challenge-page {
-    width: 100%;
+    border: 1px solid #dee2e6; /* Size, Type, Color */
     display: grid;
-    height: 100px;
+    width: 100%;
 }
 .table-row-challenge-english {
-    grid-template-columns: 12fr 4fr 1fr 1fr 1fr;
+    grid-template-columns: 12fr 1fr;
 }
 .table-row-challenge-foreign {
-    grid-template-columns: 6fr 6fr 1fr 1fr 1fr;
+    grid-template-columns: 6fr 6fr 1fr;
 }
-.table-cell-symbol {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    margin: auto;
+.table-cell-symbol-centered-11 {
     align-items: center; /* Vertically aligns */
-    justify-content: center; /* Horizontally aligns */
     border-radius: 10px;
-}
-.table-cell-text-73 {
-    width: 100%;
-    height: 100%;
     display: flex;
+    height: 100%;
+    justify-content: center; /* Horizontally aligns */
     margin: auto;
-    line-height: 25px;
-    max-height: 100px;
+    width: 100%;
+}
+
+.table-cell-text-73 {
     align-items: center; /* Vertically aligns */
+    display: flex;
+    height: 100%;
+    line-height: 25px;
+    margin: auto;
+    max-height: 100px;
+    width: 100%;
 }
 .challenge-text-size-74 {
     font-size: 1.05rem;
@@ -451,11 +399,107 @@ a {
 .write-guess-text-input-949 {
     width: 200px;
     height: 30px;
-    margin: 0 10px;
-    padding-left: 10px;
-    border-radius: 15px;
+    margin: 0;
+    padding-left: 5px;
+    border-radius: 5px;
     border: 1px solid #333;
-    font-size: 1.05rem;
+    font-size: 1.025rem;
+}
+
+.min-height-table-16 {
+    min-height: 600px;
+}
+.first-col-padding-left-74 {
+    padding-left: 10px;
+}
+.word-12312 {
+    margin: 3px;
+}
+.wrap1240 {
+    display: flex;  
+    flex-wrap: nowrap;
+    vertical-align: text-bottom;
+    border: 1px dotted blue;
+    background-color: $green-color;
+}
+
+
+/* TABLES FOR LIST PAGE, RESULTS PAGE AND CHALLENG PAGE */
+.english-results-grid {
+    display: grid;
+    grid-template-columns: 9fr 3fr 1fr 1fr 1fr;
+}
+.results-page-grid-foreign {
+    display: grid;
+    grid-template-columns: 4fr 4fr 3fr 1fr 1fr 1fr;
+}
+.list-page-grid-english {
+    display: grid;
+    grid-template-columns: 2fr 8fr 1fr 1fr 1fr;
+}
+.list-page-grid-foreign {
+    display: grid;
+    grid-template-columns: 5fr 5fr 1fr 1fr 1fr;
+}
+.table-row-recent-translation {
+    border: 1px solid $gray-color-border; /* Size, Type, Color */
+    width: 100%;
+    display: grid;
+    grid-template-columns: 3fr 1fr 3fr 1fr 1fr 1fr;
+    min-height: 40px;
+    max-height: 60px;
+}
+.table-row-results-and-list-page {
+    border: 1px solid $gray-color-border; /* Size, Type, Color */
+    width: 100%;
+    max-height: 100px;
+    min-height: 40px;
+}
+.table-header-background-color {
+    background-color: $secondary-color;
+    color: set-text-color($secondary-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+    height: 50px;
+    padding-bottom: 0.50rem;
+    position: sticky;
+    text-align: left;
+}
+
+.table-container {
+    width: 100%; 
+}
+.previous-translations-grid {
+    padding-top: 20px;
+    width: 100%;
+}
+
+
+
+/* BUTTONS AND BUTTON WRAPPERS*/
+.next-btn-wrapper-results {
+    display: flex;
+    justify-content: center; /* Horizontally aligns */
+    padding-top: 30px;
+    height: 50%;
+}
+.next-btn-results {
+    cursor: pointer;
+    background-color: $primary-color;
+    color: #fff;
+    padding: 0.5rem 1.5rem;
+    border-radius: .25rem;                    
+}
+.add-to-or-update-dict-btn-wrapper {
+    padding: 0.75rem;
+}
+.add-dict-btn-wrapper {
+    padding: 1rem 0rem;
+}
+/* Vertical and Horizontal centering for button within a div*/
+.btn-wrapper {
+    display: flex;
+    justify-content: center;
 }
 .absolute-bottom-and-center-btn-outer-container {
     display: flex;
@@ -480,87 +524,71 @@ a {
     align-items: center;
     justify-content: center;
 }
+.btn-container-flexbox-2rem-14 {
+    width: 100%;
+    display: flex;
+    padding: 2rem;
+}
 .submit-btn-challenge {
     cursor: pointer;
-    background-color: #48954e;
+    background-color: $green-color;
     color: #fff;
     padding: 0.5rem 1.5rem;
     font-size: 1.10rem;
-    border-radius: .40rem;             
+    border-radius: .40rem;        
 }
-
-.min-height-table-16 {
-    min-height: 600px;
+.add-to-or-update-dict-btn-wrapper {
+    padding: 0.75rem; /* Used for Definition and Edit Page */
 }
-
-.first-col-padding-left-74 {
-    padding-left: 10px;
-}
-
-/* 9: RESULTS */
-.results-table-container {
-    width: 100%;
-}
-.results-table-foreign {
-    width: 100%;
-}
-.english-results-grid {
-    display: grid;
-    grid-template-columns: 9fr 3fr 1fr 1fr 1fr;
-}
-.foreign-results-grid {
-    display: grid;
-    grid-template-columns: 4fr 4fr 3fr 1fr 1fr 1fr;
-}
-.list-page-grid-english {
-    display: grid;
-    grid-template-columns: 2fr 8fr 1fr 1fr 1fr;
-}
-.list-page-grid-foreign {
-    display: grid;
-    grid-template-columns: 3fr 8fr 1fr 1fr 1fr;
-}
-.table-header-results-and-list-page {
-    background-color: $secondary-color;
-    color: set-text-color($secondary-color);
-    font-size: 1.2rem;
-    font-weight: 600;
-    height: 50px;
-    padding-bottom: 0.50rem;
-    position: sticky;
-    text-align: left;
-}
-.table-cell-text-73 {
-    width: 100%;
-    height: 100%;
+/* Used for Submit Buttons and Pagination */
+.absolute-bottom-and-center-btn-outer-container {
     display: flex;
-    margin: auto;
-    align-items: center; /* Vertically aligns */
+    justify-content: center;
+    align-items: center;
+    height: 50px;
 }
-.table-row-results-and-list-page {
-    border: 1px solid #dee2e6; /* Size, Type, Color */
-    width: 100%;
-    max-height: 100px;
-    min-height: 40px;
+.submit-btn-select-target-word {
+    cursor: pointer;
+    background-color: $green-color;
+    color: #fff;
+    padding: 0.5rem 1.5rem;
+    border-radius: .35rem;             
 }
+.upload-examples-btn {
+    cursor: pointer; /* Upload Page */
+    background-color: $primary-color;
+    color: #fff;
+    padding: 0.5rem 1.5rem;
+    border-radius: .35rem;
+}
+.absolute-bottom-and-center-btn-outer-container {
+    display: flex;
+    justify-content: flex-start;
+    height: 50px;
+}
+.absolute-bottom-and-center-btn-inner-container {
+    position: absolute;
+    bottom: 90px;
+    padding-bottom: 0.75rem;
+    padding-left: 0.75rem;
+}
+.btn-125-font-size {
+    font-size: 1.25rem;
+}
+.update-preferences-btn-wrapper {
+    padding-top: 30px;
+}
+.no-border-btn {
+    border: 0;
+    cursor: pointer;
+}
+
+/* 9: RESULTS PAGE */
 .results-box-1-of-2 {
     min-height: 700px;
 }
 .results-box-2-of-2 {
     height: 100px;
-}
-.next-btn-wrapper-results {
-    display: flex;
-    justify-content: center; /* Horizontally aligns */
-    padding-top: 30px;
-    height: 50%;
-}
-.next-btn-results {
-    cursor: pointer;
-    background-color: $primary-color;
-    color: #fff;
-    padding: 0.5rem 1.5rem;
-    border-radius: .25rem;                    
 }
 
 
@@ -573,12 +601,11 @@ a {
     text-align: center;
     background-color: #f6f6f6;
 
-    .error-page-404 {
+    .error-page-404, error-page-500 {
         position: relative;
         height: 180px;
 
         h1 {
-            font-family: 'Roboto', sans-serif;
             position: absolute;
             left: 50%;
             top: 50%;
@@ -598,7 +625,6 @@ a {
     }
 
         h2 {
-            font-family: 'Roboto', sans-serif;
             font-size: 22px;
             font-weight: 400;
             text-transform: uppercase;
@@ -607,7 +633,7 @@ a {
             margin-bottom: 25px;
         }
 
-    }
+}
 
 
 /* PAGINATION */
@@ -636,7 +662,6 @@ a {
     color: #486995;
     background-color: #fff;
     border: 1px solid #dee2e6;
-
     padding: 8px 16px;
     float: left;
     width: auto;
@@ -665,7 +690,7 @@ a {
 }
 
 .pagination-active {
-    color: #48954e;
+    color: $green-color;
     font-weight: 600;
     font-size: 18px;
 }
@@ -678,16 +703,11 @@ a {
     opacity: 0.25;
 }
 
-
 .icon-selected {
     color: $secondary-color;
 }
 
-/* Navbar */
-.navbar-link-active {
-    background-color: #48954e;
-    color: #fff;
-}
+
 
 .no-saved-words-message-div {
     padding-top: 30px;
@@ -730,29 +750,9 @@ a {
     list-style-type: square;
 }
 
-.translation-table-grid-972 {
-    display: grid;
-    grid-gap: 0.1rem;
-    grid-template-columns: 55px 400px;
-    padding: 0.25rem 0.75rem;
-}
 
-.translation-table-grid-item {
-    padding: 0.1rem;
-    background-color: #f4f4f4;
-    border: 1px solid #ccc;
-    text-align: left;
-    font-weight: 500;
-    font-size: 1.1rem;
-}
 
-.add-to-or-update-dict-btn-wrapper {
-    padding: 0.75rem; /* Used for Definition and Edit Page */
-}
 
-.trash-extra-padding {
-    padding: 0px 3px; /* Extra padding as trash icon is slightly smaller */
-}
 
 .tooltip-container:hover .tooltiptext {
     visibility: visible; /* Show tooltip text when you mouse over the tooltip container */
@@ -798,12 +798,6 @@ a {
     cursor: pointer;
 }
 
-.edit-page-translation-table-grid-972 {
-    display: grid;
-    grid-gap: 0.1rem;
-    grid-template-columns: 60px 150px;
-}
-
 .translation-table-grid-item-973 {
     padding: 0.1rem;
     background-color: #f4f4f4;
@@ -818,7 +812,7 @@ a {
     border: 2px dotted #fff;
     display: flex;
     flex-wrap: wrap;
-    height: 150px;
+    min-height: 50px;
     justify-content: center; /* Horizonatally centered */
     margin: 12px;
     padding: 3px;
@@ -828,6 +822,10 @@ a {
 .keyboard-row-19 {
     display: inline;
     padding: 3px;
+}
+
+.keyboard-of-accents-div-012 {
+    min-height: 100px;
 }
 
 .accent-key-20 {
@@ -874,7 +872,7 @@ a {
 
 /* Macros */
 .word-success-green {
-    color: #48954e;
+    color: $green-color;
 }
 
 .word-fail-red {
@@ -887,32 +885,10 @@ a {
     padding: 2px;
 }
 
-/* Used for Submit Buttons and Pagination */
-.absolute-bottom-and-center-btn-outer-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
-}
+
 
 .dropdown-select-min-width-942 {
     min-width: 120px;
-}
-
-.submit-btn-select-target-word {
-    cursor: pointer;
-    background-color: #48954e;
-    color: #fff;
-    padding: 0.5rem 1.5rem;
-    border-radius: .35rem;             
-}
-
-.upload-examples-btn {
-    cursor: pointer; /* Upload Page */
-    background-color: $primary-color;
-    color: #fff;
-    padding: 0.5rem 1.5rem;
-    border-radius: .35rem;
 }
 
 /* Upload Page */
@@ -936,6 +912,7 @@ a {
     display: block;
     padding: 10px;
     font-size: 1.25rem;
+    resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
 }
 .upload-text-area-right {
     height: 500px;
@@ -943,6 +920,7 @@ a {
     display: block;
     padding: 10px;
     font-size: 1.25rem;
+    resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
 }
 select {
     font-size: 1.1rem;
@@ -950,23 +928,10 @@ select {
 .upload-form-container {
     padding: 20px;
 }
-.absolute-bottom-and-center-btn-outer-container {
-    display: flex;
-    justify-content: flex-start;
-    height: 50px;
-}
-.absolute-bottom-and-center-btn-inner-container {
-    position: absolute;
-    bottom: 90px;
-    padding-bottom: 0.75rem;
-    padding-left: 0.75rem;
-}
-.btn-125-font-size {
-    font-size: 1.25rem;
-}
 
 
-/* Profile */
+
+/* PROFILE */
 #javascript-accordion {
     display: none;
 }
@@ -986,13 +951,13 @@ select {
 
 .float-container-profile-45 {
     border: 3px solid #fff;
-    padding: 20px;
-    width: 40%;
+    padding: 10px;
+    width: 30%;
 }
 
 .float-child-profile-46 {
     width: 50%;
-    height: 70px;
+    height: 60px;
     float: left;
     padding: 15px;
 }
@@ -1069,28 +1034,16 @@ input:checked + .slider:before {
     border: 1px solid #333;
 }
 
-flag-container-profile-page-71 {
-    height: 100%;
-    border: 1px solid green;
-}
-
-switch-container-profile-page-72 {
-    height: 100%;
-    border: 1px solid red;
-}
 
 .flags-preferences-wrapper {
     padding: 30px 0 ;
 }
 
-.update-preferences-btn-wrapper {
-    padding-top: 30px;
-}
+
 
 .instructions-for-user {
-    font-size: 1.25rem;
+    font-size: 1.20rem;
     padding-left: 0.75rem;
-    font-size: 1.10rem;
 }
 
 /* Footer */
@@ -1146,7 +1099,6 @@ switch-container-profile-page-72 {
 
 
 /* NAVBAR */
-
 .navbar-grid-container {
     padding-top: 10px;
     height: 80px;
@@ -1203,10 +1155,14 @@ switch-container-profile-page-72 {
     border-left: none;
     background: #f3f3f3;                
 }
+.navbar-link-active {
+    background-color: $green-color;
+    color: #fff;
+}
 
 /* SELECT TARGET WORD */
 .target-word-selected {
-    background-color: #48954e;
+    background-color: $green-color;
     color: #fff;
     font-weight: 600;
     
@@ -1293,8 +1249,43 @@ switch-container-profile-page-72 {
     display: block;
 }
 
-/* Util */
-.no-border-btn {
-    border: none;
-    cursor: pointer;
+/* DEFINITION PAGE */
+.definition-page-container, .edit-page-container {
+    min-height: 400px;
+
+    > div {
+        padding: 0.75rem 0rem;
+    }
 }
+
+.defined-word-content-header {
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+.word-pronunication-ipa-span-content {
+    font-size: 1.25rem;
+}
+
+.definition-page-header-two-container {
+    padding-top: 1.25rem;
+    border-top: 1px solid #000;
+}
+
+.definition-page-header-two {
+    font-weight: 350;
+    font-size: 1.35rem;
+}
+
+.ordered-and-unordered-lists {
+    padding-left: 2rem;
+}    
+
+.left-indent-definition-page {
+    padding-left: 0.75rem;
+}
+
+.list-item-definition-page-bullets {
+    list-style-type: square;
+}
+/* end of Definition Page */

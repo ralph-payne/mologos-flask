@@ -13,14 +13,11 @@
             </div>
         </div>
         <div class="right-40-word-pron-symbols">
-            <div class="eye-star-bin-container">
             {% if user_example %}
                 {{ macros.eye_symbol_hide_word(user_example, 'en', False, 'main.define' ) }}
                 {{ macros.star_symbol(user_example, 'en', False, 'main.define' ) }}
                 {{ macros.success_and_fail_statistics(user_example) }}
-                {{ macros.delete_trash_icon(user_example, 'en', 'main.define', False, True) }}</div>
             {% endif %}
-            </div>
         </div>
     </div>
 

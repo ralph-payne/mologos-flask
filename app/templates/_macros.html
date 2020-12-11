@@ -64,7 +64,7 @@
 <!-- GENERATE FLAG MACRO -->
 {% macro generate_flag(endpoint, country, filename) %}
 {% set filename = ('img/flags/{country}.png'.format(country=country)) %}
-<a href="{{ url_for(endpoint, lng=country) }}"><img src="{{ url_for('static', filename=filename) }}" alt="flag-{{ country }}" class="flag"></a>
+<a class="a-tag-wrapper-flag-36-54" href="{{ url_for(endpoint, lng=country) }}"><img src="{{ url_for('static', filename=filename) }}" alt="flag-{{ country }}" class="flag-36-54"></a>
 {% endmacro %}
 
 
@@ -100,9 +100,9 @@
 
 
 <!-- STAR SYMBOL FOR MAKING A WORD IMPORTANT MACRO -->
-{% macro star_symbol(word, language, tooltip_boolean, endpoint_1) %}
+{% macro star_symbol(word, language_code, tooltip_boolean, endpoint_1) %}
 <div class="tooltip-container">
-    <a href="{{ url_for('main.update_star_or_hide', id=word.id, lng=language.code, star_or_hide=1, endpoint_1=endpoint_1) }}">
+    <a href="{{ url_for('main.update_star_or_hide', id=word.id, lng=language_code, star_or_hide=1, endpoint_1=endpoint_1) }}">
         <i class="fa fa-star fa-2x {% if word.starred %}icon-selected{% endif %}"></i>
     </a>
     <input type="hidden" id="star-boolean" name="star_boolean" value="{% if word.starred %}1{% else %}0{% endif %}">
@@ -163,4 +163,12 @@
 <!-- EDIT ICON FOREIGN-->
 {% macro edit_icon_foreign(endpoint_edit, id, lng_code, big) %}
 <a href="{{ url_for(endpoint_edit, id=id, lng=lng_code ) }}"><i class="fa fa-edit {% if big %}fa-2x{% endif %}"></i></a>
+{% endmacro %}
+
+
+<!-- EDIT ICON FOREIGN-->
+{% macro button_standard(href, text) %}
+<div class="center-btn-container-flexbox-13">
+    <a href="{{ url_for(href) }}" class="next-btn-results">{{ text }}</a>
+</div>
 {% endmacro %}

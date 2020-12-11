@@ -1,17 +1,10 @@
 {% extends "base.html" %}{% block title %}: My Words{% endblock %}{% block page_content %}
 
-<div class="flag-container-bar-at-top-14">
-    {% for language in language_codes %}
-        {% if language.active %}
-            {{ macros.generate_flag(endpoint=endpoint, country=language.code, filename=language.filename) }}
-        {% endif %}
-    {% endfor %}
-</div>
+{% include 'partials/_flag_container.html' %}
 
 {% if words %}
-
-<div class="results-table-container">
-    <div class="table-header-results-and-list-page list-page-grid-{% if english %}english{% else %}foreign{% endif %}">
+<div>
+    <div class="table-header-background-color list-page-grid-{% if english %}english{% else %}foreign{% endif %}">
         <div class="table-cell-text-73 first-col-padding-left-74">{% if english %}Word{% else %}English{% endif %}</div>
         <div class="table-cell-text-73">{% if english %}Example{% else %}{{ lng.lng_eng }} / {{ lng.lng_src }}{% endif %}</div>
         <div class="table-cell-text-73"></div>

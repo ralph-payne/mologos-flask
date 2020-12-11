@@ -1,14 +1,14 @@
 {% extends "base.html" %}{% block title %}: Results{% endblock %}{% block page_content %}
     
 <div class="results-box-1-of-2">
-    <div class="results-table-container padding-top-table-29">
+    <div class="table-container padding-top-table-29">
 
-        <div class="table-header-results-and-list-page">
+        <div class="table-header-background-color">
             <div class="table-cell-text-73 first-col-padding-left-74">Results</div>
         </div>
 
         {% for result in results %}
-            <div class="table-row-results-and-list-page {% if english %}english-results-grid{% else %}foreign-results-grid{% endif %}">
+            <div class="table-row-results-and-list-page {% if english %}english-results-grid{% else %}results-page-grid-foreign{% endif %}">
                 {% if english %}
                     <div class="table-cell-text-73 first-col-padding-left-74">{{ result.split_user_sentence.first_half_sentence }}<a class="link-color" href="{{ url_for('main.define', word=result.target_word) }}">{{ result.target_word }}</a>{{ result.split_user_sentence.second_half_sentence }}</div>   
                 {% else %}

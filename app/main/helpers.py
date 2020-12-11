@@ -561,11 +561,16 @@ def split_user_sentence(word):
         first_half_sentence = user_sentence[0:position_of_target_word]
         second_half_sentence = user_sentence[(position_of_target_word+word_length):sentence_length]
 
+        list_of_words_1st_half = first_half_sentence.split()
+        list_of_words_2nd_half = second_half_sentence.split()
+
         word_dict = {
             'id': word.id,
             'target_word': word.word,
             'first_half_sentence': first_half_sentence,
             'second_half_sentence': second_half_sentence,
+            'list_of_words_1st_half': list_of_words_1st_half,
+            'list_of_words_2nd_half': list_of_words_2nd_half,
             'success': word.success,
             'fail': word.fail
         }

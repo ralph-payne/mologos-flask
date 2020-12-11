@@ -3,34 +3,28 @@
 {% include 'partials/_flashes.html' %}
 
 <div id="javascript-accordion">
-    <p class="instructions-for-user">Choose the languages you want to appear</p>
+    <p class="instructions-for-user">Choose the languages you want to learn</p>
 
     <form action="{{ url_for('main.update_preferences') }}" method="POST">
 
-    <div class="flags-preferences-wrapper">
-        {% for language in language_codes %}
-
-        <div class="float-container-profile-45">
-
-            <div class="float-child-profile-46">
-                {{ macros.generate_flag(endpoint='.list', country=language.code, filename=language.filename) }}
-            </div>
-            
-            <div class="float-child-profile-46">
-                <label class="switch">
-                    <input type="hidden" name="language_name" value="{{ language.lng_eng.lower() }}">
-                    <input type="hidden" name="hidden_input_value" value="{% if language.active %}1{% else %}0{% endif %}">
-                    <input onChange="toggleValOfSwitchElementOnChange(this)" type="checkbox" name="checkbox_input" {% if language.active %}checked{% endif %} value="{% if language.active %}1{% else %}0{% endif %}">
-                    <span class="slider round"></span>
-                </label>
-            </div>
-            
-          </div>
-
-        {% endfor %}
+    {% for language in language_codes %}
+    <div class="float-container-profile-45">
+        <div class="float-child-profile-46">
+            {{ macros.generate_flag(endpoint='.list', country=language.code, filename=language.filename) }}
+        </div>
+        
+        <div class="float-child-profile-46">
+            <label class="switch">
+                <input type="hidden" name="language_name" value="{{ language.lng_eng.lower() }}">
+                <input type="hidden" name="hidden_input_value" value="{% if language.active %}1{% else %}0{% endif %}">
+                <input onChange="toggleValOfSwitchElementOnChange(this)" type="checkbox" name="checkbox_input" {% if language.active %}checked{% endif %} value="{% if language.active %}1{% else %}0{% endif %}">
+                <span class="slider round"></span>
+            </label>
+        </div>
     </div>
+    {% endfor %}
 
-    <div class="center-btn-container-flexbox-13">
+    <div class="btn-container-flexbox-2rem-14">
         <button type="submit" class="btn btn-primary btn-125-font-size">Update Preferences</button>
     </div>
 

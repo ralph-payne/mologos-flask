@@ -13,9 +13,9 @@
 
         <div>
             <div class="icon-container">
-                {{ macros.delete_trash_icon(word, lng, 'main.edit', False, True) }}
                 {{ macros.eye_symbol_hide_word(word, lng, False, 'main.edit' ) }}
-                {{ macros.star_symbol(word, lng, False, 'main.edit' ) }}
+                {{ macros.star_symbol(word, lng.code, False, 'main.edit' ) }}
+                {{ macros.delete_trash_icon(word, lng, 'main.edit', False, True) }}
             </div>
         </div>
 
@@ -33,7 +33,7 @@
             {% endif %}
         </div>
 
-        <div>
+        <div class="keyboard-of-accents-div-012">
             {% if keyboard %}
             <div class="definition-page-header-two-container"><h2 class="definition-page-header-two">Keyboard of Accents</h2></div>
                 <div class="keyboard-container-inner-18">

@@ -9,7 +9,7 @@
 
         <div class="box-1 flex-container">
             {% if input %}
-            <textarea class="translate-box" id="text-to-translate">{{ input }}</textarea>
+            <textarea class="translate-box" id="text-to-translate" onkeydown="fireSubmitOnEnter(this, 'translate-btn')">{{ input }}</textarea>
             {% else %}
             <textarea class="translate-box" id="text-to-translate"></textarea>
             {% endif %}
@@ -49,12 +49,14 @@
             <div class="previous-translations-grid">
                 {% for element in recent_translations %}
                     <div class="table-row-recent-translation">
-                        <div class="table-cell-symbol"><a href="{{ url_for('main.define', word=element.word) }}">{{ element.word }}</a></div>                    
-                        <div class="table-cell-symbol">
+                        <div class="table-cell-symbol-centered-11"><a href="{{ url_for('main.define', word=element.word) }}">{{ element.word }}</a></div>                    
+                        <div class="table-cell-symbol-centered-11">
                             {{ macros.generate_flag(endpoint='main.list', country=element.dst, filename='img/flags/pl.png') }}
                         </div>
-                        <div class="table-cell-symbol"><a href="{{ url_for('main.edit', id=element.id, lng=element.dst) }}">{{ element.example }}</a></div>
-                        <div>{{ macros.delete_trash_icon(element, element.dst, 'main.translate', False, True) }}</div>
+                        <div class="table-cell-symbol-centered-11"><a href="{{ url_for('main.edit', id=element.id, lng=element.dst) }}">{{ element.example }}</a></div>
+                        <div class="table-cell-symbol-centered-11">{{ macros.edit_icon_foreign('main.edit', element.id, element.dst, True) }}</div>
+                        <div class="table-cell-symbol-centered-11">{{ macros.star_symbol(element, element.dst, False, 'main.translate' ) }}</div>
+                        <div class="table-cell-symbol-centered-11">{{ macros.delete_trash_icon(element, element.dst, 'main.translate', False, True) }}</div>
                     </div>
                 {% endfor %}
             </div>
@@ -63,9 +65,7 @@
     </div>
 
 <script type="text/javascript" src="{{ url_for('static', filename='js/update-hidden-values-for-translations.js') }}"></script>
-
 <script type="text/javascript" src="{{ url_for('static', filename='js/trigger-translate-with-enter-button.js') }}"></script>
-
 <script type="text/javascript" src="{{ url_for('static', filename='js/grab-most-recent-language-and-update-select-value.js') }}"></script>
 
 <!-- End of page_content -->

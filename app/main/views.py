@@ -330,6 +330,7 @@ def update_star_or_hide(lng, id, endpoint_1, star_or_hide):
     if int(star_or_hide) == 1:
         is_starred = UserExample.query.filter_by(id=id).first().starred
 
+
         if is_starred:
             UserExample.query.filter_by(id=id).update({'starred': False})
         else:
@@ -670,8 +671,10 @@ def update_preferences():
             UserLanguagePreference.query.filter_by(user_id=current_user.id).update({language: False})
     
     db.session.commit()
+    db.session.close()
 
     # Give alert saying that your preferences have been updated
+    flash(f'You have have succesfully your language preferences!', 'flash-success')
     return redirect(url_for('main.profile', lng='en'))
 
 

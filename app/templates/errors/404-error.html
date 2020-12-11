@@ -1,0 +1,14 @@
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+{% import "_macros.html" as macros %}
+
+{% block page_content %}
+<div class="error-page">
+    <div class="error-page-404">
+        <h1>4<span>0</span>4</h1>
+    </div>
+    <h2>the page you requested could not be found</h2>
+
+    {{ macros.button_standard(href='main.index', text='Return to Homepage') }}
+    
+</div>
+{% endblock %}

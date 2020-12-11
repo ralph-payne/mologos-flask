@@ -1,49 +1,53 @@
 {% extends "base.html" %}{% block title %}: Challenge{% endblock %}{% block page_content %}
 
-<div class="flag-container-bar-at-top-14">
-    {% for language in language_codes %}
-        {% if language.active %}
-            {{ macros.generate_flag(endpoint=endpoint, country=language.code, filename=language.filename) }}
-        {% endif %}
-    {% endfor %}
-</div>
-
-<div class="table-header-results-and-list-page list-page-grid-{% if english %}english{% else %}foreign{% endif %}">
-    <div class="table-cell-text-73 first-col-padding-left-74">{% if english %}Word{% else %}English{% endif %}</div>
-    <div class="table-cell-text-73">{% if english %}Example{% else %}{{ lng.lng_eng }} / {{ lng.lng_src }}{% endif %}</div>
-    <div class="table-cell-text-73"></div>
-    <div class="table-cell-text-73"></div>
-    <div class="table-cell-text-73"></div>
-</div>
+{% include 'partials/_flag_container.html' %}
 
 {% if words %}
+<div class="table-header-background-color table-row-challenge-page table-row-challenge-{% if english %}english{% else %}foreign{% endif %} vertical-center-in-row-213">
+    <div class="first-col-padding-left-74">{% if english %}English Vocabulary Challenge{% else %}English{% endif %}</div>
+    <div>{% if english %}{% else %}{{ lng.lng_eng }} / {{ lng.lng_src }}{% endif %}</div>
+</div>
+
+
 <form class="challenge-form" action="/challenge/{{ lng.code }}" method="POST">
+
     <div class="table-challenge-english min-height-table-16">
         {% for word in words %}
-                <div class="table-row-challenge-page table-row-challenge-{% if english %}english{% else %}foreign{% endif %}">
-                <div class="table-cell-text-73 challenge-text-size-74 first-col-padding-left-74">
-                    <input type="hidden" name="word_id" value="{{ word.id }}">
-                    <input type="hidden" name="word-in-english" value="{{ word.word }}">
-                    <input type="hidden" name="star_boolean" value="0">
-                    <input type="hidden" name="eye_boolean" value="0">{% if english %}<input type="hidden" name="target_word" value="{{ word.target_word }}">{{ macros.sentence_case(word.first_half_sentence) }}_______________{{ word.second_half_sentence }}{% else %}{{ word.word }}
-                    <input type="hidden" name="target_word" value="{{ word.example }}">
-                {% endif %}
-                </div>
+        <input type="hidden" name="word_id" value="{{ word.id }}">
+        <input type="hidden" name="word-in-english" value="{{ word.word }}">
+        <input type="hidden" name="star_boolean" value="0">
+        <input type="hidden" name="eye_boolean" value="0">
+        <input type="hidden" name="target_word" value="{% if english %}{{word.target_word}}{% else %}{{word.example}}{% endif %}">
 
-                <div class="table-cell-symbol">
+        <div class="table-row-challenge-page table-row-challenge-{% if english %}english{% else %}foreign vertical-center-in-row-213{% endif %} min-height-max-height-table-row">
+
+            <div class="challenge-text-size-74-old first-col-padding-left-74 wrap-1240">
+                {% if english %}
+                    <div class="inner-wrapper-1820">
+                    {% for word in word.list_of_words_1st_half %}
+                        <span class="word-12312">{{ word }}</span>
+                    {% endfor %}
                     <input id="user-guess" class="write-guess-text-input-949" type="text" name="user_guess" placeholder="write guess...">
-                </div>
-
-                <div class="table-cell-symbol">
-                    {{ macros.success_and_fail_statistics(word) }}
-                </div>
-                <div class="table-cell-symbol">
-                    {{ macros.eye_symbol_hide_word(word, lng, False, 'main.challenge' ) }}
-                </div>
-                <div class="table-cell-symbol">
-                    {{ macros.star_symbol(word, lng, False, 'main.challenge' ) }}
-                </div>
+                    {% for word in word.list_of_words_2nd_half %}
+                        <span class="word-12312">{{ word }}</span>
+                    {% endfor %}
+                    </div>
+                {% else %}
+                    {{ word.word }}
+                {% endif %}
             </div>
+                
+            {% if english %}{% else %}
+            <div>
+                <input id="user-guess" class="write-guess-text-input-949" type="text" name="user_guess" placeholder="write guess...">
+            </div>
+            {% endif %}
+
+            <div class="table-cell-symbol-centered-11">
+                {{ macros.success_and_fail_statistics(word) }}
+            </div>
+
+        </div>
         {% endfor %}
     </div>
 
@@ -54,3 +58,4 @@
 </form>
 {% else %}{{ macros.no_saved_words_message(endpoint=endpoint, language=lng, is_english=english) }}{% endif %}
 {% endblock %}
+

@@ -15,3 +15,41 @@ textBoxInput.addEventListener("keydown", function(event) {
         document.getElementById("translate-btn").click();
     }
 });
+
+
+
+/*
+on keyDown anywhere,
+
+Inside of the div write the function for listneing to on key down
+
+the function accdepts one parameter
+
+athat parameter is the id of the button that you want to fire off when the user pressees enter
+
+
+ fireSubmitOnEnter(this, "translate-btn")
+
+
+
+
+*/
+
+
+/* Not currently working */
+const fireSubmitOnEnter = (event, idOfButton) => {
+
+    console.log(idOfButton)
+
+    console.log(event.key)
+
+    event.keyCode
+
+    if (event.keyCode === 13) {
+        event.preventDefault();
+
+        document.getElementById(idOfButton).click();
+
+    }
+
+}
