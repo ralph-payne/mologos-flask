@@ -71,7 +71,7 @@
         </div>
 
         <div class="definition-example-text-box-container">
-            <input type="hidden" name="word_id" value="{{ word.id }}">
+            <input type="hidden" name="word_id" value="{{ word.word_id }}">
             <input type="hidden" name="example_already_exists" value="{{ user_example }}">
             <textarea type="text" name="user_example" id="area-2" rows="3">{% if user_example %}{{ user_example.example }}{% endif %}</textarea>
         </div>

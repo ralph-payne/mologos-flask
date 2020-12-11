@@ -17,9 +17,6 @@ from .international_accent_list import international_accent_list
 from .starting_data import starting_data
 
 
-
-
-
 # Homepage
 @main.route('/')
 def index():
